@@ -1,15 +1,15 @@
 /* ==================== CSS VARIABLES ==================== */
 :root {
-    /* Navy Colors - değiştirmek için sadece bu değerleri güncelleyin */
-    --navy-dark: #0A1628;
-    --navy-primary: #1B2A4A;
-    --navy-medium: #2C3E6B;
-    --navy-light: #3D5A99;
+    /* Blue Theme - FBÇ temasına uygun açık mavi tonları */
+    --navy-dark: #122240;
+    --navy-primary: #1A3A65;
+    --navy-medium: #2B5A8F;
+    --navy-light: #3D7BBF;
 
-    /* Accent Colors */
-    --accent: #D4A843;
-    --accent-light: #E8C96A;
-    --accent-hover: #C49A35;
+    /* Accent Colors - Açık mavi (FBÇ logo gradient) */
+    --accent: #7DC0F0;
+    --accent-light: #A8D8FF;
+    --accent-hover: #5EAAE0;
 
     /* Neutrals */
     --white: #FFFFFF;
@@ -109,9 +109,22 @@ img {
 
 .nav-logo {
     display: flex;
-    align-items: baseline;
-    gap: 8px;
+    align-items: center;
+    gap: 10px;
     z-index: 10;
+}
+
+.nav-logo-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.logo-text-group {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
 }
 
 .logo-text {
@@ -167,7 +180,7 @@ img {
     display: inline-block;
     padding: 10px 28px;
     background: var(--accent);
-    color: var(--navy-dark);
+    color: var(--white);
     font-weight: 600;
     font-size: 0.9rem;
     border-radius: 50px;
@@ -177,7 +190,7 @@ img {
 .nav-cta:hover {
     background: var(--accent-light);
     transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(212, 168, 67, 0.4);
+    box-shadow: 0 4px 15px rgba(106, 173, 224, 0.4);
 }
 
 /* Hamburger */
@@ -265,16 +278,25 @@ img {
     justify-content: center;
     text-align: center;
     overflow: hidden;
-    background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy-primary) 50%, var(--navy-medium) 100%);
+    background: radial-gradient(ellipse at center, #5EA3D8 0%, #3D7BBF 25%, #2B5A8F 50%, #1A3A65 75%, #122240 100%);
 }
 
 .hero-overlay {
     position: absolute;
     inset: 0;
     background:
-        radial-gradient(ellipse at 20% 50%, rgba(212, 168, 67, 0.08) 0%, transparent 50%),
-        radial-gradient(ellipse at 80% 20%, rgba(61, 90, 153, 0.15) 0%, transparent 50%),
-        radial-gradient(ellipse at 50% 100%, rgba(10, 22, 40, 0.5) 0%, transparent 60%);
+        radial-gradient(ellipse at 30% 40%, rgba(106, 173, 224, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 30%, rgba(144, 197, 235, 0.1) 0%, transparent 45%),
+        radial-gradient(ellipse at 50% 100%, rgba(11, 21, 36, 0.6) 0%, transparent 60%);
+}
+
+.hero-logo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: contain;
+    margin-bottom: 24px;
+    filter: drop-shadow(0 4px 20px rgba(106, 173, 224, 0.3));
 }
 
 .hero-content {
@@ -372,13 +394,13 @@ img {
 
 .btn-primary {
     background: var(--accent);
-    color: var(--navy-dark);
+    color: var(--white);
 }
 
 .btn-primary:hover {
     background: var(--accent-light);
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(212, 168, 67, 0.35);
+    box-shadow: 0 8px 25px rgba(106, 173, 224, 0.4);
 }
 
 .btn-secondary {
@@ -907,9 +929,16 @@ img {
 
 .footer-brand .footer-logo {
     display: flex;
-    align-items: baseline;
-    gap: 8px;
+    align-items: center;
+    gap: 10px;
     margin-bottom: 16px;
+}
+
+.footer-logo-img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 
 .footer-desc {
@@ -982,7 +1011,7 @@ img {
 
 .social-links a:hover {
     background: var(--accent);
-    color: var(--navy-dark);
+    color: var(--white);
     transform: translateY(-2px);
 }
 
