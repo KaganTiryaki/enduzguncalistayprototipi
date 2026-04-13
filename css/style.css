@@ -883,9 +883,14 @@ img {
 
 /* Subteam Cards */
 .subteam-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 28px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    justify-content: center;
+}
+
+.subteam-grid .subteam-card {
+    width: calc(25% - 18px);
 }
 
 .subteam-card {
@@ -1170,8 +1175,19 @@ img {
     filter: contrast(1.02) saturate(1.05);
 }
 
+.past-gallery--4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+@media (max-width: 1024px) {
+    .past-gallery--4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 768px) {
-    .past-gallery {
+    .past-gallery,
+    .past-gallery--4 {
         grid-template-columns: 1fr;
     }
 
@@ -1435,8 +1451,8 @@ img {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .subteam-grid {
-        grid-template-columns: 1fr 1fr;
+    .subteam-grid .subteam-card {
+        width: calc(33.333% - 16px);
     }
 
     .stats-grid {
@@ -1525,8 +1541,8 @@ img {
         gap: 16px;
     }
 
-    .subteam-grid {
-        grid-template-columns: 1fr;
+    .subteam-grid .subteam-card {
+        width: 100%;
     }
 
     .contact-grid {
