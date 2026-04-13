@@ -1,5 +1,5 @@
 /* ==================== GOOGLE FORMS LINK ==================== */
-const GOOGLE_FORMS_URL = '#'; // Google Forms linkinizi buraya yapıştırın
+const GOOGLE_FORMS_URL = 'https://docs.google.com/forms/d/1ZZhDnKlnY8I3jcgfbBd72_pR7xphhxl4y2pHaWWI3jI/viewform?edit_requested=true';
 
 document.querySelectorAll('#applyBtnNav, #applyBtnHero, #applyBtnMobile').forEach(btn => {
     btn.href = GOOGLE_FORMS_URL;
