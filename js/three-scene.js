@@ -7,8 +7,8 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 const isMobile = window.innerWidth < 768;
 
 const PALETTE = {
-    dark: { particle: 0xA8C0E0, accent: 0x88A8D8, lines: 0x5888C8, fog: 0x2F5BAE },
-    light: { particle: 0x4878C0, accent: 0x3D6AB0, lines: 0x5888C8, fog: 0xF3F7FC }
+    dark: { particle: 0x9FB6D5, accent: 0x819FCD, lines: 0x5381BE, fog: 0x2C56A5 },
+    light: { particle: 0x4472B6, accent: 0x3A64A7, lines: 0x5381BE, fog: 0xF3F7FC }
 };
 
 const SECTION_MODES = {
@@ -54,9 +54,9 @@ for (let i = 0; i < particleCount; i++) {
 particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 const particleMat = new THREE.PointsMaterial({
     color: PALETTE.dark.particle,
-    size: 0.6,
+    size: 1.1,
     transparent: true,
-    opacity: 0.7,
+    opacity: 1.0,
     sizeAttenuation: true,
     blending: THREE.AdditiveBlending,
     depthWrite: false
@@ -75,10 +75,10 @@ for (let i = 0; i < farCount; i++) {
 }
 farGeo.setAttribute('position', new THREE.BufferAttribute(farPos, 3));
 const farMat = new THREE.PointsMaterial({
-    color: 0x88A8D8,
-    size: 0.3,
+    color: 0x819FCD,
+    size: 0.6,
     transparent: true,
-    opacity: 0.5,
+    opacity: 0.85,
     sizeAttenuation: true,
     blending: THREE.AdditiveBlending,
     depthWrite: false
@@ -99,10 +99,10 @@ const shapeTypes = [
 for (let i = 0; i < ambientCount; i++) {
     const geo = shapeTypes[Math.floor(Math.random() * shapeTypes.length)]();
     const mat = new THREE.MeshBasicMaterial({
-        color: Math.random() > 0.5 ? 0x88A8D8 : 0xA8C0E0,
+        color: Math.random() > 0.5 ? 0x819FCD : 0x9FB6D5,
         wireframe: true,
         transparent: true,
-        opacity: 0.25 + Math.random() * 0.3
+        opacity: 0.55 + Math.random() * 0.35
     });
     const mesh = new THREE.Mesh(geo, mat);
     mesh.position.set(
@@ -130,7 +130,7 @@ for (let i = 0; i < cometCount; i++) {
     const pts = new Float32Array(trail * 3);
     geo.setAttribute('position', new THREE.BufferAttribute(pts, 3));
     const mat = new THREE.LineBasicMaterial({
-        color: 0xA8C0E0,
+        color: 0x9FB6D5,
         transparent: true,
         opacity: 0.8,
         blending: THREE.AdditiveBlending
@@ -171,15 +171,15 @@ let nextCometTime = 2;
 const orbGroup = new THREE.Group();
 const orbCore = new THREE.Mesh(
     new THREE.SphereGeometry(0.6, 24, 24),
-    new THREE.MeshBasicMaterial({ color: 0xA8C0E0, transparent: true, opacity: 0.9 })
+    new THREE.MeshBasicMaterial({ color: 0x9FB6D5, transparent: true, opacity: 0.9 })
 );
 orbGroup.add(orbCore);
 const orbHalo = new THREE.Mesh(
     new THREE.SphereGeometry(1.5, 24, 24),
     new THREE.MeshBasicMaterial({
-        color: 0x88A8D8,
+        color: 0x819FCD,
         transparent: true,
-        opacity: 0.25,
+        opacity: 0.55,
         blending: THREE.AdditiveBlending,
         depthWrite: false
     })
@@ -199,7 +199,7 @@ function createBurstPool(count) {
         const vel = new Float32Array(n * 3);
         geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
         const mat = new THREE.PointsMaterial({
-            color: 0xA8C0E0,
+            color: 0x9FB6D5,
             size: 0.8,
             transparent: true,
             opacity: 0,
@@ -266,7 +266,7 @@ const modes = {};
 function buildAtom() {
     const g = new THREE.Group();
     const ringGeo = new THREE.TorusGeometry(15, 0.08, 8, 128);
-    const ringMat = new THREE.MeshBasicMaterial({ color: 0x88A8D8, transparent: true, opacity: 0.5 });
+    const ringMat = new THREE.MeshBasicMaterial({ color: 0x819FCD, transparent: true, opacity: 0.85 });
     for (let i = 0; i < 5; i++) {
         const ring = new THREE.Mesh(ringGeo, ringMat.clone());
         ring.rotation.x = Math.PI / 5 * i;
@@ -276,7 +276,7 @@ function buildAtom() {
         // Electron
         const el = new THREE.Mesh(
             new THREE.SphereGeometry(0.5, 16, 16),
-            new THREE.MeshBasicMaterial({ color: 0xA8C0E0 })
+            new THREE.MeshBasicMaterial({ color: 0x9FB6D5 })
         );
         el.userData.ring = ring;
         el.userData.offset = Math.random() * Math.PI * 2;
@@ -286,7 +286,7 @@ function buildAtom() {
     // Outer thin ring
     const outerRing = new THREE.Mesh(
         new THREE.TorusGeometry(22, 0.04, 6, 128),
-        new THREE.MeshBasicMaterial({ color: 0xA8C0E0, transparent: true, opacity: 0.3 })
+        new THREE.MeshBasicMaterial({ color: 0x9FB6D5, transparent: true, opacity: 0.6 })
     );
     outerRing.userData.isOuter = true;
     g.add(outerRing);
@@ -305,7 +305,7 @@ function buildAtom() {
     }
     cloudGeo.setAttribute('position', new THREE.BufferAttribute(cloudPos, 3));
     const cloud = new THREE.Points(cloudGeo, new THREE.PointsMaterial({
-        color: 0xA8C0E0, size: 0.3, transparent: true, opacity: 0.7,
+        color: 0x9FB6D5, size: 0.3, transparent: true, opacity: 0.7,
         blending: THREE.AdditiveBlending, depthWrite: false
     }));
     g.add(cloud);
@@ -313,7 +313,7 @@ function buildAtom() {
 
     const nucleus = new THREE.Mesh(
         new THREE.SphereGeometry(1.5, 24, 24),
-        new THREE.MeshBasicMaterial({ color: 0xA8C0E0, transparent: true, opacity: 0.9 })
+        new THREE.MeshBasicMaterial({ color: 0x9FB6D5, transparent: true, opacity: 0.9 })
     );
     g.add(nucleus);
     g.userData.nucleus = nucleus;
@@ -325,7 +325,7 @@ function buildOrbital() {
     const g = new THREE.Group();
     const core = new THREE.Mesh(
         new THREE.IcosahedronGeometry(2, 1),
-        new THREE.MeshBasicMaterial({ color: 0x5888C8, wireframe: true, transparent: true, opacity: 0.6 })
+        new THREE.MeshBasicMaterial({ color: 0x5381BE, wireframe: true, transparent: true, opacity: 0.6 })
     );
     g.add(core);
     for (let i = 0; i < 7; i++) {
@@ -333,7 +333,7 @@ function buildOrbital() {
         const r = 14;
         const sphere = new THREE.Mesh(
             new THREE.SphereGeometry(0.9, 16, 16),
-            new THREE.MeshBasicMaterial({ color: 0x88A8D8, transparent: true, opacity: 0.85 })
+            new THREE.MeshBasicMaterial({ color: 0x819FCD, transparent: true, opacity: 0.85 })
         );
         sphere.userData.baseAngle = angle;
         sphere.userData.radius = r;
@@ -345,7 +345,7 @@ function buildOrbital() {
             new THREE.Vector3(0, 0, 0),
             new THREE.Vector3(Math.cos(angle) * r, Math.sin(angle) * r * Math.cos(sphere.userData.tilt), Math.sin(angle) * r * Math.sin(sphere.userData.tilt))
         ]);
-        const line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({ color: 0x5888C8, transparent: true, opacity: 0.25 }));
+        const line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({ color: 0x5381BE, transparent: true, opacity: 0.55 }));
         sphere.userData.line = line;
         g.add(line);
     }
@@ -356,7 +356,7 @@ function buildOrbital() {
 function buildFlow() {
     const g = new THREE.Group();
     const geo = new THREE.IcosahedronGeometry(14, 2);
-    const mat = new THREE.MeshBasicMaterial({ color: 0x5888C8, wireframe: true, transparent: true, opacity: 0.35 });
+    const mat = new THREE.MeshBasicMaterial({ color: 0x5381BE, wireframe: true, transparent: true, opacity: 0.65 });
     const mesh = new THREE.Mesh(geo, mat);
     g.add(mesh);
     g.userData.mesh = mesh;
@@ -368,7 +368,7 @@ function buildFlow() {
 function buildWave() {
     const g = new THREE.Group();
     const geo = new THREE.PlaneGeometry(60, 60, 40, 40);
-    const mat = new THREE.MeshBasicMaterial({ color: 0x88A8D8, wireframe: true, transparent: true, opacity: 0.3 });
+    const mat = new THREE.MeshBasicMaterial({ color: 0x819FCD, wireframe: true, transparent: true, opacity: 0.6 });
     const mesh = new THREE.Mesh(geo, mat);
     mesh.rotation.x = -Math.PI / 2.5;
     mesh.position.y = -8;
@@ -391,7 +391,7 @@ function buildTimeline() {
         points.push(new THREE.Vector3(x, y, z));
         const node = new THREE.Mesh(
             new THREE.SphereGeometry(0.35, 12, 12),
-            new THREE.MeshBasicMaterial({ color: 0xA8C0E0, transparent: true, opacity: 0.9 })
+            new THREE.MeshBasicMaterial({ color: 0x9FB6D5, transparent: true, opacity: 0.9 })
         );
         node.position.set(x, y, z);
         node.userData.baseY = y;
@@ -400,7 +400,7 @@ function buildTimeline() {
         nodes.push(node);
     }
     const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
-    const line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({ color: 0x88A8D8, transparent: true, opacity: 0.5 }));
+    const line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({ color: 0x819FCD, transparent: true, opacity: 0.5 }));
     g.add(line);
     g.userData.nodes = nodes;
     g.userData.line = line;
@@ -416,7 +416,7 @@ function buildConstellation() {
     for (let i = 0; i < starCount; i++) {
         const star = new THREE.Mesh(
             new THREE.SphereGeometry(0.3, 8, 8),
-            new THREE.MeshBasicMaterial({ color: 0xA8C0E0, transparent: true, opacity: 0.8 })
+            new THREE.MeshBasicMaterial({ color: 0x9FB6D5, transparent: true, opacity: 0.8 })
         );
         star.position.set(
             (Math.random() - 0.5) * 30,
@@ -436,7 +436,7 @@ function buildConstellation() {
         }
     }
     const lineGeo = new THREE.BufferGeometry().setFromPoints(linePoints);
-    const lines = new THREE.LineSegments(lineGeo, new THREE.LineBasicMaterial({ color: 0x5888C8, transparent: true, opacity: 0.25 }));
+    const lines = new THREE.LineSegments(lineGeo, new THREE.LineBasicMaterial({ color: 0x5381BE, transparent: true, opacity: 0.55 }));
     g.add(lines);
     g.userData.stars = stars;
     return g;
@@ -458,12 +458,12 @@ function buildDNA() {
         strand1.push(new THREE.Vector3(Math.cos(angle) * radius, y, Math.sin(angle) * radius));
         strand2.push(new THREE.Vector3(Math.cos(angle + Math.PI) * radius, y, Math.sin(angle + Math.PI) * radius));
     }
-    const m1 = new THREE.LineBasicMaterial({ color: 0x88A8D8, transparent: true, opacity: 0.7 });
-    const m2 = new THREE.LineBasicMaterial({ color: 0xA8C0E0, transparent: true, opacity: 0.7 });
+    const m1 = new THREE.LineBasicMaterial({ color: 0x819FCD, transparent: true, opacity: 0.7 });
+    const m2 = new THREE.LineBasicMaterial({ color: 0x9FB6D5, transparent: true, opacity: 0.7 });
     g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(strand1), m1));
     g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(strand2), m2));
     // Rungs
-    const rungMat = new THREE.LineBasicMaterial({ color: 0x5888C8, transparent: true, opacity: 0.4 });
+    const rungMat = new THREE.LineBasicMaterial({ color: 0x5381BE, transparent: true, opacity: 0.7 });
     const nodes = [];
     for (let i = 0; i <= segments; i += 4) {
         const rung = new THREE.Line(
@@ -474,13 +474,13 @@ function buildDNA() {
         // Node spheres
         const s1 = new THREE.Mesh(
             new THREE.SphereGeometry(0.25, 8, 8),
-            new THREE.MeshBasicMaterial({ color: 0xA8C0E0 })
+            new THREE.MeshBasicMaterial({ color: 0x9FB6D5 })
         );
         s1.position.copy(strand1[i]);
         g.add(s1);
         const s2 = new THREE.Mesh(
             new THREE.SphereGeometry(0.25, 8, 8),
-            new THREE.MeshBasicMaterial({ color: 0xA8C0E0 })
+            new THREE.MeshBasicMaterial({ color: 0x9FB6D5 })
         );
         s2.position.copy(strand2[i]);
         g.add(s2);
@@ -495,7 +495,7 @@ function buildNeural() {
     const g = new THREE.Group();
     const layers = [4, 6, 6, 3];
     const layerSpacing = 7;
-    const nodeMat = new THREE.MeshBasicMaterial({ color: 0xA8C0E0, transparent: true, opacity: 0.9 });
+    const nodeMat = new THREE.MeshBasicMaterial({ color: 0x9FB6D5, transparent: true, opacity: 0.9 });
     const nodes = [];
     const allNodes = [];
     layers.forEach((count, li) => {
@@ -514,7 +514,7 @@ function buildNeural() {
         nodes.push(layerNodes);
     });
     // Connections
-    const connMat = new THREE.LineBasicMaterial({ color: 0x5888C8, transparent: true, opacity: 0.2 });
+    const connMat = new THREE.LineBasicMaterial({ color: 0x5381BE, transparent: true, opacity: 0.5 });
     const conns = [];
     for (let li = 0; li < nodes.length - 1; li++) {
         nodes[li].forEach(a => {
@@ -696,7 +696,7 @@ function animate() {
         currentThemeMix
     );
     particleMat.color.copy(pColor);
-    particleMat.opacity = lerp(0.35, 0.75, currentThemeMix);
+    particleMat.opacity = lerp(0.75, 1.0, currentThemeMix);
 
     if (!prefersReducedMotion) {
         // Particle drift
