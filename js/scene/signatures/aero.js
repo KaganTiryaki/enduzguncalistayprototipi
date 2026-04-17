@@ -8,7 +8,7 @@ export function aero({ palette, anchor }) {
     const group = new Group();
     group.position.copy(anchor);
 
-    const torusGeom = new TorusGeometry(1.0, 0.01, 8, 160);
+    const torusGeom = new TorusGeometry(1.15, 0.02, 10, 180);
     const torusMat = new MeshBasicMaterial({
         color: new Color(palette.mist),
         transparent: true,
@@ -24,9 +24,9 @@ export function aero({ palette, anchor }) {
     trailGeom.setAttribute('position', new Float32BufferAttribute(trailPositions, 3));
     const trailMat = new PointsMaterial({
         color: new Color(palette.accent),
-        size: 0.026,
+        size: 0.042,
         transparent: true,
-        opacity: 0.85,
+        opacity: 0.95,
         depthWrite: false,
         blending: AdditiveBlending,
     });

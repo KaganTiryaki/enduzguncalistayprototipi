@@ -50,9 +50,9 @@ export function aiNlp({ palette, anchor }) {
     nodeGeom.setAttribute('position', new Float32BufferAttribute(nodePositions, 3));
     const nodeMat = new PointsMaterial({
         color: new Color(palette.accent),
-        size: 0.06,
+        size: 0.09,
         transparent: true,
-        opacity: 0.9,
+        opacity: 0.95,
         depthWrite: false,
         blending: AdditiveBlending,
     });

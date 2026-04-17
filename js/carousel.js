@@ -18,18 +18,7 @@ function ready(fn) {
     }
 }
 
-function waitForGlobal(name, timeoutMs = 4000) {
-    return new Promise((resolve) => {
-        const start = performance.now();
-        (function check() {
-            if (window[name]) return resolve(window[name]);
-            if (performance.now() - start > timeoutMs) return resolve(null);
-            setTimeout(check, 40);
-        })();
-    });
-}
-
-ready(async () => {
+ready(() => {
     const section = document.getElementById('komiteler');
     const canvas = document.getElementById('committees-stage');
     const slides = Array.from(document.querySelectorAll('.committee-slide'));
@@ -38,131 +27,68 @@ ready(async () => {
     const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
     const stage = initStage(canvas, { palette: PALETTE, dpr });
 
-    // Wait for GSAP + ScrollTrigger + Lenis (loaded via defer scripts)
-    const [gsap, ScrollTrigger, Lenis] = await Promise.all([
-        waitForGlobal('gsap'),
-        waitForGlobal('ScrollTrigger'),
-        waitForGlobal('Lenis'),
-    ]);
-
-    // ===== Lenis smooth scroll =====
-    let lenis = null;
-    if (Lenis) {
-        lenis = new Lenis({
-            duration: 1.1,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smoothWheel: true,
-            smoothTouch: false,
-        });
-    }
-
-    // ===== RAF loop: Three.js + Lenis =====
-    let canvasVisible = false;
+    let inView = false;
+    let modalOpen = false;
     let rafId = null;
 
+    const sectionIO = new IntersectionObserver((entries) => {
+        entries.forEach((e) => { inView = e.isIntersecting; });
+        if (!modalOpen) {
+            document.body.classList.toggle('committees-visible', inView);
+        }
+        if ((inView || modalOpen) && rafId === null) loop(performance.now());
+    }, { rootMargin: '80px 0px 80px 0px' });
+    sectionIO.observe(section);
+
     function loop(t) {
-        if (lenis) lenis.raf(t);
         stage.tick(t);
-        if (document.visibilityState === 'visible') {
+        if ((inView || modalOpen) && document.visibilityState === 'visible') {
             rafId = requestAnimationFrame(loop);
         } else {
             rafId = null;
         }
     }
-    rafId = requestAnimationFrame(loop);
 
+    window.addEventListener('resize', () => stage.resize());
     document.addEventListener('visibilitychange', () => {
-        if (!document.hidden && rafId === null) {
-            rafId = requestAnimationFrame(loop);
-        }
+        if (!document.hidden && inView && rafId === null) loop(performance.now());
     });
 
-    // Canvas sizing
-    function sizeCanvas() {
-        stage.resize();
-    }
-    sizeCanvas();
-    window.addEventListener('resize', sizeCanvas);
-
-    // ===== ScrollTrigger: section visibility + active slide =====
-    if (gsap && ScrollTrigger) {
-        gsap.registerPlugin(ScrollTrigger);
-
-        // Hook Lenis into ScrollTrigger
-        if (lenis) {
-            lenis.on('scroll', ScrollTrigger.update);
-            gsap.ticker.lagSmoothing(0);
-        }
-
-        // Show/hide canvas based on section visibility
-        ScrollTrigger.create({
-            trigger: section,
-            start: 'top bottom',
-            end: 'bottom top',
-            onToggle: (self) => {
-                canvasVisible = self.isActive;
-                canvas.classList.toggle('is-visible', canvasVisible);
-            },
-        });
-
-        // Each slide activates its signature when near center
-        slides.forEach((slide) => {
-            ScrollTrigger.create({
-                trigger: slide,
-                start: 'top 65%',
-                end: 'bottom 35%',
-                onToggle: (self) => {
-                    if (self.isActive) activateSlide(slide);
-                },
-            });
-        });
-    } else {
-        // Fallback: IntersectionObserver if GSAP fails to load
-        const sectionIO = new IntersectionObserver((entries) => {
-            entries.forEach((e) => {
-                canvasVisible = e.isIntersecting;
-                canvas.classList.toggle('is-visible', canvasVisible);
-            });
-        }, { rootMargin: '100px 0px 100px 0px' });
-        sectionIO.observe(section);
-
-        const slideIO = new IntersectionObserver((entries) => {
-            const visible = entries
-                .filter((e) => e.isIntersecting)
-                .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-            if (visible) activateSlide(visible.target);
-        }, { threshold: [0.35, 0.6, 0.85], rootMargin: '-20% 0px -30% 0px' });
-        slides.forEach((s) => slideIO.observe(s));
-    }
-
+    // Track which slide is most in view → active signature
     let activeSlide = null;
-    function activateSlide(slide) {
-        if (slide === activeSlide) return;
+    const slideIO = new IntersectionObserver((entries) => {
+        const visible = entries
+            .filter((e) => e.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        const top = visible[0];
+        if (!top) return;
+        if (top.target === activeSlide) return;
         activeSlide?.classList.remove('is-active');
-        activeSlide = slide;
+        activeSlide = top.target;
         activeSlide.classList.add('is-active');
-        const sig = slide.getAttribute('data-signature');
+        const sig = activeSlide.getAttribute('data-signature');
         if (sig) stage.setActive(sig);
-    }
+    }, {
+        threshold: [0.35, 0.6, 0.85],
+        rootMargin: '-20% 0px -30% 0px',
+    });
+    slides.forEach((s) => slideIO.observe(s));
 
-    // ===== Click / keyboard → zoom + modal =====
+    // Click / keyboard → zoom + open modal
     function onCardActivate(slide) {
         const sig = slide.getAttribute('data-signature');
         const num = slide.querySelector('.committee__num')?.textContent?.trim();
         if (!sig || !num) return;
 
-        activateSlide(slide);
         slide.classList.add('is-zooming');
         stage.zoomTo(sig);
 
-        // Fire modal open after zoom settles
-        const delay = 720;
         setTimeout(() => {
             if (typeof window.openCommitteeModal === 'function') {
                 window.openCommitteeModal(num, slide);
             }
             slide.classList.remove('is-zooming');
-        }, delay);
+        }, 720);
     }
 
     slides.forEach((slide) => {
@@ -180,8 +106,19 @@ ready(async () => {
         });
     });
 
-    // Modal close → zoom out
+    window.addEventListener('committee-modal:opened', (e) => {
+        const sig = e.detail?.sig;
+        if (sig) stage.zoomTo(sig);
+        stage.isolate(true);
+        modalOpen = true;
+        document.body.classList.add('committees-visible');
+        if (rafId === null) loop(performance.now());
+    });
+
     window.addEventListener('committee-modal:closed', () => {
+        stage.isolate(false);
         stage.zoomOut();
+        modalOpen = false;
+        if (!inView) document.body.classList.remove('committees-visible');
     });
 });

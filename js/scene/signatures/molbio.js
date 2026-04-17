@@ -7,9 +7,9 @@ export function molbio({ palette, anchor }) {
     const group = new Group();
     group.position.copy(anchor);
 
-    const samples = 220;
-    const height = 2.4;
-    const radius = 0.4;
+    const samples = 260;
+    const height = 3.0;
+    const radius = 0.55;
     const turns = 3.2;
 
     const strandA = [];

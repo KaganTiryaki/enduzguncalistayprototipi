@@ -49,9 +49,9 @@ export function neuro({ palette, anchor }) {
     nodeGeom.setAttribute('position', new Float32BufferAttribute(nodes, 3));
     const nodeMat = new PointsMaterial({
         color: new Color(palette.accent),
-        size: 0.05,
+        size: 0.075,
         transparent: true,
-        opacity: 0.9,
+        opacity: 0.95,
         depthWrite: false,
         blending: AdditiveBlending,
     });

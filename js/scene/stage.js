@@ -2,8 +2,30 @@ import {
     Scene, PerspectiveCamera, WebGLRenderer, Vector3, Color, Group,
 } from 'three';
 import { signatures, signatureOrder } from './signatures/index.js';
-import { HOME_TARGET, ZOOM_TARGET, dampVec } from './camera.js';
+import { cameraTargets, zoomTargets, HOME_TARGET, dampVec } from './camera.js';
 import { disposeGroup } from './dispose.js';
+
+const CONSTELLATION_RADIUS = 3.6;
+
+function constellationAnchor(index, count) {
+    const a = (index / count) * Math.PI * 2 - Math.PI / 2;
+    return new Vector3(
+        Math.cos(a) * CONSTELLATION_RADIUS,
+        Math.sin(a) * CONSTELLATION_RADIUS * 0.58,
+        0
+    );
+}
+
+// Per-committee signature palettes so each constellation is visually distinct
+const SIGNATURE_PALETTES = {
+    quantum:  { accent: '#7B8FE8', mist: '#C4D1F2', navy500: '#3A64A7', navy400: '#4472B6', navy300: '#5381BE' },
+    neuro:    { accent: '#FF7BAE', mist: '#FFC2D6', navy500: '#B54873', navy400: '#C25B86', navy300: '#D07299' },
+    'ai-nlp': { accent: '#33E1C9', mist: '#B9F4EB', navy500: '#2E8E80', navy400: '#3BA697', navy300: '#4FBEAE' },
+    aero:     { accent: '#C8E6FF', mist: '#E9F4FF', navy500: '#5A93C4', navy400: '#6AA5D0', navy300: '#7FB6DB' },
+    molbio:   { accent: '#6EE58C', mist: '#C2F3CE', navy500: '#3C9454', navy400: '#49A863', navy300: '#58B974' },
+    forensic: { accent: '#FFA65C', mist: '#FFD7B5', navy500: '#C56A3A', navy400: '#D47D48', navy300: '#E28F58' },
+    smart:    { accent: '#FFD23F', mist: '#FFEA9E', navy500: '#C49522', navy400: '#D6A630', navy300: '#E5B843' },
+};
 
 export function initStage(canvas, options) {
     const { palette, dpr } = options;
@@ -24,32 +46,19 @@ export function initStage(canvas, options) {
     renderer.setPixelRatio(dpr);
     renderer.setClearColor(new Color(0x000000), 0);
 
-    const sigPalette = {
-        navy500: palette.navy500,
-        navy400: palette.navy400,
-        navy300: palette.navy300,
-        accent: palette.accent,
-        mist: palette.mist,
-    };
-
     const rootGroup = new Group();
     scene.add(rootGroup);
 
-    // All signatures rendered at origin — only active one visible
     const handles = {};
-    signatureOrder.forEach((sig) => {
-        handles[sig] = signatures[sig]({
-            palette: sigPalette,
-            anchor: new Vector3(0, 0, 0),
-        });
-        // Boost visual presence — each signature scales up for prominence
-        handles[sig].group.scale.setScalar(1.25);
-        handles[sig].group.visible = false;
+    signatureOrder.forEach((sig, i) => {
+        const anchor = constellationAnchor(i, signatureOrder.length);
+        handles[sig] = signatures[sig]({ palette: SIGNATURE_PALETTES[sig], anchor });
         rootGroup.add(handles[sig].group);
     });
 
     let activeSig = null;
-    let zoomed = false;
+    let zoomedSig = null;
+    let isolated = false;
     let prevTime = performance.now();
 
     const camPos = camera.position.clone();
@@ -57,12 +66,13 @@ export function initStage(canvas, options) {
     const targetPos = camera.position.clone();
     const targetLook = HOME_TARGET.lookAt.clone();
 
-    const intensity = {};
-    signatureOrder.forEach((sig) => { intensity[sig] = 0; });
+    const intensity = {
+        quantum: 0, neuro: 0, 'ai-nlp': 0, aero: 0, molbio: 0, forensic: 0, smart: 0,
+    };
 
     function resize() {
-        const w = canvas.clientWidth || window.innerWidth;
-        const h = canvas.clientHeight || window.innerHeight;
+        const w = canvas.clientWidth;
+        const h = canvas.clientHeight;
         if (w === 0 || h === 0) return;
         camera.aspect = Math.max(0.1, w / Math.max(1, h));
         camera.updateProjectionMatrix();
@@ -70,9 +80,12 @@ export function initStage(canvas, options) {
     }
 
     function updateTargets() {
-        if (zoomed) {
-            targetPos.copy(ZOOM_TARGET.position);
-            targetLook.copy(ZOOM_TARGET.lookAt);
+        if (zoomedSig) {
+            targetPos.copy(zoomTargets[zoomedSig].position);
+            targetLook.copy(zoomTargets[zoomedSig].lookAt);
+        } else if (activeSig) {
+            targetPos.copy(cameraTargets[activeSig].position);
+            targetLook.copy(cameraTargets[activeSig].lookAt);
         } else {
             targetPos.copy(HOME_TARGET.position);
             targetLook.copy(HOME_TARGET.lookAt);
@@ -85,21 +98,27 @@ export function initStage(canvas, options) {
         prevTime = timeMs;
 
         signatureOrder.forEach((sig) => {
-            const isActive = activeSig === sig;
-            // Overdrive active to 1.4 for more prominence (signatures cap opacity at 1)
-            const target = isActive ? 1.4 : 0;
-            intensity[sig] += (target - intensity[sig]) * Math.min(1, dt * 4.5);
-            const h = handles[sig];
-            h.update(elapsed, dt, intensity[sig]);
-            // Show/hide for perf — only visible when intensity non-trivial
-            h.group.visible = intensity[sig] > 0.02;
+            let target;
+            if (isolated) {
+                target = (zoomedSig === sig || activeSig === sig) ? 1 : 0;
+            } else if (zoomedSig === sig) {
+                target = 1;
+            } else if (zoomedSig) {
+                target = 0;
+            } else if (activeSig === sig) {
+                target = 1;
+            } else {
+                target = 0.45;
+            }
+            const speed = isolated ? 7 : 5;
+            intensity[sig] += (target - intensity[sig]) * Math.min(1, dt * speed);
+            handles[sig].update(elapsed, dt, intensity[sig]);
         });
 
-        // Gentle ambient rotation to keep scene alive
-        rootGroup.rotation.y = 0.04 * Math.sin(elapsed * 0.15);
+        rootGroup.rotation.y = 0.05 * Math.sin(elapsed * 0.15);
 
         updateTargets();
-        const lambda = zoomed ? 4.0 : 3.0;
+        const lambda = zoomedSig ? 4.5 : 3.2;
         dampVec(camPos, targetPos, lambda, dt);
         dampVec(camLook, targetLook, lambda, dt);
         camera.position.copy(camPos);
@@ -113,12 +132,15 @@ export function initStage(canvas, options) {
     }
 
     function zoomTo(sig) {
-        if (sig) activeSig = sig;
-        zoomed = true;
+        zoomedSig = sig;
     }
 
     function zoomOut() {
-        zoomed = false;
+        zoomedSig = null;
+    }
+
+    function isolate(on) {
+        isolated = !!on;
     }
 
     function destroy() {
@@ -128,5 +150,5 @@ export function initStage(canvas, options) {
 
     resize();
 
-    return { tick, resize, setActive, zoomTo, zoomOut, destroy };
+    return { tick, resize, setActive, zoomTo, zoomOut, isolate, destroy };
 }

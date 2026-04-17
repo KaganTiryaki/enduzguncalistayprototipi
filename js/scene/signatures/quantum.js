@@ -11,7 +11,7 @@ export function quantum({ palette, anchor }) {
     const radii = [0.7, 0.95, 1.2];
 
     radii.forEach((r, idx) => {
-        const count = 260 + idx * 80;
+        const count = 340 + idx * 100;
         const positions = new Float32Array(count * 3);
         for (let i = 0; i < count; i++) {
             const u = Math.random();
@@ -27,9 +27,9 @@ export function quantum({ palette, anchor }) {
         const color = idx === 1 ? palette.accent : idx === 2 ? palette.navy300 : palette.mist;
         const mat = new PointsMaterial({
             color: new Color(color),
-            size: 0.022,
+            size: 0.034,
             transparent: true,
-            opacity: 0.8,
+            opacity: 0.9,
             depthWrite: false,
             blending: AdditiveBlending,
         });

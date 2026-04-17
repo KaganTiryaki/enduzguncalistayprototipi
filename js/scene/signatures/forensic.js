@@ -9,8 +9,8 @@ export function forensic({ palette, anchor }) {
     group.position.copy(anchor);
 
     const spokes = [];
-    const spokeCount = 24;
-    const outer = 1.2;
+    const spokeCount = 28;
+    const outer = 1.4;
     for (let i = 0; i < spokeCount; i++) {
         const a = (i / spokeCount) * Math.PI * 2;
         spokes.push(0, 0, 0, Math.cos(a) * outer, Math.sin(a) * outer, 0);
@@ -26,8 +26,8 @@ export function forensic({ palette, anchor }) {
 
     const rings = [];
     const ringMats = [];
-    [0.35, 0.65, 0.95, 1.2].forEach((r, i) => {
-        const geom = new RingGeometry(r - 0.004, r, 128);
+    [0.4, 0.75, 1.1, 1.4].forEach((r, i) => {
+        const geom = new RingGeometry(r - 0.012, r, 128);
         const mat = new MeshBasicMaterial({
             color: new Color(i === 2 ? palette.accent : palette.mist),
             transparent: true,

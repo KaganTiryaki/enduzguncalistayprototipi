@@ -308,6 +308,8 @@ if (committeeModal) {
         // eslint-disable-next-line no-unused-expressions
         committeeModal.offsetHeight;
         committeeModal.classList.add('is-open');
+        const sig = sourceCard?.getAttribute('data-signature');
+        window.dispatchEvent(new CustomEvent('committee-modal:opened', { detail: { key, sig } }));
     }
 
     function closeCommittee() {

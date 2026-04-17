@@ -35,9 +35,9 @@ export function smart({ palette, anchor }) {
     signalGeom.setAttribute('position', new Float32BufferAttribute(signalPositions, 3));
     const signalMat = new PointsMaterial({
         color: new Color(palette.accent),
-        size: 0.05,
+        size: 0.08,
         transparent: true,
-        opacity: 0.95,
+        opacity: 1,
         depthWrite: false,
         blending: AdditiveBlending,
     });
