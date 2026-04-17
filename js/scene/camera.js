@@ -3,7 +3,7 @@ import { anchors } from './anchors.js';
 
 // Shift camera view to the right of the signature → signature renders in
 // the LEFT half of the viewport, card stays centered, both visible.
-const VIEWPORT_X_OFFSET = 2.8;
+export const VIEWPORT_X_OFFSET = 2.8;
 
 function buildTargets(distance, xOffset = 0) {
     const out = {};

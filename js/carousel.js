@@ -27,6 +27,23 @@ ready(() => {
     const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
     const stage = initStage(canvas, { palette: PALETTE, dpr });
 
+    // Lenis smooth scroll — cinematic momentum, cheap UX upgrade
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let lenis = null;
+    if (window.Lenis && !reduced) {
+        lenis = new window.Lenis({
+            duration: 1.1,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true,
+            touchMultiplier: 1.4,
+        });
+        function lenisRaf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(lenisRaf);
+        }
+        requestAnimationFrame(lenisRaf);
+    }
+
     let inView = false;
     let modalOpen = false;
     let rafId = null;

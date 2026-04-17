@@ -1,8 +1,12 @@
 import {
-    Scene, PerspectiveCamera, WebGLRenderer, Color, Group,
+    Scene, PerspectiveCamera, WebGLRenderer, Color, Group, Vector2,
 } from 'three';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { signatures, signatureOrder } from './signatures/index.js';
-import { cameraTargets, zoomTargets, HOME_TARGET, dampVec } from './camera.js';
+import { cameraTargets, zoomTargets, HOME_TARGET, VIEWPORT_X_OFFSET, dampVec } from './camera.js';
 import { anchors } from './anchors.js';
 import { disposeGroup } from './dispose.js';
 
@@ -39,11 +43,34 @@ export function initStage(canvas, options) {
     const rootGroup = new Group();
     scene.add(rootGroup);
 
+    // Create signature + its symmetric mirror twin (shared geometry/materials,
+    // positioned at anchor + 2*OFFSET with scale.x = -1 for true mirror).
+    // In viewport: original renders LEFT of card, mirror renders RIGHT — card
+    // at center splits the sig visually into two halves.
     const handles = {};
     signatureOrder.forEach((sig) => {
-        handles[sig] = signatures[sig]({ palette: SIGNATURE_PALETTES[sig], anchor: anchors[sig] });
+        const anchor = anchors[sig];
+        handles[sig] = signatures[sig]({ palette: SIGNATURE_PALETTES[sig], anchor });
         rootGroup.add(handles[sig].group);
+
+        const mirror = handles[sig].group.clone(true);
+        mirror.position.set(
+            anchor.x + 2 * VIEWPORT_X_OFFSET,
+            anchor.y,
+            anchor.z
+        );
+        mirror.scale.x = -1;
+        handles[sig].mirror = mirror;
+        rootGroup.add(mirror);
     });
+
+    // Postprocessing: bloom makes accent particles/lines glow cinematically
+    const composer = new EffectComposer(renderer);
+    composer.setPixelRatio(dpr);
+    composer.addPass(new RenderPass(scene, camera));
+    const bloom = new UnrealBloomPass(new Vector2(1, 1), 0.75, 0.55, 0.12);
+    composer.addPass(bloom);
+    composer.addPass(new OutputPass());
 
     let activeSig = null;
     let zoomedSig = null;
@@ -66,15 +93,12 @@ export function initStage(canvas, options) {
         camera.aspect = Math.max(0.1, w / Math.max(1, h));
         camera.updateProjectionMatrix();
         renderer.setSize(w, h, false);
+        composer.setSize(w, h);
+        bloom.resolution.set(w, h);
     }
 
     const gsap = (typeof window !== 'undefined') ? window.gsap : null;
 
-    // GTA-V style camera transition: zoom out, fly laterally, zoom back in.
-    // Only applied when source and destination are at roughly the same z-plane
-    // AND there is significant lateral travel (sig-to-sig scroll). Otherwise
-    // (home→sig, sig→home, or same position) use a direct tween — no unnecessary
-    // extra pullback when camera is already far.
     function tweenCameraTo(pos, look, duration = 1.5) {
         if (!gsap) {
             targetPos.copy(pos);
@@ -93,13 +117,11 @@ export function initStage(canvas, options) {
         const useGtaArc = zDiff < 3 && lateral > 2;
 
         if (!useGtaArc) {
-            // Direct tween — zoom in/out or trivial move
             gsap.to(camPos,  { x: pos.x,  y: pos.y,  z: pos.z,  duration, ease: 'power2.inOut' });
             gsap.to(camLook, { x: look.x, y: look.y, z: look.z, duration, ease: 'power2.inOut' });
             return;
         }
 
-        // GTA arc: pullback proportional to lateral travel
         const pullback = Math.min(10, Math.max(4, lateral * 0.6));
         const midZ = pos.z + pullback;
 
@@ -125,6 +147,19 @@ export function initStage(canvas, options) {
         }, 0);
     }
 
+    // Copy rotations from original group's entire subtree onto mirror
+    function syncMirror(handle) {
+        const src = handle.group;
+        const dst = handle.mirror;
+        if (!dst) return;
+        dst.rotation.copy(src.rotation);
+        const srcKids = src.children;
+        const dstKids = dst.children;
+        for (let i = 0; i < srcKids.length; i++) {
+            if (dstKids[i]) dstKids[i].rotation.copy(srcKids[i].rotation);
+        }
+    }
+
     function tick(timeMs) {
         const elapsed = timeMs / 1000;
         const dt = Math.min(0.05, (timeMs - prevTime) / 1000);
@@ -146,12 +181,12 @@ export function initStage(canvas, options) {
             const speed = isolated ? 7 : 5;
             intensity[sig] += (target - intensity[sig]) * Math.min(1, dt * speed);
             handles[sig].update(elapsed, dt, intensity[sig]);
+            syncMirror(handles[sig]);
         });
 
         rootGroup.rotation.y = 0.04 * Math.sin(elapsed * 0.12);
 
         if (!gsap) {
-            // Fallback: damp camPos/camLook toward targets
             const lambda = zoomedSig ? 4.0 : 2.4;
             dampVec(camPos, targetPos, lambda, dt);
             dampVec(camLook, targetLook, lambda, dt);
@@ -159,12 +194,11 @@ export function initStage(canvas, options) {
         camera.position.copy(camPos);
         camera.lookAt(camLook);
 
-        renderer.render(scene, camera);
+        composer.render();
     }
 
     function applyTarget() {
         if (zoomedSig) {
-            // Click zoom: direct (no GTA-style pullback, stays intimate)
             tweenCameraDirect(zoomTargets[zoomedSig].position, zoomTargets[zoomedSig].lookAt, 0.9);
         } else if (activeSig) {
             tweenCameraTo(cameraTargets[activeSig].position, cameraTargets[activeSig].lookAt, 1.6);
@@ -173,7 +207,6 @@ export function initStage(canvas, options) {
         }
     }
 
-    // Direct tween — used for modal click-zoom (don't want dramatic pullback)
     function tweenCameraDirect(pos, look, duration) {
         if (!gsap) { targetPos.copy(pos); targetLook.copy(look); return; }
         gsap.killTweensOf(camPos);
@@ -203,8 +236,12 @@ export function initStage(canvas, options) {
     }
 
     function destroy() {
-        signatureOrder.forEach((sig) => disposeGroup(handles[sig].group));
+        signatureOrder.forEach((sig) => {
+            disposeGroup(handles[sig].group);
+            if (handles[sig].mirror) disposeGroup(handles[sig].mirror);
+        });
         renderer.dispose();
+        composer.dispose?.();
     }
 
     resize();
