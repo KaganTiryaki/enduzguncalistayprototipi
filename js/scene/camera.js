@@ -14,7 +14,7 @@ function buildTargets(distance) {
 }
 
 export const HOME_TARGET = {
-    position: new Vector3(0, 0.3, 28),
+    position: new Vector3(0, 0.3, 32),
     lookAt: new Vector3(0, 0, 0),
 };
 

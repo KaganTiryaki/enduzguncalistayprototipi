@@ -70,14 +70,50 @@ export function initStage(canvas, options) {
 
     const gsap = (typeof window !== 'undefined') ? window.gsap : null;
 
-    function tweenCameraTo(pos, look, duration = 1.2, ease = 'power2.inOut') {
-        if (gsap) {
-            gsap.to(camPos,  { x: pos.x,  y: pos.y,  z: pos.z,  duration, ease, overwrite: true });
-            gsap.to(camLook, { x: look.x, y: look.y, z: look.z, duration, ease, overwrite: true });
-        } else {
+    // GTA-V style camera transition: zoom out, fly laterally, zoom back in.
+    // When source and destination are on the same z-plane (typical scroll
+    // transition between signatures), this creates a satisfying "pullback →
+    // glide → settle" arc instead of a flat lateral slide.
+    function tweenCameraTo(pos, look, duration = 1.5) {
+        if (!gsap) {
             targetPos.copy(pos);
             targetLook.copy(look);
+            return;
         }
+
+        gsap.killTweensOf(camPos);
+        gsap.killTweensOf(camLook);
+
+        // Pullback distance: proportional to lateral travel, min 4, max 10
+        const dx = pos.x - camPos.x;
+        const dy = pos.y - camPos.y;
+        const lateral = Math.sqrt(dx * dx + dy * dy);
+        const pullback = Math.min(10, Math.max(4, lateral * 0.6));
+        const midZ = Math.max(camPos.z, pos.z) + pullback;
+
+        const tl = gsap.timeline();
+        // Phase 1: pull back (out), start lateral move
+        tl.to(camPos, {
+            x: pos.x,
+            y: pos.y,
+            z: midZ,
+            duration: duration * 0.55,
+            ease: 'power2.inOut',
+        }, 0);
+        // Phase 2: zoom in to target z (starts halfway through lateral)
+        tl.to(camPos, {
+            z: pos.z,
+            duration: duration * 0.5,
+            ease: 'power2.out',
+        }, duration * 0.55);
+        // Look: smooth pan throughout
+        tl.to(camLook, {
+            x: look.x,
+            y: look.y,
+            z: look.z,
+            duration: duration * 0.95,
+            ease: 'power2.inOut',
+        }, 0);
     }
 
     function tick(timeMs) {
@@ -119,12 +155,22 @@ export function initStage(canvas, options) {
 
     function applyTarget() {
         if (zoomedSig) {
-            tweenCameraTo(zoomTargets[zoomedSig].position, zoomTargets[zoomedSig].lookAt, 0.9);
+            // Click zoom: direct (no GTA-style pullback, stays intimate)
+            tweenCameraDirect(zoomTargets[zoomedSig].position, zoomTargets[zoomedSig].lookAt, 0.9);
         } else if (activeSig) {
-            tweenCameraTo(cameraTargets[activeSig].position, cameraTargets[activeSig].lookAt, 1.5);
+            tweenCameraTo(cameraTargets[activeSig].position, cameraTargets[activeSig].lookAt, 1.6);
         } else {
-            tweenCameraTo(HOME_TARGET.position, HOME_TARGET.lookAt, 1.6);
+            tweenCameraTo(HOME_TARGET.position, HOME_TARGET.lookAt, 1.5);
         }
+    }
+
+    // Direct tween — used for modal click-zoom (don't want dramatic pullback)
+    function tweenCameraDirect(pos, look, duration) {
+        if (!gsap) { targetPos.copy(pos); targetLook.copy(look); return; }
+        gsap.killTweensOf(camPos);
+        gsap.killTweensOf(camLook);
+        gsap.to(camPos,  { x: pos.x,  y: pos.y,  z: pos.z,  duration, ease: 'power2.inOut' });
+        gsap.to(camLook, { x: look.x, y: look.y, z: look.z, duration, ease: 'power2.inOut' });
     }
 
     function setActive(sig) {

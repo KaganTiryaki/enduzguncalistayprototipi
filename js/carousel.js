@@ -46,15 +46,15 @@ ready(() => {
     });
 
     // Active slide = the one whose vertical center is closest to viewport center.
-    // Simple, deterministic, no gaps/overlaps unlike thresholded IO/ScrollTrigger.
+    // Before first slide / after last slide: overview mode (HOME_TARGET, all signatures visible).
     let activeSlide = null;
     function setActiveSlide(slide) {
         if (slide === activeSlide) return;
         activeSlide?.classList.remove('is-active');
         activeSlide = slide;
-        activeSlide.classList.add('is-active');
-        const sig = activeSlide.getAttribute('data-signature');
-        if (sig) stage.setActive(sig);
+        activeSlide?.classList.add('is-active');
+        const sig = activeSlide?.getAttribute('data-signature') ?? null;
+        stage.setActive(sig);
     }
 
     function updateActiveFromScroll() {
@@ -75,7 +75,21 @@ ready(() => {
         if (!modalOpen) {
             document.body.classList.toggle('committees-visible', anyInView);
         }
-        if (best) setActiveSlide(best);
+
+        // Overview mode: viewport center above first slide OR below last slide
+        // → no signature active, camera stays at wide HOME_TARGET
+        if (anyInView) {
+            const firstR = slides[0].getBoundingClientRect();
+            const lastR = slides[slides.length - 1].getBoundingClientRect();
+            const beforeFirst = firstR.top > vc;
+            const afterLast = lastR.bottom < vc;
+            if (beforeFirst || afterLast) {
+                setActiveSlide(null);
+            } else if (best) {
+                setActiveSlide(best);
+            }
+        }
+
         if ((anyInView || modalOpen) && rafId === null) loop(performance.now());
     }
 
