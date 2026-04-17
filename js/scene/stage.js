@@ -25,7 +25,7 @@ export function initStage(canvas, options) {
     const { palette, dpr } = options;
 
     const scene = new Scene();
-    scene.background = null;
+    scene.background = new Color(0x0A1128);
 
     const camera = new PerspectiveCamera(42, 1, 0.1, 100);
     camera.position.copy(HOME_TARGET.position);

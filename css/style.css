@@ -69,6 +69,7 @@ body.menu-open {
     z-index: -1;
     pointer-events: none;
     display: block;
+    transition: opacity 0.4s ease;
 }
 
 /* All sections: allow canvas to subtly peek through by using rgba backgrounds */
@@ -2200,7 +2201,7 @@ img {
 .committee-modal__panel {
     position: relative;
     width: min(720px, 92vw);
-    max-height: 80vh;
+    max-height: 92vh;
     background: rgba(12, 22, 42, 0.42);
     border: 1px solid rgba(159, 182, 213, 0.32);
     border-radius: 16px;
@@ -2339,8 +2340,7 @@ img {
     position: relative;
     z-index: 2;
     padding: 36px 40px 40px;
-    overflow-y: auto;
-    max-height: calc(90vh - 180px);
+    overflow: visible;
 }
 
 .committee-modal__head {
@@ -2491,12 +2491,13 @@ body.modal-open { overflow: hidden; }
 }
 
 /* ==================== EXPERIMENTAL — COMMITTEES CAROUSEL ==================== */
-/* Old full-page Three.js canvas disabled (three-scene.js not loaded) */
-#bg-canvas { display: none !important; }
+/* bg-canvas fades out while committees are visible — the dedicated committee
+   scene (js/scene/stage.js) takes over inside #komiteler */
+body.committees-visible #bg-canvas { opacity: 0; }
 
 .section--committees {
     padding: 140px 0 180px;
-    background: #07101F;
+    background: #0A1128;
 }
 #committees-stage {
     position: fixed;
@@ -2508,6 +2509,7 @@ body.modal-open { overflow: hidden; }
     pointer-events: none;
     display: block;
     opacity: 0;
+    background: #0A1128;
     transition: opacity 0.4s ease;
 }
 body.committees-visible #committees-stage {

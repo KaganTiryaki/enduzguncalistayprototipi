@@ -11,13 +11,17 @@ const PALETTE = {
     light: { particle: 0x4472B6, accent: 0x3A64A7, lines: 0x5381BE, fog: 0xF3F7FC }
 };
 
+// NOTE: komiteler is INTENTIONALLY not in SECTION_MODES — the committees
+// section has its own dedicated Three.js scene (js/scene/stage.js with 7
+// custom signatures, bloom, camera flyovers). The bg-canvas fades out via
+// CSS (.committees-visible #bg-canvas { opacity: 0 }) while committees are in
+// view.
 const SECTION_MODES = {
     hero: 'atom',
     theme: 'dna',
     vision: 'flow',
     about: 'neural',
     workshop: 'wave',
-    komiteler: 'orbital',
     program: 'timeline',
     team: 'constellation',
     faq: 'flow',
@@ -38,7 +42,7 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x000000, 0);
 
-// ===== PARTICLE FIELD (always visible) =====
+// ===== PARTICLE FIELD =====
 const particleCount = isMobile ? 250 : 500;
 const particleGeo = new THREE.BufferGeometry();
 const positions = new Float32Array(particleCount * 3);
@@ -64,7 +68,7 @@ const particleMat = new THREE.PointsMaterial({
 const particles = new THREE.Points(particleGeo, particleMat);
 scene.add(particles);
 
-// ===== DEEP STARFIELD (far-back dust) =====
+// ===== DEEP STARFIELD =====
 const farCount = isMobile ? 400 : 900;
 const farGeo = new THREE.BufferGeometry();
 const farPos = new Float32Array(farCount * 3);
@@ -121,10 +125,9 @@ for (let i = 0; i < ambientCount; i++) {
     ambientShapes.push(mesh);
 }
 
-// ===== SHOOTING STARS / COMETS =====
+// ===== COMETS =====
 const comets = [];
-const cometCount = 2;
-for (let i = 0; i < cometCount; i++) {
+for (let i = 0; i < 2; i++) {
     const geo = new THREE.BufferGeometry();
     const trail = 20;
     const pts = new Float32Array(trail * 3);
@@ -188,35 +191,31 @@ orbGroup.add(orbHalo);
 orbGroup.position.set(0, 0, 10);
 scene.add(orbGroup);
 
-// ===== BURST PARTICLES (triggered on card hover) =====
-const BURST_COUNT = 60;
+// ===== BURST PARTICLES =====
 const bursts = [];
-function createBurstPool(count) {
-    for (let i = 0; i < count; i++) {
-        const geo = new THREE.BufferGeometry();
-        const n = 10;
-        const pos = new Float32Array(n * 3);
-        const vel = new Float32Array(n * 3);
-        geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-        const mat = new THREE.PointsMaterial({
-            color: 0x9FB6D5,
-            size: 0.8,
-            transparent: true,
-            opacity: 0,
-            blending: THREE.AdditiveBlending,
-            depthWrite: false
-        });
-        const points = new THREE.Points(geo, mat);
-        points.userData.vel = vel;
-        points.userData.life = 0;
-        points.userData.maxLife = 1;
-        points.userData.active = false;
-        points.userData.n = n;
-        scene.add(points);
-        bursts.push(points);
-    }
+for (let i = 0; i < 4; i++) {
+    const geo = new THREE.BufferGeometry();
+    const n = 10;
+    const pos = new Float32Array(n * 3);
+    const vel = new Float32Array(n * 3);
+    geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const mat = new THREE.PointsMaterial({
+        color: 0x9FB6D5,
+        size: 0.8,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+    });
+    const points = new THREE.Points(geo, mat);
+    points.userData.vel = vel;
+    points.userData.life = 0;
+    points.userData.maxLife = 1;
+    points.userData.active = false;
+    points.userData.n = n;
+    scene.add(points);
+    bursts.push(points);
 }
-createBurstPool(4);
 
 function fireBurst(screenX, screenY) {
     const free = bursts.find(b => !b.userData.active);
@@ -230,7 +229,6 @@ function fireBurst(screenX, screenY) {
     const dir = ndc.sub(camera.position).normalize();
     const dist = (15 - camera.position.z) / dir.z;
     const world = camera.position.clone().add(dir.multiplyScalar(dist));
-
     const pos = free.geometry.attributes.position.array;
     const vel = free.userData.vel;
     for (let i = 0; i < free.userData.n; i++) {
@@ -250,19 +248,13 @@ function fireBurst(screenX, screenY) {
     free.material.opacity = 1;
 }
 
-// ===== CARD HOVER TRACKING =====
 let hoverTarget = { x: 0, y: 0, active: false };
-window.addEventListener('card-hover', (e) => {
-    hoverTarget = e.detail;
-});
-window.addEventListener('card-enter', (e) => {
-    fireBurst(e.detail.x, e.detail.y);
-});
+window.addEventListener('card-hover', (e) => { hoverTarget = e.detail; });
+window.addEventListener('card-enter', (e) => { fireBurst(e.detail.x, e.detail.y); });
 
 // ===== MODE GROUPS =====
 const modes = {};
 
-// --- Atom mode: 5 orbital ellipses + nucleus + electron cloud ---
 function buildAtom() {
     const g = new THREE.Group();
     const ringGeo = new THREE.TorusGeometry(15, 0.08, 8, 128);
@@ -273,7 +265,6 @@ function buildAtom() {
         ring.rotation.y = Math.PI / 4 * i;
         ring.rotation.z = Math.PI / 6 * i;
         g.add(ring);
-        // Electron
         const el = new THREE.Mesh(
             new THREE.SphereGeometry(0.5, 16, 16),
             new THREE.MeshBasicMaterial({ color: 0x9FB6D5 })
@@ -283,7 +274,6 @@ function buildAtom() {
         el.userData.speed = 0.5 + Math.random() * 0.7;
         g.add(el);
     }
-    // Outer thin ring
     const outerRing = new THREE.Mesh(
         new THREE.TorusGeometry(22, 0.04, 6, 128),
         new THREE.MeshBasicMaterial({ color: 0x9FB6D5, transparent: true, opacity: 0.6 })
@@ -291,7 +281,6 @@ function buildAtom() {
     outerRing.userData.isOuter = true;
     g.add(outerRing);
 
-    // Electron cloud (small particles around nucleus)
     const cloudCount = 25;
     const cloudGeo = new THREE.BufferGeometry();
     const cloudPos = new Float32Array(cloudCount * 3);
@@ -320,39 +309,6 @@ function buildAtom() {
     return g;
 }
 
-// --- Orbital mode: 7 spheres (committees) orbiting central core ---
-function buildOrbital() {
-    const g = new THREE.Group();
-    const core = new THREE.Mesh(
-        new THREE.IcosahedronGeometry(2, 1),
-        new THREE.MeshBasicMaterial({ color: 0x5381BE, wireframe: true, transparent: true, opacity: 0.6 })
-    );
-    g.add(core);
-    for (let i = 0; i < 7; i++) {
-        const angle = (i / 7) * Math.PI * 2;
-        const r = 14;
-        const sphere = new THREE.Mesh(
-            new THREE.SphereGeometry(0.9, 16, 16),
-            new THREE.MeshBasicMaterial({ color: 0x819FCD, transparent: true, opacity: 0.85 })
-        );
-        sphere.userData.baseAngle = angle;
-        sphere.userData.radius = r;
-        sphere.userData.tilt = (Math.random() - 0.5) * 0.4;
-        g.add(sphere);
-
-        // Connecting line to core
-        const lineGeo = new THREE.BufferGeometry().setFromPoints([
-            new THREE.Vector3(0, 0, 0),
-            new THREE.Vector3(Math.cos(angle) * r, Math.sin(angle) * r * Math.cos(sphere.userData.tilt), Math.sin(angle) * r * Math.sin(sphere.userData.tilt))
-        ]);
-        const line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({ color: 0x5381BE, transparent: true, opacity: 0.55 }));
-        sphere.userData.line = line;
-        g.add(line);
-    }
-    return g;
-}
-
-// --- Flow mode: soft wireframe blob ---
 function buildFlow() {
     const g = new THREE.Group();
     const geo = new THREE.IcosahedronGeometry(14, 2);
@@ -364,7 +320,6 @@ function buildFlow() {
     return g;
 }
 
-// --- Wave mode: plane grid with sine wave ---
 function buildWave() {
     const g = new THREE.Group();
     const geo = new THREE.PlaneGeometry(60, 60, 40, 40);
@@ -378,7 +333,6 @@ function buildWave() {
     return g;
 }
 
-// --- Timeline mode: connected line sequence ---
 function buildTimeline() {
     const g = new THREE.Group();
     const points = [];
@@ -408,12 +362,10 @@ function buildTimeline() {
     return g;
 }
 
-// --- Constellation mode: star cluster with lines ---
 function buildConstellation() {
     const g = new THREE.Group();
-    const starCount = 30;
     const stars = [];
-    for (let i = 0; i < starCount; i++) {
+    for (let i = 0; i < 30; i++) {
         const star = new THREE.Mesh(
             new THREE.SphereGeometry(0.3, 8, 8),
             new THREE.MeshBasicMaterial({ color: 0x9FB6D5, transparent: true, opacity: 0.8 })
@@ -426,7 +378,6 @@ function buildConstellation() {
         g.add(star);
         stars.push(star);
     }
-    // Connect near neighbors
     const linePoints = [];
     for (let i = 0; i < stars.length; i++) {
         for (let j = i + 1; j < stars.length; j++) {
@@ -442,7 +393,6 @@ function buildConstellation() {
     return g;
 }
 
-// --- DNA mode: double helix ---
 function buildDNA() {
     const g = new THREE.Group();
     const turns = 4;
@@ -452,26 +402,23 @@ function buildDNA() {
     const strand1 = [];
     const strand2 = [];
     for (let i = 0; i <= segments; i++) {
-        const t = i / segments;
-        const angle = t * Math.PI * 2 * turns;
-        const y = (t - 0.5) * height;
+        const ti = i / segments;
+        const angle = ti * Math.PI * 2 * turns;
+        const y = (ti - 0.5) * height;
         strand1.push(new THREE.Vector3(Math.cos(angle) * radius, y, Math.sin(angle) * radius));
         strand2.push(new THREE.Vector3(Math.cos(angle + Math.PI) * radius, y, Math.sin(angle + Math.PI) * radius));
     }
-    const m1 = new THREE.LineBasicMaterial({ color: 0x819FCD, transparent: true, opacity: 0.7 });
-    const m2 = new THREE.LineBasicMaterial({ color: 0x9FB6D5, transparent: true, opacity: 0.7 });
-    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(strand1), m1));
-    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(strand2), m2));
-    // Rungs
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(strand1),
+        new THREE.LineBasicMaterial({ color: 0x819FCD, transparent: true, opacity: 0.7 })));
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(strand2),
+        new THREE.LineBasicMaterial({ color: 0x9FB6D5, transparent: true, opacity: 0.7 })));
     const rungMat = new THREE.LineBasicMaterial({ color: 0x5381BE, transparent: true, opacity: 0.7 });
     const nodes = [];
     for (let i = 0; i <= segments; i += 4) {
-        const rung = new THREE.Line(
+        g.add(new THREE.Line(
             new THREE.BufferGeometry().setFromPoints([strand1[i], strand2[i]]),
             rungMat
-        );
-        g.add(rung);
-        // Node spheres
+        ));
         const s1 = new THREE.Mesh(
             new THREE.SphereGeometry(0.25, 8, 8),
             new THREE.MeshBasicMaterial({ color: 0x9FB6D5 })
@@ -490,7 +437,6 @@ function buildDNA() {
     return g;
 }
 
-// --- Neural mode: neural network layers ---
 function buildNeural() {
     const g = new THREE.Group();
     const layers = [4, 6, 6, 3];
@@ -503,7 +449,7 @@ function buildNeural() {
         const xOffset = (li - (layers.length - 1) / 2) * layerSpacing;
         for (let i = 0; i < count; i++) {
             const y = (i - (count - 1) / 2) * 2.5;
-            const node = new THREE.Mesh(new THREE.SphereGeometry(0.4, 12, 12), nodeMat.clone());
+            const node = new THREE.Mesh(new THREE.SphereGeometry(0.35, 12, 12), nodeMat.clone());
             node.position.set(xOffset, y, 0);
             node.userData.basePos = node.position.clone();
             node.userData.phase = Math.random() * Math.PI * 2;
@@ -513,8 +459,7 @@ function buildNeural() {
         }
         nodes.push(layerNodes);
     });
-    // Connections
-    const connMat = new THREE.LineBasicMaterial({ color: 0x5381BE, transparent: true, opacity: 0.5 });
+    const connMat = new THREE.LineBasicMaterial({ color: 0x5381BE, transparent: true, opacity: 0.45 });
     const conns = [];
     for (let li = 0; li < nodes.length - 1; li++) {
         nodes[li].forEach(a => {
@@ -523,8 +468,6 @@ function buildNeural() {
                     new THREE.BufferGeometry().setFromPoints([a.position, b.position]),
                     connMat.clone()
                 );
-                line.userData.a = a;
-                line.userData.b = b;
                 line.userData.phase = Math.random() * Math.PI * 2;
                 g.add(line);
                 conns.push(line);
@@ -537,7 +480,6 @@ function buildNeural() {
 }
 
 modes.atom = buildAtom();
-modes.orbital = buildOrbital();
 modes.flow = buildFlow();
 modes.wave = buildWave();
 modes.timeline = buildTimeline();
@@ -555,13 +497,12 @@ Object.values(modes).forEach(group => {
 
 let currentMode = 'atom';
 let targetMode = 'atom';
-let modeFade = 1; // 1 = fully current, 0 = transitioning
+let modeFade = 1;
 modes.atom.visible = true;
 
 function setModeOpacity(group, opacity) {
     group.traverse(obj => {
         if (obj.material && obj.material.transparent) {
-            // Store original opacity once
             if (obj.userData._baseOpacity === undefined) {
                 obj.userData._baseOpacity = obj.material.opacity;
             }
@@ -573,12 +514,10 @@ function setModeOpacity(group, opacity) {
 // ===== SECTION OBSERVER =====
 const sectionIds = Object.keys(SECTION_MODES);
 const sectionEls = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
-let activeSection = 'hero';
 let targetTheme = 'dark';
-let currentThemeMix = 1; // 1 = dark, 0 = light
+let currentThemeMix = 1;
 
 const sectionObserver = new IntersectionObserver((entries) => {
-    // Pick the entry most in view
     let best = null;
     let bestRatio = 0;
     entries.forEach(e => {
@@ -588,14 +527,14 @@ const sectionObserver = new IntersectionObserver((entries) => {
         }
     });
     if (best && best.target.id) {
-        activeSection = best.target.id;
-        const nextMode = SECTION_MODES[activeSection] || 'flow';
+        const id = best.target.id;
+        const nextMode = SECTION_MODES[id] || 'flow';
         if (nextMode !== targetMode) {
             targetMode = nextMode;
             modeFade = 0;
             modes[targetMode].visible = true;
         }
-        targetTheme = DARK_SECTIONS.has(activeSection) ? 'dark' : 'light';
+        targetTheme = DARK_SECTIONS.has(id) ? 'dark' : 'light';
     }
 }, { threshold: [0.25, 0.5, 0.75] });
 
@@ -619,10 +558,9 @@ window.addEventListener('resize', () => {
     }, 150);
 });
 
-// ===== ANIMATE LOOP =====
+// ===== ANIMATE =====
 const clock = new THREE.Clock();
 let running = true;
-
 document.addEventListener('visibilitychange', () => {
     running = !document.hidden;
     if (running) clock.start();
@@ -635,14 +573,12 @@ function animate() {
     const dt = Math.min(clock.getDelta(), 0.05);
     const t = clock.elapsedTime;
 
-    // Mouse parallax (smooth)
     mouse.x = lerp(mouse.x, mouse.tx, 0.05);
     mouse.y = lerp(mouse.y, mouse.ty, 0.05);
     camera.position.x = mouse.x * 3;
     camera.position.y = -mouse.y * 3;
     camera.lookAt(0, 0, 0);
 
-    // Mouse-follower orb — screen-space to world-space
     {
         const targetScreenX = (mouse.tx + 1) / 2 * window.innerWidth;
         const targetScreenY = (1 - (mouse.ty + 1) / 2) * window.innerHeight;
@@ -657,14 +593,11 @@ function animate() {
         const worldPos = camera.position.clone().add(dir.multiplyScalar(distToPlane));
         orbGroup.position.lerp(worldPos, 0.12);
         const scaleTarget = hoverTarget.active ? 2.2 : 1;
-        const currentScale = orbGroup.scale.x;
-        const newScale = lerp(currentScale, scaleTarget, 0.1);
-        orbGroup.scale.setScalar(newScale);
+        orbGroup.scale.setScalar(lerp(orbGroup.scale.x, scaleTarget, 0.1));
         orbCore.material.opacity = lerp(orbCore.material.opacity, hoverTarget.active ? 1 : 0.6, 0.1);
         orbHalo.material.opacity = lerp(orbHalo.material.opacity, hoverTarget.active ? 0.5 : 0.2, 0.1);
     }
 
-    // Update bursts
     bursts.forEach(burst => {
         if (!burst.userData.active) return;
         burst.userData.life += dt;
@@ -687,7 +620,6 @@ function animate() {
         burst.material.opacity = 1 - (burst.userData.life / burst.userData.maxLife);
     });
 
-    // Theme mix (dark -> light transitions)
     const themeTarget = targetTheme === 'dark' ? 1 : 0;
     currentThemeMix = lerp(currentThemeMix, themeTarget, 0.04);
     const pColor = new THREE.Color().lerpColors(
@@ -699,13 +631,11 @@ function animate() {
     particleMat.opacity = lerp(0.75, 1.0, currentThemeMix);
 
     if (!prefersReducedMotion) {
-        // Particle drift
         const pos = particleGeo.attributes.position.array;
         for (let i = 0; i < particleCount; i++) {
             pos[i * 3]     += velocities[i * 3];
             pos[i * 3 + 1] += velocities[i * 3 + 1];
             pos[i * 3 + 2] += velocities[i * 3 + 2];
-            // Wrap
             if (Math.abs(pos[i * 3])     > 100) velocities[i * 3]     *= -1;
             if (Math.abs(pos[i * 3 + 1]) > 100) velocities[i * 3 + 1] *= -1;
             if (Math.abs(pos[i * 3 + 2]) > 50)  velocities[i * 3 + 2] *= -1;
@@ -713,12 +643,10 @@ function animate() {
         particleGeo.attributes.position.needsUpdate = true;
         particles.rotation.y += dt * 0.02;
 
-        // Far field slow rotation
         farField.rotation.y += dt * 0.005;
         farField.rotation.x += dt * 0.003;
 
-        // Ambient floating shapes
-        ambientShapes.forEach((shape, i) => {
+        ambientShapes.forEach((shape) => {
             shape.rotation.x += dt * shape.userData.rotSpeed.x;
             shape.rotation.y += dt * shape.userData.rotSpeed.y;
             shape.rotation.z += dt * shape.userData.rotSpeed.z;
@@ -726,7 +654,6 @@ function animate() {
             shape.position.x = shape.userData.basePos.x + Math.cos(t * 0.3 + shape.userData.floatOffset) * 1;
         });
 
-        // Comets
         nextCometTime -= dt;
         if (nextCometTime <= 0) {
             const free = comets.find(c => !c.userData.active);
@@ -743,23 +670,21 @@ function animate() {
             }
             comet.userData.headX += comet.userData.vx * dt;
             comet.userData.headY += comet.userData.vy * dt;
-            const pos = comet.geometry.attributes.position.array;
+            const cpos = comet.geometry.attributes.position.array;
             const trail = comet.userData.trail;
-            // Shift trail: each segment follows the previous
             for (let i = trail - 1; i > 0; i--) {
-                pos[i * 3]     = pos[(i - 1) * 3];
-                pos[i * 3 + 1] = pos[(i - 1) * 3 + 1];
-                pos[i * 3 + 2] = pos[(i - 1) * 3 + 2];
+                cpos[i * 3]     = cpos[(i - 1) * 3];
+                cpos[i * 3 + 1] = cpos[(i - 1) * 3 + 1];
+                cpos[i * 3 + 2] = cpos[(i - 1) * 3 + 2];
             }
-            pos[0] = comet.userData.headX;
-            pos[1] = comet.userData.headY;
-            pos[2] = -10;
+            cpos[0] = comet.userData.headX;
+            cpos[1] = comet.userData.headY;
+            cpos[2] = -10;
             comet.geometry.attributes.position.needsUpdate = true;
             const fade = 1 - comet.userData.life / comet.userData.maxLife;
             comet.material.opacity = 0.9 * fade;
         });
 
-        // Mode fade (cross-dissolve)
         modeFade = Math.min(1, modeFade + dt * 1.2);
         if (currentMode !== targetMode) {
             setModeOpacity(modes[currentMode], 1 - modeFade);
@@ -772,9 +697,7 @@ function animate() {
             setModeOpacity(modes[currentMode], 1);
         }
 
-        // Mode-specific animations
         animateMode(modes.atom, 'atom', t);
-        animateMode(modes.orbital, 'orbital', t);
         animateMode(modes.flow, 'flow', t);
         animateMode(modes.wave, 'wave', t);
         animateMode(modes.timeline, 'timeline', t);
@@ -814,23 +737,6 @@ function animateMode(group, name, t) {
                 group.userData.cloud.rotation.y = t * 0.4;
                 group.userData.cloud.rotation.x = t * 0.25;
             }
-            break;
-        }
-        case 'orbital': {
-            group.rotation.y = t * 0.1;
-            group.rotation.x = Math.sin(t * 0.15) * 0.15;
-            group.children.forEach(child => {
-                if (child.userData.baseAngle !== undefined) {
-                    const a = child.userData.baseAngle + t * 0.3;
-                    const r = child.userData.radius;
-                    const tilt = child.userData.tilt;
-                    child.position.set(Math.cos(a) * r, Math.sin(a) * r * Math.cos(tilt), Math.sin(a) * r * Math.sin(tilt));
-                    if (child.userData.line) {
-                        const pts = [new THREE.Vector3(0, 0, 0), child.position.clone()];
-                        child.userData.line.geometry.setFromPoints(pts);
-                    }
-                }
-            });
             break;
         }
         case 'flow': {
@@ -897,14 +803,14 @@ function animateMode(group, name, t) {
             group.rotation.y = Math.sin(t * 0.2) * 0.3;
             group.rotation.x = Math.sin(t * 0.15) * 0.1;
             if (group.userData.nodes) {
-                group.userData.nodes.forEach((n, i) => {
+                group.userData.nodes.forEach((n) => {
                     const pulse = 0.8 + Math.sin(t * 2 + n.userData.phase) * 0.3;
                     n.scale.setScalar(pulse);
                     n.material.opacity = 0.7 + Math.sin(t * 3 + n.userData.phase) * 0.25;
                 });
             }
             if (group.userData.conns) {
-                group.userData.conns.forEach((line, i) => {
+                group.userData.conns.forEach((line) => {
                     const signal = Math.sin(t * 2.5 + line.userData.phase);
                     line.material.opacity = 0.1 + Math.max(0, signal) * 0.4;
                 });
@@ -915,4 +821,4 @@ function animateMode(group, name, t) {
 }
 
 animate();
-console.log('Three.js sahnesi aktif —', THREE.REVISION);
+console.log('Three.js background scene aktif —', THREE.REVISION);

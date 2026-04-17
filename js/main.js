@@ -163,76 +163,76 @@ const statObserver = new IntersectionObserver((entries) => {
 const COMMITTEE_DATA = {
     'C/01': {
         title: 'Kuantum Fiziği',
-        tagline: 'Atom altı dünyanın kuralları klasik fiziğe meydan okuyor. Süperpozisyon, dolanıklık ve belirsizlik ilkesinden kuantum hesaplamaya uzanan yolculuğa katılın.',
+        tagline: 'Süperpozisyondan dolanıklığa, kuantum hesaplamadan iletişime — atom altı dünyanın kurallarına bakış.',
         topics: ['Kuantum mekaniği temelleri', 'Süperpozisyon ve dolanıklık', 'Kuantum hesaplama (qubit, kapı mantığı)', 'Kuantum iletişim ve güvenlik'],
         learn: ['Klasik sezginin neden bozulduğunu', 'Kuantum algoritmaların gücünü', 'Güncel kuantum teknoloji uygulamalarını', 'Türkiye\'deki araştırma ekosistemini'],
         speakers: [
-            { name: 'Onur Pusuluk', inst: 'Kadir Has Üniversitesi', focus: 'Kuantum mekaniği ve termodinamiği alanında araştırmalar yürütüyor.' },
-            { name: 'İnanç Kanık', inst: 'Radarsan', focus: 'Radar ve algılama sistemlerinde kuantum prensiplerinin endüstriyel uygulaması üzerine çalışıyor.' },
-            { name: 'Elif Yunt', inst: 'Türk Alman Üniversitesi', focus: 'Kuantum fiziğinin teorik temelleri ve güncel araştırma alanları üzerine çalışıyor.' }
+            { name: 'Onur Pusuluk', inst: 'Kadir Has Üniversitesi', focus: 'Kuantum mekaniği & termodinamik araştırmacısı' },
+            { name: 'İnanç Kanık', inst: 'Radarsan', focus: 'Radar/algılamada kuantum uygulamaları' },
+            { name: 'Elif Yunt', inst: 'Türk Alman Üniversitesi', focus: 'Kuantum fiziği teorik temelleri' }
         ]
     },
     'C/02': {
         title: 'Nöropsikoloji',
-        tagline: 'Beynin biyolojik yapısı ile zihnin süreçleri arasındaki köprüyü inceleyeceğiz. Davranış, bilinç ve bozuklukların nörobilimsel temellerine odaklanacağız.',
+        tagline: 'Beynin biyolojisi ile zihnin süreçleri arasındaki köprü: davranış, bilinç ve bozuklukların nörobilimsel temelleri.',
         topics: ['Beyin bölgeleri ve fonksiyonları', 'Bilişsel süreçler: algı, dikkat, bellek', 'Nörolojik bozukluklar', 'Bilinç ve karar verme'],
         learn: ['Beynin davranışı nasıl şekillendirdiğini', 'Bilişsel süreçlerin biyolojik temelini', 'Modern nörogörüntüleme tekniklerini', 'Psikoloji ile sinirbilim arasındaki bağları'],
         speakers: [
-            { name: 'Havva Demir', inst: 'İstanbul Üniversitesi', focus: 'Nöropsikoloji alanında klinik ve akademik çalışmalar yürütüyor.' }
+            { name: 'Havva Demir', inst: 'İstanbul Üniversitesi', focus: 'Nöropsikoloji klinik ve akademik araştırmacı' }
         ]
     },
     'C/03': {
         title: 'Yapay Zekâ, Veri & Doğal Dil İşleme',
-        tagline: 'Makinelerin öğrenmesinden dil modellerine, veri biliminden üretken yapay zekâya — teknolojinin en dinamik cephesini masaya yatıracağız.',
+        tagline: 'Makine öğrenmesinden dil modellerine, veri biliminden üretken yapay zekâya.',
         topics: ['Makine öğrenmesi temelleri', 'Büyük dil modelleri (LLM)', 'Doğal dil işleme (NLP)', 'Veri etiği ve önyargı'],
         learn: ['Bir modelin nasıl eğitildiğini', 'Dil modellerinin içeriden nasıl çalıştığını', 'Gerçek dünya NLP uygulamalarını', 'Yapay zekânın etik sınırlarını'],
         speakers: [
-            { name: 'Mehmet Ali Bayram', inst: 'Yeditepe Üniversitesi', focus: 'Yapay zekâ ve veri bilimi alanında akademik araştırmalar yürütüyor.' },
-            { name: 'Emre Gül', inst: 'Fi-Product', focus: 'Doğal dil işleme ve yapay zekâ ürünleri geliştirme alanında çalışıyor.' },
-            { name: 'Melis Dünya Sezer Gül', inst: 'Fi-Product', focus: 'Yapay zekâ tabanlı ürünlerin tasarımı ve uygulanması üzerine çalışıyor.' }
+            { name: 'Mehmet Ali Bayram', inst: 'Yeditepe Üniversitesi', focus: 'Yapay zekâ & veri bilimi akademisyeni' },
+            { name: 'Emre Gül', inst: 'Fi-Product', focus: 'NLP & yapay zekâ ürün geliştirici' },
+            { name: 'Melis Dünya Sezer Gül', inst: 'Fi-Product', focus: 'Yapay zekâ ürün tasarımı' }
         ]
     },
     'C/04': {
         title: 'Uçak ve Havacılık',
-        tagline: 'Kanattan yörüngeye uzanan mühendislik zinciri: aerodinamik prensiplerden modern hava araçlarının tasarımına ve sürdürülebilir havacılığa.',
+        tagline: 'Aerodinamikten modern hava araçlarının tasarımına ve sürdürülebilir havacılığa uzanan mühendislik zinciri.',
         topics: ['Aerodinamik prensipler', 'Uçak tasarımı ve yapısal analiz', 'Uçuş sistemleri ve aviyonik', 'Sürdürülebilir havacılık ve uzay teknolojileri'],
         learn: ['Bir uçağın nasıl havalandığını', 'Mühendislik optimizasyonunun gücünü', 'Havacılık sektörünün yol haritasını', 'Türkiye\'nin havacılık ekosistemini'],
         speakers: [
-            { name: 'Serhan Kök', inst: 'Maltepe Kadir Has BİLSEM', focus: 'Havacılık alanında eğitim ve uygulamalı çalışmalar yürütüyor.' },
-            { name: 'Dr. Caner Şentürk', inst: 'İstanbul Beykoz Üniversitesi', focus: 'Havacılık mühendisliği alanında akademik çalışmalar yürütüyor.' }
+            { name: 'Serhan Kök', inst: 'Maltepe Kadir Has BİLSEM', focus: 'Havacılık eğitimi & uygulamalı çalışma' },
+            { name: 'Dr. Caner Şentürk', inst: 'İstanbul Beykoz Üniversitesi', focus: 'Havacılık mühendisliği akademisyeni' }
         ]
     },
     'C/05': {
         title: 'Moleküler Biyoloji & Genetik',
-        tagline: 'Yaşamın moleküler dilini çözmek: DNA\'dan CRISPR\'a, gen ifadesinden biyoteknolojinin en taze uygulamalarına.',
+        tagline: 'DNA\'dan CRISPR\'a, gen ifadesinden biyoteknolojinin en taze uygulamalarına.',
         topics: ['DNA, RNA ve protein sentezi', 'Gen düzenleme (CRISPR-Cas9)', 'Genetik hastalıklar ve tanı', 'Biyoteknoloji uygulamaları'],
         learn: ['Genin bilgiden proteine yolculuğunu', 'CRISPR\'ın nasıl çalıştığını', 'Tıpta genetik devrimin boyutlarını', 'Biyoetik tartışmaların temellerini'],
         speakers: [
-            { name: 'Necla Birgül-Iyison', inst: 'Boğaziçi Üniversitesi', focus: 'Moleküler biyoloji ve genetik alanında araştırmalar yürütüyor.' },
-            { name: 'Yelda Özden Çiftçi', inst: 'Gebze Teknik Üniversitesi', focus: 'Moleküler biyoloji ve genetik alanında akademik çalışmalar yürütüyor.' },
-            { name: 'Ercan Arıcan', inst: 'İstanbul Üniversitesi', focus: 'Moleküler biyoloji ve genetik alanında araştırmalar yürütüyor.' },
-            { name: 'Gül Çiçek Kılıç', inst: 'Gebze Teknik Üniversitesi', focus: 'Moleküler biyoloji ve biyoteknoloji alanında çalışmalar yürütüyor.' },
-            { name: 'Işık Ertekin', inst: 'Şişli Terakki', focus: 'Biyoloji eğitimi ve genetik alanında çalışmalar yürütüyor.' }
+            { name: 'Necla Birgül-Iyison', inst: 'Boğaziçi Üniversitesi', focus: 'Moleküler biyoloji & genetik araştırmacısı' },
+            { name: 'Yelda Özden Çiftçi', inst: 'Gebze Teknik Üniversitesi', focus: 'Moleküler biyoloji & genetik akademisyeni' },
+            { name: 'Ercan Arıcan', inst: 'İstanbul Üniversitesi', focus: 'Moleküler biyoloji & genetik araştırmacısı' },
+            { name: 'Gül Çiçek Kılıç', inst: 'Gebze Teknik Üniversitesi', focus: 'Moleküler biyoloji & biyoteknoloji' },
+            { name: 'Işık Ertekin', inst: 'Şişli Terakki', focus: 'Biyoloji eğitimi & genetik' }
         ]
     },
     'C/06': {
         title: 'Adli Bilimler, Kriminalistik & Toksikoloji',
-        tagline: 'Suçun aydınlatılması bilim ve hukukun ortak masasında yapılır. DNA analizinden olay yeri incelemesine, toksikolojiden delil hukukuna.',
+        tagline: 'DNA analizinden olay yeri incelemesine, toksikolojiden delil hukukuna.',
         topics: ['DNA ve biyolojik delil analizi', 'Olay yeri inceleme yöntemleri', 'Toksikoloji ve zehir bilimi', 'Adli delilin hukuki geçerliliği'],
         learn: ['Bir delilin mahkemeye nasıl ulaştığını', 'Adli bilim tekniklerinin sınırlarını', 'Toksikolojik analizin prensiplerini', 'Bilim ile hukukun kesiştiği noktaları'],
         speakers: [
-            { name: 'Miraç Özdemir', inst: 'İstanbul Gelişim Üniversitesi', focus: 'Adli bilimler ve toksikoloji alanında akademik çalışmalar yürütüyor.' },
-            { name: 'Av. Ece Ertuğ Özkara', inst: 'Serbest Avukat', focus: 'Adli delil ve hukuk pratiği alanında çalışmalar yürütüyor.' }
+            { name: 'Miraç Özdemir', inst: 'İstanbul Gelişim Üniversitesi', focus: 'Adli bilimler & toksikoloji akademisyeni' },
+            { name: 'Av. Ece Ertuğ Özkara', inst: 'Serbest Avukat', focus: 'Adli delil & hukuk pratiği' }
         ]
     },
     'C/07': {
         title: 'Akıllı Sistemler & Mühendislik',
-        tagline: 'Sensörden karara uzanan zincir: robotik, otomasyon, gömülü sistemler ve Endüstri 4.0\'ın yeniden şekillendirdiği mühendislik pratiği.',
+        tagline: 'Robotik, otomasyon, gömülü sistemler ve Endüstri 4.0\'ın şekillendirdiği mühendislik.',
         topics: ['Robotik ve otonom sistemler', 'Gömülü sistemler ve IoT', 'Endüstri 4.0 ve otomasyon', 'İnsan-makine etkileşimi'],
         learn: ['Bir robotun nasıl karar verdiğini', 'Sensör-aktüatör döngüsünü', 'Akıllı fabrika mimarisini', 'Mühendislik kariyerinin yol haritasını'],
         speakers: [
-            { name: 'Ali Buldu', inst: 'Marmara Üniversitesi', focus: 'Akıllı sistemler ve mühendislik alanında akademik çalışmalar yürütüyor.' },
-            { name: 'Mehmet Kaan İldiz', inst: 'Üsküdar Üniversitesi', focus: 'Mühendislik ve gömülü sistemler alanında çalışmalar yürütüyor.' }
+            { name: 'Ali Buldu', inst: 'Marmara Üniversitesi', focus: 'Akıllı sistemler & mühendislik akademisyeni' },
+            { name: 'Mehmet Kaan İldiz', inst: 'Üsküdar Üniversitesi', focus: 'Mühendislik & gömülü sistemler' }
         ]
     }
 };
