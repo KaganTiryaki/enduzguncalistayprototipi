@@ -4,7 +4,7 @@ import { anchors } from './anchors.js';
 // Split distance: when a sig is active, its two halves fly out by this
 // amount to each side of the anchor → halves appear fully at left/right
 // of the card (which sits at viewport center).
-export const SPLIT_DISTANCE = 3.6;
+export const SPLIT_DISTANCE = 5.0;
 
 function buildTargets(distance) {
     const out = {};

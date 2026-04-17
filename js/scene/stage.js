@@ -54,7 +54,16 @@ export function initStage(canvas, options) {
         handles[sig] = signatures[sig]({ palette: SIGNATURE_PALETTES[sig], anchor });
         rootGroup.add(handles[sig].group);
 
+        // Mirror: deep clone with INDEPENDENT materials so we can fade it in
+        // separately (splitProgress controls mirror opacity)
         const mirror = handles[sig].group.clone(true);
+        mirror.traverse((child) => {
+            if (child.material) {
+                child.material = Array.isArray(child.material)
+                    ? child.material.map((m) => m.clone())
+                    : child.material.clone();
+            }
+        });
         mirror.scale.x = -1;
         handles[sig].mirror = mirror;
         rootGroup.add(mirror);
@@ -159,16 +168,34 @@ export function initStage(canvas, options) {
         }, 0);
     }
 
-    // Copy rotations from original group's entire subtree onto mirror
-    function syncMirror(handle) {
+    // Copy rotations from original group's entire subtree onto mirror,
+    // and tie mirror material opacities to splitProgress (so mirror fades
+    // in as it flies out — prevents asymmetric ghosting when merged)
+    function syncMirror(sig) {
+        const handle = handles[sig];
         const src = handle.group;
         const dst = handle.mirror;
         if (!dst) return;
         dst.rotation.copy(src.rotation);
+        const p = splitProgress[sig].v;
         const srcKids = src.children;
         const dstKids = dst.children;
         for (let i = 0; i < srcKids.length; i++) {
-            if (dstKids[i]) dstKids[i].rotation.copy(srcKids[i].rotation);
+            const sk = srcKids[i];
+            const dk = dstKids[i];
+            if (!dk) continue;
+            dk.rotation.copy(sk.rotation);
+            const sm = sk.material;
+            const dm = dk.material;
+            if (sm && dm) {
+                if (Array.isArray(sm) && Array.isArray(dm)) {
+                    for (let j = 0; j < sm.length; j++) {
+                        if (dm[j]) dm[j].opacity = (sm[j].opacity ?? 1) * p;
+                    }
+                } else if (!Array.isArray(sm) && !Array.isArray(dm)) {
+                    dm.opacity = (sm.opacity ?? 1) * p;
+                }
+            }
         }
     }
 
@@ -193,7 +220,7 @@ export function initStage(canvas, options) {
             const speed = isolated ? 7 : 5;
             intensity[sig] += (target - intensity[sig]) * Math.min(1, dt * speed);
             handles[sig].update(elapsed, dt, intensity[sig]);
-            syncMirror(handles[sig]);
+            syncMirror(sig);
         });
 
         rootGroup.rotation.y = 0.04 * Math.sin(elapsed * 0.12);
@@ -250,10 +277,9 @@ export function initStage(canvas, options) {
         activeSig = sig;
         if (!zoomedSig) applyTarget();
         // Merge previous fast — gets out of the way
-        if (prev) animateSplit(prev, 0, { duration: 0.55, ease: 'power2.in' });
-        // Delay new split so camera has time to arrive; back.out gives a
-        // visible "pop-apart" bounce the user can actually see
-        if (sig) animateSplit(sig, 1, { delay: 0.85, duration: 1.3, ease: 'back.out(1.4)' });
+        if (prev) animateSplit(prev, 0, { duration: 0.5, ease: 'power2.in' });
+        // Delay new split so camera has time to arrive; smooth settle (no bounce)
+        if (sig) animateSplit(sig, 1, { delay: 0.8, duration: 1.4, ease: 'power2.out' });
     }
 
     function zoomTo(sig) {
