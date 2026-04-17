@@ -26,8 +26,9 @@ export const HOME_TARGET = {
 // Camera framed squarely on the signature anchor. When active, halves
 // split around anchor → symmetric around the card (viewport center).
 export const cameraTargets = buildTargets(9.5);
-// Modal zoom: closer, still on anchor
-export const zoomTargets  = buildTargets(3.2);
+// Modal: same framing as scroll-active so split halves remain visible
+// on the sides (no zoom-in that would push halves off-screen)
+export const zoomTargets  = buildTargets(9.5);
 
 export function dampVec(current, target, lambda, dt) {
     current.x = MathUtils.damp(current.x, target.x, lambda, dt);
