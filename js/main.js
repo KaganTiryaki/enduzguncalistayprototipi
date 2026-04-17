@@ -270,7 +270,24 @@ if (committeeModal) {
                     } catch (_) { /* noop */ }
                 });
             });
+        } else {
+            const baseImg = sourceCard?.querySelector('.committee__icon-img--base');
+            const overlayImg = sourceCard?.querySelector('.committee__icon-img--overlay');
+            if (baseImg && overlayImg) {
+                const baseClone = baseImg.cloneNode(true);
+                baseClone.className = 'committee-modal__symbol-img committee-modal__symbol-img--base';
+                baseClone.setAttribute('alt', '');
+                const overlayClone = overlayImg.cloneNode(true);
+                overlayClone.className = 'committee-modal__symbol-img committee-modal__symbol-img--overlay';
+                overlayClone.setAttribute('alt', '');
+                symbolEl.appendChild(baseClone);
+                symbolEl.appendChild(overlayClone);
+            }
         }
+
+        // Mark the active card so its icon swap state reflects the opened modal
+        document.querySelectorAll('.committee.is-active').forEach(c => c.classList.remove('is-active'));
+        sourceCard?.classList.add('is-active');
 
         numEl.textContent = key;
         titleEl.textContent = data.title;
@@ -296,10 +313,12 @@ if (committeeModal) {
     function closeCommittee() {
         committeeModal.classList.remove('is-open');
         document.body.classList.remove('modal-open');
+        document.querySelectorAll('.committee.is-active, .committee-slide.is-active').forEach(c => c.classList.remove('is-active'));
         setTimeout(() => {
             committeeModal.hidden = true;
             symbolEl.innerHTML = '';
         }, 400);
+        window.dispatchEvent(new CustomEvent('committee-modal:closed'));
     }
 
     committeeModal.addEventListener('click', (e) => {
@@ -309,6 +328,10 @@ if (committeeModal) {
         if (e.key === 'Escape' && !committeeModal.hidden) closeCommittee();
     });
 
+    // Expose for carousel integration (new experimental committees section)
+    window.openCommitteeModal = openCommittee;
+
+    // Legacy card binding kept for any non-carousel .committee cards still in DOM
     document.querySelectorAll('.committee:not(.committee--cta)').forEach(card => {
         const num = card.querySelector('.committee__num')?.textContent?.trim();
         if (!num) return;
