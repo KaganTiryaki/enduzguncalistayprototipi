@@ -71,9 +71,10 @@ export function initStage(canvas, options) {
     const gsap = (typeof window !== 'undefined') ? window.gsap : null;
 
     // GTA-V style camera transition: zoom out, fly laterally, zoom back in.
-    // When source and destination are on the same z-plane (typical scroll
-    // transition between signatures), this creates a satisfying "pullback →
-    // glide → settle" arc instead of a flat lateral slide.
+    // Only applied when source and destination are at roughly the same z-plane
+    // AND there is significant lateral travel (sig-to-sig scroll). Otherwise
+    // (home→sig, sig→home, or same position) use a direct tween — no unnecessary
+    // extra pullback when camera is already far.
     function tweenCameraTo(pos, look, duration = 1.5) {
         if (!gsap) {
             targetPos.copy(pos);
@@ -84,15 +85,25 @@ export function initStage(canvas, options) {
         gsap.killTweensOf(camPos);
         gsap.killTweensOf(camLook);
 
-        // Pullback distance: proportional to lateral travel, min 4, max 10
         const dx = pos.x - camPos.x;
         const dy = pos.y - camPos.y;
         const lateral = Math.sqrt(dx * dx + dy * dy);
+        const zDiff = Math.abs(camPos.z - pos.z);
+
+        const useGtaArc = zDiff < 3 && lateral > 2;
+
+        if (!useGtaArc) {
+            // Direct tween — zoom in/out or trivial move
+            gsap.to(camPos,  { x: pos.x,  y: pos.y,  z: pos.z,  duration, ease: 'power2.inOut' });
+            gsap.to(camLook, { x: look.x, y: look.y, z: look.z, duration, ease: 'power2.inOut' });
+            return;
+        }
+
+        // GTA arc: pullback proportional to lateral travel
         const pullback = Math.min(10, Math.max(4, lateral * 0.6));
-        const midZ = Math.max(camPos.z, pos.z) + pullback;
+        const midZ = pos.z + pullback;
 
         const tl = gsap.timeline();
-        // Phase 1: pull back (out), start lateral move
         tl.to(camPos, {
             x: pos.x,
             y: pos.y,
@@ -100,13 +111,11 @@ export function initStage(canvas, options) {
             duration: duration * 0.55,
             ease: 'power2.inOut',
         }, 0);
-        // Phase 2: zoom in to target z (starts halfway through lateral)
         tl.to(camPos, {
             z: pos.z,
             duration: duration * 0.5,
             ease: 'power2.out',
         }, duration * 0.55);
-        // Look: smooth pan throughout
         tl.to(camLook, {
             x: look.x,
             y: look.y,
