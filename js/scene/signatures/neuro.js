@@ -1,97 +1,102 @@
 import {
     Group, BufferGeometry, Float32BufferAttribute,
-    Line, LineSegments, LineBasicMaterial, Color,
+    LineSegments, LineBasicMaterial, Points, PointsMaterial,
+    Color, AdditiveBlending,
 } from 'three';
 
-// Side-view brain silhouette: outline polyline + cerebellum oval + brainstem
-// + two internal gyri lines. Face points RIGHT (+x). Static, no rotation.
 export function neuro({ palette, anchor }) {
     const group = new Group();
     group.position.copy(anchor);
 
-    // --- 1. Cerebrum outline (closed polyline, side view) ---
-    const keyPts = [
-        [ 1.00,  0.75], [ 1.18,  0.55], [ 1.22,  0.30], [ 1.15,  0.05],
-        [ 0.95, -0.22], [ 0.55, -0.40], [ 0.05, -0.45], [-0.40, -0.40],
-        [-0.70, -0.22], [-0.95,  0.08], [-1.05,  0.35], [-0.95,  0.62],
-        [-0.70,  0.82], [-0.30,  0.95], [ 0.15,  1.02], [ 0.55,  0.98],
-        [ 0.82,  0.88], [ 1.00,  0.75],
+    // Brain side-view: 19 manually placed outline points tracing the silhouette
+    // (frontal dome → top arc → occipital → cerebellum lobe → brainstem → underside)
+    const outline = [
+        // Frontal dome → top arc → occipital
+        [ 1.25,  0.10, 0], [ 1.20,  0.55, 0], [ 0.95,  0.95, 0],
+        [ 0.45,  1.15, 0], [-0.15,  1.18, 0], [-0.70,  1.05, 0],
+        [-1.15,  0.75, 0], [-1.30,  0.25, 0],
+        // Cerebellum bulge (back-bottom)
+        [-1.25, -0.25, 0], [-1.35, -0.55, 0], [-1.15, -0.80, 0],
+        [-0.85, -0.85, 0],
+        // Brainstem tail (hangs down)
+        [-0.75, -1.05, 0], [-0.70, -1.30, 0], [-0.70, -1.55, 0],
+        // Underside → back to frontal base
+        [-0.35, -0.95, 0], [ 0.30, -0.80, 0], [ 0.85, -0.55, 0],
+        [ 1.15, -0.20, 0],
     ];
-    const subdiv = 10;
-    const outlinePts = [];
-    for (let i = 0; i < keyPts.length - 1; i++) {
-        for (let k = 0; k < subdiv; k++) {
-            const t = k / subdiv;
-            const x = keyPts[i][0] * (1 - t) + keyPts[i + 1][0] * t;
-            const y = keyPts[i][1] * (1 - t) + keyPts[i + 1][1] * t;
-            outlinePts.push(x, y, 0);
+
+    // Interior texture nodes — 12 random points within brain bounding ellipse
+    // (axis-aligned, centered at ~origin, roughly fits the outline)
+    const interior = [];
+    {
+        let placed = 0;
+        while (placed < 12) {
+            const x = (Math.random() - 0.5) * 2.2 - 0.05;
+            const y = (Math.random() - 0.5) * 1.8 + 0.05;
+            // Ellipse test (approximates outline interior)
+            if ((x * x) / (1.15 * 1.15) + (y * y) / (0.95 * 0.95) < 0.95) {
+                const z = (Math.random() - 0.5) * 0.25;
+                interior.push([x, y, z]);
+                placed++;
+            }
         }
     }
-    const outlineGeom = new BufferGeometry();
-    outlineGeom.setAttribute('position', new Float32BufferAttribute(outlinePts, 3));
-    const outlineMat = new LineBasicMaterial({
-        color: new Color(palette.accent),
-        transparent: true,
-        opacity: 0.9,
-    });
-    group.add(new Line(outlineGeom, outlineMat));
 
-    // --- 2. Cerebellum (oval at back-bottom) ---
-    const cerPts = [];
-    const ccx = -0.72, ccy = -0.32, rx = 0.28, ry = 0.20;
-    for (let i = 0; i <= 48; i++) {
-        const a = (i / 48) * Math.PI * 2;
-        cerPts.push(ccx + Math.cos(a) * rx, ccy + Math.sin(a) * ry, 0);
+    // Nodes array (outline + interior)
+    const nodes = [];
+    outline.forEach(([x, y, z]) => nodes.push(x, y, z));
+    interior.forEach(([x, y, z]) => nodes.push(x, y, z));
+
+    // Edges
+    const edges = [];
+    // 1) Outline ring: outline[i] ↔ outline[i+1]
+    for (let i = 0; i < outline.length; i++) {
+        const a = outline[i];
+        const b = outline[(i + 1) % outline.length];
+        edges.push(a[0], a[1], a[2], b[0], b[1], b[2]);
     }
-    const cerGeom = new BufferGeometry();
-    cerGeom.setAttribute('position', new Float32BufferAttribute(cerPts, 3));
-    const accentMat = new LineBasicMaterial({
+    // 2) Each interior node → its 2 nearest outline neighbors
+    interior.forEach(([ix, iy, iz]) => {
+        const dists = outline.map(([ox, oy, oz], idx) => {
+            const dx = ix - ox, dy = iy - oy, dz = iz - oz;
+            return { idx, d: Math.sqrt(dx * dx + dy * dy + dz * dz) };
+        });
+        dists.sort((a, b) => a.d - b.d);
+        for (let k = 0; k < 2; k++) {
+            const [ox, oy, oz] = outline[dists[k].idx];
+            edges.push(ix, iy, iz, ox, oy, oz);
+        }
+    });
+
+    const edgeGeom = new BufferGeometry();
+    edgeGeom.setAttribute('position', new Float32BufferAttribute(edges, 3));
+    const edgeMat = new LineBasicMaterial({
         color: new Color(palette.navy300),
         transparent: true,
-        opacity: 0.75,
+        opacity: 0.5,
     });
-    group.add(new Line(cerGeom, accentMat));
+    group.add(new LineSegments(edgeGeom, edgeMat));
 
-    // --- 3. Brainstem (short vertical line below cerebellum) ---
-    const stemPts = [-0.60, -0.45, 0,  -0.60, -0.80, 0];
-    const stemGeom = new BufferGeometry();
-    stemGeom.setAttribute('position', new Float32BufferAttribute(stemPts, 3));
-    group.add(new LineSegments(stemGeom, accentMat));
-
-    // --- 4. Internal gyri (wavy lines showing cortical folds) ---
-    const gyriPts = [];
-    const waves = [
-        { y:  0.50, amp: 0.06, xs: -0.60, xe:  0.80, freq: 5 },
-        { y:  0.15, amp: 0.05, xs: -0.85, xe:  0.95, freq: 6 },
-        { y: -0.15, amp: 0.04, xs: -0.50, xe:  0.90, freq: 5 },
-    ];
-    for (const w of waves) {
-        const segs = 90;
-        for (let i = 0; i < segs; i++) {
-            const t0 = i / segs;
-            const t1 = (i + 1) / segs;
-            const x0 = w.xs + (w.xe - w.xs) * t0;
-            const x1 = w.xs + (w.xe - w.xs) * t1;
-            const y0 = w.y + Math.sin(t0 * Math.PI * w.freq) * w.amp;
-            const y1 = w.y + Math.sin(t1 * Math.PI * w.freq) * w.amp;
-            gyriPts.push(x0, y0, 0, x1, y1, 0);
-        }
-    }
-    const gyriGeom = new BufferGeometry();
-    gyriGeom.setAttribute('position', new Float32BufferAttribute(gyriPts, 3));
-    const gyriMat = new LineBasicMaterial({
-        color: new Color(palette.mist),
+    const nodeGeom = new BufferGeometry();
+    nodeGeom.setAttribute('position', new Float32BufferAttribute(nodes, 3));
+    const nodeMat = new PointsMaterial({
+        color: new Color(palette.accent),
+        size: 0.085,
         transparent: true,
-        opacity: 0.4,
+        opacity: 0.95,
+        depthWrite: false,
+        blending: AdditiveBlending,
     });
-    group.add(new LineSegments(gyriGeom, gyriMat));
+    group.add(new Points(nodeGeom, nodeMat));
 
     return {
         group,
-        update(_elapsed, _delta, intensity) {
-            outlineMat.opacity = 0.35 + 0.6 * intensity;
-            accentMat.opacity = 0.25 + 0.55 * intensity;
-            gyriMat.opacity   = 0.15 + 0.4 * intensity;
+        update(elapsed, _delta, intensity) {
+            // Very subtle breathing sway — doesn't disrupt profile readability
+            group.rotation.y = Math.sin(elapsed * 0.25) * 0.06;
+            const pulse = 0.55 + 0.4 * Math.sin(elapsed * 1.2);
+            edgeMat.opacity = (0.2 + 0.55 * intensity) * pulse;
+            nodeMat.opacity = 0.45 + 0.55 * intensity;
         },
     };
 }
