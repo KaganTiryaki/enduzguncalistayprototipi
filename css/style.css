@@ -2189,11 +2189,11 @@ img {
     position: absolute;
     inset: 0;
     background: radial-gradient(ellipse at center,
-        rgba(58, 100, 167, 0.7) 0%,
-        rgba(44, 86, 165, 0.92) 60%,
-        rgba(44, 86, 165, 0.98) 100%);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+        rgba(11, 20, 40, 0.35) 0%,
+        rgba(11, 20, 40, 0.65) 70%,
+        rgba(11, 20, 40, 0.82) 100%);
+    backdrop-filter: blur(8px) saturate(110%);
+    -webkit-backdrop-filter: blur(8px) saturate(110%);
     opacity: 0;
     transition: opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -2497,32 +2497,21 @@ body.modal-open { overflow: hidden; }
 .section--committees {
     position: relative;
     padding: 120px 0 160px;
-    background: #0E1A33;
+    background: #0B1428;
     isolation: isolate;
 }
-.section--committees__gradient {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    background:
-        linear-gradient(180deg,
-            #0B1428 0%,
-            #1A2E5F 14%,
-            #2C56A5 38%,
-            #5F82BC 70%,
-            #9FB6D5 100%);
-    pointer-events: none;
-}
 #committees-stage {
-    position: sticky;
-    top: 0;
-    left: 0;
-    width: 100%;
+    position: fixed;
+    inset: 0;
+    width: 100vw;
     height: 100vh;
     z-index: 1;
     pointer-events: none;
     display: block;
-    margin-bottom: -100vh; /* pull following content up so stack sits over sticky canvas */
+    opacity: 0;
+    transition: opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+#committees-stage.is-visible {
     opacity: 1;
 }
 .section--committees > .container {
