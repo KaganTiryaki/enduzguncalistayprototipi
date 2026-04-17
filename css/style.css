@@ -2508,7 +2508,7 @@ body.modal-open { overflow: hidden; }
     pointer-events: none;
     display: block;
     opacity: 0;
-    transition: opacity 0.25s linear;
+    transition: opacity 0.9s ease;
 }
 body.committees-visible #committees-stage {
     opacity: 1;

@@ -5,9 +5,15 @@ import { signatures, signatureOrder } from './signatures/index.js';
 import { cameraTargets, zoomTargets, HOME_TARGET, dampVec } from './camera.js';
 import { disposeGroup } from './dispose.js';
 
-// All signatures share the origin; only the active one is visible (crossfade).
-function anchorAtOrigin() {
-    return new Vector3(0, 0, 0);
+const CONSTELLATION_RADIUS = 8.0;
+
+function constellationAnchor(index, count) {
+    const a = (index / count) * Math.PI * 2 - Math.PI / 2;
+    return new Vector3(
+        Math.cos(a) * CONSTELLATION_RADIUS,
+        Math.sin(a) * CONSTELLATION_RADIUS * 0.55,
+        0
+    );
 }
 
 // Per-committee signature palettes so each constellation is visually distinct
@@ -44,8 +50,9 @@ export function initStage(canvas, options) {
     scene.add(rootGroup);
 
     const handles = {};
-    signatureOrder.forEach((sig) => {
-        handles[sig] = signatures[sig]({ palette: SIGNATURE_PALETTES[sig], anchor: anchorAtOrigin() });
+    signatureOrder.forEach((sig, i) => {
+        const anchor = constellationAnchor(i, signatureOrder.length);
+        handles[sig] = signatures[sig]({ palette: SIGNATURE_PALETTES[sig], anchor });
         rootGroup.add(handles[sig].group);
     });
 
@@ -72,16 +79,15 @@ export function initStage(canvas, options) {
         renderer.setSize(w, h, false);
     }
 
-    function updateTargets() {
-        if (zoomedSig) {
-            targetPos.copy(zoomTargets[zoomedSig].position);
-            targetLook.copy(zoomTargets[zoomedSig].lookAt);
-        } else if (activeSig) {
-            targetPos.copy(cameraTargets[activeSig].position);
-            targetLook.copy(cameraTargets[activeSig].lookAt);
+    const gsap = (typeof window !== 'undefined') ? window.gsap : null;
+
+    function tweenCameraTo(pos, look, duration = 1.2, ease = 'power2.inOut') {
+        if (gsap) {
+            gsap.to(camPos,  { x: pos.x,  y: pos.y,  z: pos.z,  duration, ease, overwrite: true });
+            gsap.to(camLook, { x: look.x, y: look.y, z: look.z, duration, ease, overwrite: true });
         } else {
-            targetPos.copy(HOME_TARGET.position);
-            targetLook.copy(HOME_TARGET.lookAt);
+            targetPos.copy(pos);
+            targetLook.copy(look);
         }
     }
 
@@ -90,35 +96,62 @@ export function initStage(canvas, options) {
         const dt = Math.min(0.05, (timeMs - prevTime) / 1000);
         prevTime = timeMs;
 
-        // Only the focused signature is visible; others smoothly fade out.
-        const focus = zoomedSig || activeSig;
         signatureOrder.forEach((sig) => {
-            const target = sig === focus ? 1 : 0;
-            intensity[sig] += (target - intensity[sig]) * Math.min(1, dt * 6);
-            handles[sig].group.visible = intensity[sig] > 0.005;
+            let target;
+            if (isolated) {
+                target = (zoomedSig === sig || activeSig === sig) ? 1 : 0;
+            } else if (zoomedSig === sig) {
+                target = 1;
+            } else if (zoomedSig) {
+                target = 0;
+            } else if (activeSig === sig) {
+                target = 1;
+            } else {
+                target = 0.35;
+            }
+            const speed = isolated ? 7 : 5;
+            intensity[sig] += (target - intensity[sig]) * Math.min(1, dt * speed);
             handles[sig].update(elapsed, dt, intensity[sig]);
         });
 
-        updateTargets();
-        const lambda = zoomedSig ? 4.5 : 3.2;
-        dampVec(camPos, targetPos, lambda, dt);
-        dampVec(camLook, targetLook, lambda, dt);
+        rootGroup.rotation.y = 0.04 * Math.sin(elapsed * 0.12);
+
+        if (!gsap) {
+            // Fallback: damp camPos/camLook toward targets
+            const lambda = zoomedSig ? 4.0 : 2.4;
+            dampVec(camPos, targetPos, lambda, dt);
+            dampVec(camLook, targetLook, lambda, dt);
+        }
         camera.position.copy(camPos);
         camera.lookAt(camLook);
 
         renderer.render(scene, camera);
     }
 
+    function applyTarget() {
+        if (zoomedSig) {
+            tweenCameraTo(zoomTargets[zoomedSig].position, zoomTargets[zoomedSig].lookAt, 0.9);
+        } else if (activeSig) {
+            tweenCameraTo(cameraTargets[activeSig].position, cameraTargets[activeSig].lookAt, 1.3);
+        } else {
+            tweenCameraTo(HOME_TARGET.position, HOME_TARGET.lookAt, 1.6);
+        }
+    }
+
     function setActive(sig) {
+        if (sig === activeSig) return;
         activeSig = sig;
+        if (!zoomedSig) applyTarget();
     }
 
     function zoomTo(sig) {
         zoomedSig = sig;
+        applyTarget();
     }
 
     function zoomOut() {
         zoomedSig = null;
+        applyTarget();
     }
 
     function isolate(on) {

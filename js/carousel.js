@@ -37,7 +37,7 @@ ready(() => {
             document.body.classList.toggle('committees-visible', inView);
         }
         if ((inView || modalOpen) && rafId === null) loop(performance.now());
-    }, { rootMargin: '80px 0px 80px 0px' });
+    }, { rootMargin: '300px 0px 300px 0px' });
     sectionIO.observe(section);
 
     function loop(t) {
@@ -54,25 +54,39 @@ ready(() => {
         if (!document.hidden && inView && rafId === null) loop(performance.now());
     });
 
-    // Track which slide is most in view → active signature
+    // Track active signature via ScrollTrigger (GSAP) for stable, non-glitchy transitions
     let activeSlide = null;
-    const slideIO = new IntersectionObserver((entries) => {
-        const visible = entries
-            .filter((e) => e.isIntersecting)
-            .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        const top = visible[0];
-        if (!top) return;
-        if (top.target === activeSlide) return;
+    function setActiveSlide(slide) {
+        if (slide === activeSlide) return;
         activeSlide?.classList.remove('is-active');
-        activeSlide = top.target;
+        activeSlide = slide;
         activeSlide.classList.add('is-active');
         const sig = activeSlide.getAttribute('data-signature');
         if (sig) stage.setActive(sig);
-    }, {
-        threshold: [0, 0.5, 1],
-        rootMargin: '-38% 0px -38% 0px',
-    });
-    slides.forEach((s) => slideIO.observe(s));
+    }
+
+    const gsap = window.gsap;
+    const ScrollTrigger = window.ScrollTrigger;
+    if (gsap && ScrollTrigger) {
+        gsap.registerPlugin(ScrollTrigger);
+        slides.forEach((slide) => {
+            ScrollTrigger.create({
+                trigger: slide,
+                start: 'top 65%',
+                end: 'bottom 35%',
+                onEnter:     () => setActiveSlide(slide),
+                onEnterBack: () => setActiveSlide(slide),
+            });
+        });
+    } else {
+        // Fallback: single IntersectionObserver with stricter threshold (no flip)
+        const fallbackIO = new IntersectionObserver((entries) => {
+            entries.forEach((e) => {
+                if (e.isIntersecting && e.intersectionRatio > 0.5) setActiveSlide(e.target);
+            });
+        }, { threshold: [0.5] });
+        slides.forEach((s) => fallbackIO.observe(s));
+    }
 
     // Click / keyboard → zoom + open modal
     function onCardActivate(slide) {
