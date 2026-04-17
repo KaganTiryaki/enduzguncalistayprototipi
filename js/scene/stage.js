@@ -1,20 +1,10 @@
 import {
-    Scene, PerspectiveCamera, WebGLRenderer, Vector3, Color, Group,
+    Scene, PerspectiveCamera, WebGLRenderer, Color, Group,
 } from 'three';
 import { signatures, signatureOrder } from './signatures/index.js';
 import { cameraTargets, zoomTargets, HOME_TARGET, dampVec } from './camera.js';
+import { anchors } from './anchors.js';
 import { disposeGroup } from './dispose.js';
-
-const CONSTELLATION_RADIUS = 8.0;
-
-function constellationAnchor(index, count) {
-    const a = (index / count) * Math.PI * 2 - Math.PI / 2;
-    return new Vector3(
-        Math.cos(a) * CONSTELLATION_RADIUS,
-        Math.sin(a) * CONSTELLATION_RADIUS * 0.55,
-        0
-    );
-}
 
 // Per-committee signature palettes so each constellation is visually distinct
 const SIGNATURE_PALETTES = {
@@ -50,9 +40,8 @@ export function initStage(canvas, options) {
     scene.add(rootGroup);
 
     const handles = {};
-    signatureOrder.forEach((sig, i) => {
-        const anchor = constellationAnchor(i, signatureOrder.length);
-        handles[sig] = signatures[sig]({ palette: SIGNATURE_PALETTES[sig], anchor });
+    signatureOrder.forEach((sig) => {
+        handles[sig] = signatures[sig]({ palette: SIGNATURE_PALETTES[sig], anchor: anchors[sig] });
         rootGroup.add(handles[sig].group);
     });
 

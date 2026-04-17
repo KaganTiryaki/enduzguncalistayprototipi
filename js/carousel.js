@@ -31,15 +31,6 @@ ready(() => {
     let modalOpen = false;
     let rafId = null;
 
-    const sectionIO = new IntersectionObserver((entries) => {
-        entries.forEach((e) => { inView = e.isIntersecting; });
-        if (!modalOpen) {
-            document.body.classList.toggle('committees-visible', inView);
-        }
-        if ((inView || modalOpen) && rafId === null) loop(performance.now());
-    }, { rootMargin: '300px 0px 300px 0px' });
-    sectionIO.observe(section);
-
     function loop(t) {
         stage.tick(t);
         if ((inView || modalOpen) && document.visibilityState === 'visible') {
@@ -67,17 +58,25 @@ ready(() => {
     }
 
     function updateActiveFromScroll() {
-        const vc = window.innerHeight * 0.5;
+        const vh = window.innerHeight;
+        const vc = vh * 0.5;
         let best = null;
         let bestDist = Infinity;
+        let anyInView = false;
         for (const s of slides) {
             const r = s.getBoundingClientRect();
-            if (r.bottom < 0 || r.top > window.innerHeight) continue;
+            if (r.bottom < 0 || r.top > vh) continue;
+            anyInView = true;
             const center = r.top + r.height * 0.5;
             const dist = Math.abs(center - vc);
             if (dist < bestDist) { bestDist = dist; best = s; }
         }
+        inView = anyInView;
+        if (!modalOpen) {
+            document.body.classList.toggle('committees-visible', anyInView);
+        }
         if (best) setActiveSlide(best);
+        if ((anyInView || modalOpen) && rafId === null) loop(performance.now());
     }
 
     let scrollTicking = false;
