@@ -22,10 +22,12 @@ export const HOME_TARGET = {
     lookAt: new Vector3(0, 0, 0),
 };
 
-// Scroll-active: camera framed on signature, offset so sig sits on LEFT of viewport (card centered overlays right-of-sig)
+// Scroll-active: camera framed on signature, offset so sig splits into two
+// halves around the card (signature's merged form sits at viewport center;
+// on active, halves fly out to left/right of card).
 export const cameraTargets = buildTargets(9.5, VIEWPORT_X_OFFSET);
-// Click-zoom (modal): no offset, signature centered behind modal panel
-export const zoomTargets  = buildTargets(3.2, 0);
+// Click-zoom (modal): same framing, closer — halves stay symmetric around modal
+export const zoomTargets  = buildTargets(3.2, VIEWPORT_X_OFFSET);
 
 export function dampVec(current, target, lambda, dt) {
     current.x = MathUtils.damp(current.x, target.x, lambda, dt);

@@ -43,26 +43,39 @@ export function initStage(canvas, options) {
     const rootGroup = new Group();
     scene.add(rootGroup);
 
-    // Create signature + its symmetric mirror twin (shared geometry/materials,
-    // positioned at anchor + 2*OFFSET with scale.x = -1 for true mirror).
-    // In viewport: original renders LEFT of card, mirror renders RIGHT — card
-    // at center splits the sig visually into two halves.
+    // Each signature has a symmetric mirror twin (cloned, scale.x = -1).
+    // Both halves start MERGED at anchor + OFFSET (single shape at viewport
+    // center). When sig becomes active, splitProgress tweens 0→1 and the
+    // halves fly out to anchor.x / anchor.x + 2*OFFSET — card-framing split.
     const handles = {};
+    const splitProgress = {};
     signatureOrder.forEach((sig) => {
         const anchor = anchors[sig];
         handles[sig] = signatures[sig]({ palette: SIGNATURE_PALETTES[sig], anchor });
         rootGroup.add(handles[sig].group);
 
         const mirror = handles[sig].group.clone(true);
-        mirror.position.set(
-            anchor.x + 2 * VIEWPORT_X_OFFSET,
-            anchor.y,
-            anchor.z
-        );
         mirror.scale.x = -1;
         handles[sig].mirror = mirror;
         rootGroup.add(mirror);
+
+        splitProgress[sig] = { v: 0 };
+        applySplit(sig);
     });
+
+    function applySplit(sig) {
+        const anchor = anchors[sig];
+        const p = splitProgress[sig].v;
+        // p=0 → both at anchor + OFFSET (merged, center of active viewport)
+        // p=1 → original at anchor (left), mirror at anchor + 2*OFFSET (right)
+        const mergedX = anchor.x + VIEWPORT_X_OFFSET;
+        handles[sig].group.position.x   = mergedX - VIEWPORT_X_OFFSET * p;
+        handles[sig].mirror.position.x  = mergedX + VIEWPORT_X_OFFSET * p;
+        handles[sig].group.position.y   = anchor.y;
+        handles[sig].mirror.position.y  = anchor.y;
+        handles[sig].group.position.z   = anchor.z;
+        handles[sig].mirror.position.z  = anchor.z;
+    }
 
     // Postprocessing: bloom makes accent particles/lines glow cinematically
     const composer = new EffectComposer(renderer);
@@ -215,10 +228,29 @@ export function initStage(canvas, options) {
         gsap.to(camLook, { x: look.x, y: look.y, z: look.z, duration, ease: 'power2.inOut' });
     }
 
+    function animateSplit(sig, target) {
+        if (!splitProgress[sig]) return;
+        if (gsap) {
+            gsap.to(splitProgress[sig], {
+                v: target,
+                duration: 1.0,
+                ease: 'power2.inOut',
+                onUpdate: () => applySplit(sig),
+                overwrite: 'auto',
+            });
+        } else {
+            splitProgress[sig].v = target;
+            applySplit(sig);
+        }
+    }
+
     function setActive(sig) {
         if (sig === activeSig) return;
+        const prev = activeSig;
         activeSig = sig;
         if (!zoomedSig) applyTarget();
+        if (prev) animateSplit(prev, 0);
+        if (sig) animateSplit(sig, 1);
     }
 
     function zoomTo(sig) {
