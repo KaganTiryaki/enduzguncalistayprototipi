@@ -1,134 +1,97 @@
 import {
     Group, BufferGeometry, Float32BufferAttribute,
-    Line, LineBasicMaterial, Points, PointsMaterial,
-    Color, AdditiveBlending,
+    Line, LineSegments, LineBasicMaterial, Color,
 } from 'three';
 
+// Side-view brain silhouette: outline polyline + cerebellum oval + brainstem
+// + two internal gyri lines. Face points RIGHT (+x). Static, no rotation.
 export function neuro({ palette, anchor }) {
     const group = new Group();
     group.position.copy(anchor);
 
-    // --- Brain side-view silhouette (facing right: +x = front) ---
-    // Closed outline: forehead → crown → occiput → cerebellum → brainstem →
-    // temporal underside → back to forehead
-    const outlinePts = [
-         1.15,  0.75, 0,
-         0.95,  0.97, 0,
-         0.55,  1.10, 0,
-         0.00,  1.16, 0,
-        -0.50,  1.12, 0,
-        -0.95,  0.95, 0,
-        -1.30,  0.55, 0,
-        -1.45,  0.10, 0,
-        -1.35, -0.30, 0,
-        -1.20, -0.55, 0,  // cerebellum top-back
-        -1.05, -0.78, 0,  // cerebellum back curve
-        -0.80, -0.92, 0,  // cerebellum bottom
-        -0.55, -0.88, 0,  // indent between cerebellum and brainstem
-        -0.35, -1.05, 0,  // brainstem
-        -0.10, -1.05, 0,
-         0.20, -1.00, 0,
-         0.55, -0.85, 0,  // temporal lobe underside
-         0.90, -0.60, 0,
-         1.15, -0.25, 0,
-         1.30,  0.15, 0,
-         1.22,  0.50, 0,
-         1.15,  0.75, 0,  // close loop
+    // --- 1. Cerebrum outline (closed polyline, side view) ---
+    const keyPts = [
+        [ 1.00,  0.75], [ 1.18,  0.55], [ 1.22,  0.30], [ 1.15,  0.05],
+        [ 0.95, -0.22], [ 0.55, -0.40], [ 0.05, -0.45], [-0.40, -0.40],
+        [-0.70, -0.22], [-0.95,  0.08], [-1.05,  0.35], [-0.95,  0.62],
+        [-0.70,  0.82], [-0.30,  0.95], [ 0.15,  1.02], [ 0.55,  0.98],
+        [ 0.82,  0.88], [ 1.00,  0.75],
     ];
-
+    const subdiv = 10;
+    const outlinePts = [];
+    for (let i = 0; i < keyPts.length - 1; i++) {
+        for (let k = 0; k < subdiv; k++) {
+            const t = k / subdiv;
+            const x = keyPts[i][0] * (1 - t) + keyPts[i + 1][0] * t;
+            const y = keyPts[i][1] * (1 - t) + keyPts[i + 1][1] * t;
+            outlinePts.push(x, y, 0);
+        }
+    }
+    const outlineGeom = new BufferGeometry();
+    outlineGeom.setAttribute('position', new Float32BufferAttribute(outlinePts, 3));
     const outlineMat = new LineBasicMaterial({
         color: new Color(palette.accent),
         transparent: true,
         opacity: 0.9,
     });
-    const outlineGeom = new BufferGeometry();
-    outlineGeom.setAttribute('position', new Float32BufferAttribute(outlinePts, 3));
     group.add(new Line(outlineGeom, outlineMat));
 
-    // --- Internal anatomy: sulci & gyri (shared softer material) ---
-    const foldMat = new LineBasicMaterial({
-        color: new Color(palette.accent),
-        transparent: true,
-        opacity: 0.55,
-    });
-
-    function addFold(pts) {
-        const g = new BufferGeometry();
-        g.setAttribute('position', new Float32BufferAttribute(pts, 3));
-        group.add(new Line(g, foldMat));
+    // --- 2. Cerebellum (oval at back-bottom) ---
+    const cerPts = [];
+    const ccx = -0.72, ccy = -0.32, rx = 0.28, ry = 0.20;
+    for (let i = 0; i <= 48; i++) {
+        const a = (i / 48) * Math.PI * 2;
+        cerPts.push(ccx + Math.cos(a) * rx, ccy + Math.sin(a) * ry, 0);
     }
-
-    // Central sulcus — major vertical fold dividing frontal/parietal
-    addFold([
-        0.15,  1.05, 0,
-        0.18,  0.85, 0,
-        0.22,  0.55, 0,
-        0.28,  0.25, 0,
-        0.30, -0.05, 0,
-    ]);
-
-    // Lateral (Sylvian) fissure — horizontal split
-    addFold([
-         0.95, -0.20, 0,
-         0.55, -0.38, 0,
-         0.10, -0.42, 0,
-        -0.40, -0.30, 0,
-        -0.80, -0.12, 0,
-    ]);
-
-    // Upper gyrus curve (parietal)
-    addFold([
-        -0.85,  0.80, 0,
-        -0.45,  0.95, 0,
-         0.00,  0.92, 0,
-         0.45,  0.80, 0,
-         0.75,  0.62, 0,
-    ]);
-
-    // Mid gyrus (temporal-frontal)
-    addFold([
-        -0.95,  0.45, 0,
-        -0.55,  0.62, 0,
-        -0.10,  0.58, 0,
-         0.40,  0.42, 0,
-         0.75,  0.20, 0,
-    ]);
-
-    // Cerebellum internal fold
-    addFold([
-        -1.25, -0.45, 0,
-        -1.10, -0.62, 0,
-        -0.95, -0.80, 0,
-        -0.75, -0.88, 0,
-    ]);
-
-    // --- Accent dots at landmarks (pulse with intensity) ---
-    const landmarks = [
-         0.30, -0.05, 0,   // central sulcus end
-        -0.80, -0.12, 0,   // posterior lateral fissure
-         0.15,  1.05, 0,   // top of central sulcus
-        -0.95, -0.80, 0,   // cerebellum
-    ];
-    const dotMat = new PointsMaterial({
-        color: new Color(palette.accent),
-        size: 0.10,
+    const cerGeom = new BufferGeometry();
+    cerGeom.setAttribute('position', new Float32BufferAttribute(cerPts, 3));
+    const accentMat = new LineBasicMaterial({
+        color: new Color(palette.navy300),
         transparent: true,
-        opacity: 0.95,
-        depthWrite: false,
-        blending: AdditiveBlending,
+        opacity: 0.75,
     });
-    const dotGeom = new BufferGeometry();
-    dotGeom.setAttribute('position', new Float32BufferAttribute(landmarks, 3));
-    group.add(new Points(dotGeom, dotMat));
+    group.add(new Line(cerGeom, accentMat));
+
+    // --- 3. Brainstem (short vertical line below cerebellum) ---
+    const stemPts = [-0.60, -0.45, 0,  -0.60, -0.80, 0];
+    const stemGeom = new BufferGeometry();
+    stemGeom.setAttribute('position', new Float32BufferAttribute(stemPts, 3));
+    group.add(new LineSegments(stemGeom, accentMat));
+
+    // --- 4. Internal gyri (wavy lines showing cortical folds) ---
+    const gyriPts = [];
+    const waves = [
+        { y:  0.50, amp: 0.06, xs: -0.60, xe:  0.80, freq: 5 },
+        { y:  0.15, amp: 0.05, xs: -0.85, xe:  0.95, freq: 6 },
+        { y: -0.15, amp: 0.04, xs: -0.50, xe:  0.90, freq: 5 },
+    ];
+    for (const w of waves) {
+        const segs = 90;
+        for (let i = 0; i < segs; i++) {
+            const t0 = i / segs;
+            const t1 = (i + 1) / segs;
+            const x0 = w.xs + (w.xe - w.xs) * t0;
+            const x1 = w.xs + (w.xe - w.xs) * t1;
+            const y0 = w.y + Math.sin(t0 * Math.PI * w.freq) * w.amp;
+            const y1 = w.y + Math.sin(t1 * Math.PI * w.freq) * w.amp;
+            gyriPts.push(x0, y0, 0, x1, y1, 0);
+        }
+    }
+    const gyriGeom = new BufferGeometry();
+    gyriGeom.setAttribute('position', new Float32BufferAttribute(gyriPts, 3));
+    const gyriMat = new LineBasicMaterial({
+        color: new Color(palette.mist),
+        transparent: true,
+        opacity: 0.4,
+    });
+    group.add(new LineSegments(gyriGeom, gyriMat));
 
     return {
         group,
-        update(elapsed, _delta, intensity) {
-            // No rotation — stable profile, readable at a glance
-            const pulse = 0.55 + 0.4 * Math.sin(elapsed * 1.2);
-            outlineMat.opacity = 0.55 + 0.4 * intensity;
-            foldMat.opacity    = (0.25 + 0.45 * intensity) * (0.82 + 0.18 * pulse);
-            dotMat.opacity     = 0.45 + 0.5 * intensity;
+        update(_elapsed, _delta, intensity) {
+            outlineMat.opacity = 0.35 + 0.6 * intensity;
+            accentMat.opacity = 0.25 + 0.55 * intensity;
+            gyriMat.opacity   = 0.15 + 0.4 * intensity;
         },
     };
 }
