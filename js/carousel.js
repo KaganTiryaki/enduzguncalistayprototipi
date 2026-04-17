@@ -162,6 +162,8 @@ ready(() => {
         modalOpen = true;
         document.body.classList.add('committees-visible');
         if (rafId === null) loop(performance.now());
+        // Stop Lenis so modal content can scroll natively
+        lenis?.stop();
     });
 
     window.addEventListener('committee-modal:closed', () => {
@@ -169,5 +171,6 @@ ready(() => {
         stage.zoomOut();
         modalOpen = false;
         if (!inView) document.body.classList.remove('committees-visible');
+        lenis?.start();
     });
 });

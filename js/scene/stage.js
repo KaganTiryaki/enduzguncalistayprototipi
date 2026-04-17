@@ -285,11 +285,19 @@ export function initStage(canvas, options) {
     function zoomTo(sig) {
         zoomedSig = sig;
         applyTarget();
+        // Merge halves back so the single shape sits behind the modal panel
+        // (halves split at ±5 would be off-screen at zoom distance)
+        if (sig) animateSplit(sig, 0, { duration: 0.6, ease: 'power2.inOut' });
     }
 
     function zoomOut() {
+        const prev = zoomedSig;
         zoomedSig = null;
         applyTarget();
+        // Restore split if sig is still the scroll-active one
+        if (prev && prev === activeSig) {
+            animateSplit(prev, 1, { delay: 0.3, duration: 1.0, ease: 'power2.out' });
+        }
     }
 
     function isolate(on) {
