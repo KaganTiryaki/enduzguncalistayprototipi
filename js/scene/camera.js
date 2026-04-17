@@ -27,13 +27,14 @@ function buildTargets(distance, yLift = 0) {
 }
 
 export const HOME_TARGET = {
-    position: new Vector3(0, 0.3, 22),
+    position: new Vector3(0, 0.3, 24),
     lookAt: new Vector3(0, 0, 0),
 };
 
-// When a committee is active (scroll), camera settles close to its anchor
-export const cameraTargets = buildTargets(5.5, 0);
-// When zoomed (modal), camera gets intimate with the signature
+// Scroll-active: camera settles at overview distance from the signature
+// (signature framed with breathing room — not a close-up)
+export const cameraTargets = buildTargets(9.5, 0);
+// Click-zoom (modal): camera gets intimate with the signature
 export const zoomTargets  = buildTargets(3.2, 0);
 
 export function dampVec(current, target, lambda, dt) {

@@ -54,7 +54,8 @@ ready(() => {
         if (!document.hidden && inView && rafId === null) loop(performance.now());
     });
 
-    // Track active signature via ScrollTrigger (GSAP) for stable, non-glitchy transitions
+    // Active slide = the one whose vertical center is closest to viewport center.
+    // Simple, deterministic, no gaps/overlaps unlike thresholded IO/ScrollTrigger.
     let activeSlide = null;
     function setActiveSlide(slide) {
         if (slide === activeSlide) return;
@@ -65,28 +66,32 @@ ready(() => {
         if (sig) stage.setActive(sig);
     }
 
-    const gsap = window.gsap;
-    const ScrollTrigger = window.ScrollTrigger;
-    if (gsap && ScrollTrigger) {
-        gsap.registerPlugin(ScrollTrigger);
-        slides.forEach((slide) => {
-            ScrollTrigger.create({
-                trigger: slide,
-                start: 'top 65%',
-                end: 'bottom 35%',
-                onEnter:     () => setActiveSlide(slide),
-                onEnterBack: () => setActiveSlide(slide),
-            });
-        });
-    } else {
-        // Fallback: single IntersectionObserver with stricter threshold (no flip)
-        const fallbackIO = new IntersectionObserver((entries) => {
-            entries.forEach((e) => {
-                if (e.isIntersecting && e.intersectionRatio > 0.5) setActiveSlide(e.target);
-            });
-        }, { threshold: [0.5] });
-        slides.forEach((s) => fallbackIO.observe(s));
+    function updateActiveFromScroll() {
+        const vc = window.innerHeight * 0.5;
+        let best = null;
+        let bestDist = Infinity;
+        for (const s of slides) {
+            const r = s.getBoundingClientRect();
+            if (r.bottom < 0 || r.top > window.innerHeight) continue;
+            const center = r.top + r.height * 0.5;
+            const dist = Math.abs(center - vc);
+            if (dist < bestDist) { bestDist = dist; best = s; }
+        }
+        if (best) setActiveSlide(best);
     }
+
+    let scrollTicking = false;
+    function onScrollOrResize() {
+        if (scrollTicking) return;
+        scrollTicking = true;
+        requestAnimationFrame(() => {
+            updateActiveFromScroll();
+            scrollTicking = false;
+        });
+    }
+    window.addEventListener('scroll', onScrollOrResize, { passive: true });
+    window.addEventListener('resize', onScrollOrResize);
+    updateActiveFromScroll();
 
     // Click / keyboard → zoom + open modal
     function onCardActivate(slide) {

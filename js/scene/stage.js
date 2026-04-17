@@ -132,7 +132,7 @@ export function initStage(canvas, options) {
         if (zoomedSig) {
             tweenCameraTo(zoomTargets[zoomedSig].position, zoomTargets[zoomedSig].lookAt, 0.9);
         } else if (activeSig) {
-            tweenCameraTo(cameraTargets[activeSig].position, cameraTargets[activeSig].lookAt, 1.3);
+            tweenCameraTo(cameraTargets[activeSig].position, cameraTargets[activeSig].lookAt, 1.5);
         } else {
             tweenCameraTo(HOME_TARGET.position, HOME_TARGET.lookAt, 1.6);
         }
