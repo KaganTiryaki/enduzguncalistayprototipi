@@ -6,7 +6,7 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
 import { signatures, signatureOrder } from './signatures/index.js';
-import { cameraTargets, zoomTargets, HOME_TARGET, VIEWPORT_X_OFFSET, dampVec } from './camera.js';
+import { cameraTargets, zoomTargets, HOME_TARGET, SPLIT_DISTANCE, dampVec } from './camera.js';
 import { anchors } from './anchors.js';
 import { disposeGroup } from './dispose.js';
 
@@ -66,11 +66,10 @@ export function initStage(canvas, options) {
     function applySplit(sig) {
         const anchor = anchors[sig];
         const p = splitProgress[sig].v;
-        // p=0 → both at anchor + OFFSET (merged, center of active viewport)
-        // p=1 → original at anchor (left), mirror at anchor + 2*OFFSET (right)
-        const mergedX = anchor.x + VIEWPORT_X_OFFSET;
-        handles[sig].group.position.x   = mergedX - VIEWPORT_X_OFFSET * p;
-        handles[sig].mirror.position.x  = mergedX + VIEWPORT_X_OFFSET * p;
+        // p=0: both at anchor → overlap, renders as single shape
+        // p=1: original at anchor.x - D, mirror at anchor.x + D → symmetric split
+        handles[sig].group.position.x   = anchor.x - SPLIT_DISTANCE * p;
+        handles[sig].mirror.position.x  = anchor.x + SPLIT_DISTANCE * p;
         handles[sig].group.position.y   = anchor.y;
         handles[sig].mirror.position.y  = anchor.y;
         handles[sig].group.position.z   = anchor.z;

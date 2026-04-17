@@ -1,17 +1,18 @@
 import { Vector3, MathUtils } from 'three';
 import { anchors } from './anchors.js';
 
-// Shift camera view to the right of the signature → signature renders in
-// the LEFT half of the viewport, card stays centered, both visible.
-export const VIEWPORT_X_OFFSET = 2.8;
+// Split distance: when a sig is active, its two halves fly out by this
+// amount to each side of the anchor → halves appear fully at left/right
+// of the card (which sits at viewport center).
+export const SPLIT_DISTANCE = 3.6;
 
-function buildTargets(distance, xOffset = 0) {
+function buildTargets(distance) {
     const out = {};
     for (const sig of Object.keys(anchors)) {
         const p = anchors[sig];
         out[sig] = {
-            position: new Vector3(p.x + xOffset, p.y, p.z + distance),
-            lookAt: new Vector3(p.x + xOffset, p.y, p.z),
+            position: new Vector3(p.x, p.y, p.z + distance),
+            lookAt: new Vector3(p.x, p.y, p.z),
         };
     }
     return out;
@@ -22,12 +23,11 @@ export const HOME_TARGET = {
     lookAt: new Vector3(0, 0, 0),
 };
 
-// Scroll-active: camera framed on signature, offset so sig splits into two
-// halves around the card (signature's merged form sits at viewport center;
-// on active, halves fly out to left/right of card).
-export const cameraTargets = buildTargets(9.5, VIEWPORT_X_OFFSET);
-// Click-zoom (modal): same framing, closer — halves stay symmetric around modal
-export const zoomTargets  = buildTargets(3.2, VIEWPORT_X_OFFSET);
+// Camera framed squarely on the signature anchor. When active, halves
+// split around anchor → symmetric around the card (viewport center).
+export const cameraTargets = buildTargets(9.5);
+// Modal zoom: closer, still on anchor
+export const zoomTargets  = buildTargets(3.2);
 
 export function dampVec(current, target, lambda, dt) {
     current.x = MathUtils.damp(current.x, target.x, lambda, dt);
