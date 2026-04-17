@@ -21,21 +21,20 @@ function ready(fn) {
 ready(() => {
     const section = document.getElementById('komiteler');
     const canvas = document.getElementById('committees-stage');
-    const carouselEl = document.querySelector('.committees-carousel');
-    if (!section || !canvas || !carouselEl) return;
+    const slides = Array.from(document.querySelectorAll('.committee-slide'));
+    if (!section || !canvas || slides.length === 0) return;
 
     const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
     const stage = initStage(canvas, { palette: PALETTE, dpr });
 
-    // RAF loop (runs only when committees section is visible)
     let inView = false;
     let rafId = null;
 
-    const io = new IntersectionObserver((entries) => {
+    const sectionIO = new IntersectionObserver((entries) => {
         entries.forEach((e) => { inView = e.isIntersecting; });
         if (inView && rafId === null) loop(performance.now());
     }, { rootMargin: '200px 0px 200px 0px' });
-    io.observe(section);
+    sectionIO.observe(section);
 
     function loop(t) {
         stage.tick(t);
@@ -51,81 +50,47 @@ ready(() => {
         if (!document.hidden && inView && rafId === null) loop(performance.now());
     });
 
-    // Swiper init
-    const SwiperCls = window.Swiper;
-    if (!SwiperCls) {
-        console.warn('[committees] Swiper not loaded');
-        return;
-    }
-
-    const swiper = new SwiperCls(carouselEl, {
-        slidesPerView: 'auto',
-        centeredSlides: true,
-        grabCursor: true,
-        speed: 700,
-        initialSlide: 0,
-        spaceBetween: 24,
-        keyboard: { enabled: true },
-        mousewheel: { forceToAxis: true, sensitivity: 0.4, thresholdDelta: 10 },
-        pagination: {
-            el: '.committees-carousel__pagination',
-            clickable: true,
-            bulletClass: 'committees-carousel__bullet',
-            bulletActiveClass: 'committees-carousel__bullet--active',
-        },
-        navigation: {
-            nextEl: '.committees-carousel__next',
-            prevEl: '.committees-carousel__prev',
-        },
-        breakpoints: {
-            640:  { slidesPerView: 'auto', spaceBetween: 28 },
-            1024: { slidesPerView: 'auto', spaceBetween: 36 },
-        },
-    });
-
-    function slideToSignature(slide) {
-        if (!slide) return;
-        const sig = slide.getAttribute('data-signature');
+    // Track which slide is most in view → active signature
+    let activeSlide = null;
+    const slideIO = new IntersectionObserver((entries) => {
+        const visible = entries
+            .filter((e) => e.isIntersecting)
+            .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        const top = visible[0];
+        if (!top) return;
+        if (top.target === activeSlide) return;
+        activeSlide?.classList.remove('is-active');
+        activeSlide = top.target;
+        activeSlide.classList.add('is-active');
+        const sig = activeSlide.getAttribute('data-signature');
         if (sig) stage.setActive(sig);
-    }
-
-    slideToSignature(swiper.slides[swiper.activeIndex]);
-    swiper.on('slideChange', () => {
-        slideToSignature(swiper.slides[swiper.activeIndex]);
+    }, {
+        threshold: [0.35, 0.6, 0.85],
+        rootMargin: '-20% 0px -30% 0px',
     });
+    slides.forEach((s) => slideIO.observe(s));
 
     // Click / keyboard → zoom + open modal
-    const gsap = window.gsap;
-
-    function triggerZoom(sig, cb) {
-        stage.zoomTo(sig);
-        if (gsap) {
-            gsap.to({}, { duration: 0.85, onComplete: cb || (() => {}) });
-        } else {
-            setTimeout(cb || (() => {}), 700);
-        }
-    }
-
     function onCardActivate(slide) {
         const sig = slide.getAttribute('data-signature');
         const num = slide.querySelector('.committee__num')?.textContent?.trim();
         if (!sig || !num) return;
 
         slide.classList.add('is-zooming');
-        triggerZoom(sig, () => {
-            // Delegate to existing modal open function on main.js
+        stage.zoomTo(sig);
+
+        setTimeout(() => {
             if (typeof window.openCommitteeModal === 'function') {
                 window.openCommitteeModal(num, slide);
             }
             slide.classList.remove('is-zooming');
-        });
+        }, 720);
     }
 
-    carouselEl.querySelectorAll('.committee-slide').forEach((slide) => {
+    slides.forEach((slide) => {
         slide.setAttribute('role', 'button');
         slide.setAttribute('tabindex', '0');
         slide.addEventListener('click', (e) => {
-            // Avoid clicks on interactive children (none today but future-proof)
             if (e.target.closest('a, button')) return;
             onCardActivate(slide);
         });
@@ -137,7 +102,6 @@ ready(() => {
         });
     });
 
-    // Zoom out when modal closes
     window.addEventListener('committee-modal:closed', () => {
         stage.zoomOut();
     });
