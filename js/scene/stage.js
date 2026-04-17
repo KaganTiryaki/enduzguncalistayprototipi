@@ -228,13 +228,14 @@ export function initStage(canvas, options) {
         gsap.to(camLook, { x: look.x, y: look.y, z: look.z, duration, ease: 'power2.inOut' });
     }
 
-    function animateSplit(sig, target) {
+    function animateSplit(sig, target, { delay = 0, duration = 1.2, ease = 'power2.inOut' } = {}) {
         if (!splitProgress[sig]) return;
         if (gsap) {
             gsap.to(splitProgress[sig], {
                 v: target,
-                duration: 1.0,
-                ease: 'power2.inOut',
+                duration,
+                delay,
+                ease,
                 onUpdate: () => applySplit(sig),
                 overwrite: 'auto',
             });
@@ -249,8 +250,11 @@ export function initStage(canvas, options) {
         const prev = activeSig;
         activeSig = sig;
         if (!zoomedSig) applyTarget();
-        if (prev) animateSplit(prev, 0);
-        if (sig) animateSplit(sig, 1);
+        // Merge previous fast — gets out of the way
+        if (prev) animateSplit(prev, 0, { duration: 0.55, ease: 'power2.in' });
+        // Delay new split so camera has time to arrive; back.out gives a
+        // visible "pop-apart" bounce the user can actually see
+        if (sig) animateSplit(sig, 1, { delay: 0.85, duration: 1.3, ease: 'back.out(1.4)' });
     }
 
     function zoomTo(sig) {
