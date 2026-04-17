@@ -276,9 +276,18 @@ export function initStage(canvas, options) {
         const prev = activeSig;
         activeSig = sig;
         if (!zoomedSig) applyTarget();
-        // Merge previous fast — gets out of the way
+        // Merge the previous active sig visibly (quick but still smooth)
         if (prev) animateSplit(prev, 0, { duration: 0.5, ease: 'power2.in' });
-        // Delay new split so camera has time to arrive; smooth settle (no bounce)
+        // Force-merge ANY other sig that's still mid-split (e.g. user
+        // scrolled past before previous merge finished) — even if not
+        // visible in viewport
+        signatureOrder.forEach((s) => {
+            if (s === sig || s === prev) return;
+            if (splitProgress[s].v > 0.001) {
+                animateSplit(s, 0, { duration: 0.25, ease: 'power2.in' });
+            }
+        });
+        // Delay new split so camera has time to arrive; smooth settle
         if (sig) animateSplit(sig, 1, { delay: 0.8, duration: 1.4, ease: 'power2.out' });
     }
 

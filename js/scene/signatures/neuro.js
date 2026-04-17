@@ -61,7 +61,7 @@ export function neuro({ palette, anchor }) {
     return {
         group,
         update(elapsed, _delta, intensity) {
-            group.rotation.y = elapsed * 0.06;
+            // No rotation — keeps the angular composition readable instantly
             const pulse = 0.55 + 0.4 * Math.sin(elapsed * 1.2);
             edgeMat.opacity = (0.15 + 0.5 * intensity) * pulse;
             nodeMat.opacity = 0.4 + 0.55 * intensity;
