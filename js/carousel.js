@@ -69,8 +69,8 @@ ready(() => {
         const sig = activeSlide.getAttribute('data-signature');
         if (sig) stage.setActive(sig);
     }, {
-        threshold: [0.35, 0.6, 0.85],
-        rootMargin: '-20% 0px -30% 0px',
+        threshold: [0, 0.5, 1],
+        rootMargin: '-38% 0px -38% 0px',
     });
     slides.forEach((s) => slideIO.observe(s));
 

@@ -5,15 +5,9 @@ import { signatures, signatureOrder } from './signatures/index.js';
 import { cameraTargets, zoomTargets, HOME_TARGET, dampVec } from './camera.js';
 import { disposeGroup } from './dispose.js';
 
-const CONSTELLATION_RADIUS = 3.6;
-
-function constellationAnchor(index, count) {
-    const a = (index / count) * Math.PI * 2 - Math.PI / 2;
-    return new Vector3(
-        Math.cos(a) * CONSTELLATION_RADIUS,
-        Math.sin(a) * CONSTELLATION_RADIUS * 0.58,
-        0
-    );
+// All signatures share the origin; only the active one is visible (crossfade).
+function anchorAtOrigin() {
+    return new Vector3(0, 0, 0);
 }
 
 // Per-committee signature palettes so each constellation is visually distinct
@@ -50,9 +44,8 @@ export function initStage(canvas, options) {
     scene.add(rootGroup);
 
     const handles = {};
-    signatureOrder.forEach((sig, i) => {
-        const anchor = constellationAnchor(i, signatureOrder.length);
-        handles[sig] = signatures[sig]({ palette: SIGNATURE_PALETTES[sig], anchor });
+    signatureOrder.forEach((sig) => {
+        handles[sig] = signatures[sig]({ palette: SIGNATURE_PALETTES[sig], anchor: anchorAtOrigin() });
         rootGroup.add(handles[sig].group);
     });
 
@@ -97,25 +90,14 @@ export function initStage(canvas, options) {
         const dt = Math.min(0.05, (timeMs - prevTime) / 1000);
         prevTime = timeMs;
 
+        // Only the focused signature is visible; others smoothly fade out.
+        const focus = zoomedSig || activeSig;
         signatureOrder.forEach((sig) => {
-            let target;
-            if (isolated) {
-                target = (zoomedSig === sig || activeSig === sig) ? 1 : 0;
-            } else if (zoomedSig === sig) {
-                target = 1;
-            } else if (zoomedSig) {
-                target = 0;
-            } else if (activeSig === sig) {
-                target = 1;
-            } else {
-                target = 0.45;
-            }
-            const speed = isolated ? 7 : 5;
-            intensity[sig] += (target - intensity[sig]) * Math.min(1, dt * speed);
+            const target = sig === focus ? 1 : 0;
+            intensity[sig] += (target - intensity[sig]) * Math.min(1, dt * 6);
+            handles[sig].group.visible = intensity[sig] > 0.005;
             handles[sig].update(elapsed, dt, intensity[sig]);
         });
-
-        rootGroup.rotation.y = 0.05 * Math.sin(elapsed * 0.15);
 
         updateTargets();
         const lambda = zoomedSig ? 4.5 : 3.2;
