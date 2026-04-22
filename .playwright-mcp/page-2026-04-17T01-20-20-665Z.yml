@@ -1,0 +1,474 @@
+- generic [active] [ref=e1]:
+  - navigation [ref=e2]:
+    - generic [ref=e3]:
+      - link "Maltepe Fen Lisesi FBÇ MFL FBÇ '26" [ref=e4] [cursor=pointer]:
+        - /url: "#hero"
+        - img "Maltepe Fen Lisesi" [ref=e5]
+        - img "FBÇ" [ref=e6]
+        - generic [ref=e7]:
+          - generic [ref=e8]: MFL
+          - generic [ref=e9]: FBÇ '26
+      - button "Menüyü aç" [ref=e10] [cursor=pointer]
+  - list [ref=e15]:
+    - listitem [ref=e16]:
+      - link "Anasayfa" [ref=e17] [cursor=pointer]:
+        - /url: "#hero"
+    - listitem [ref=e18]:
+      - link "Hakkımızda" [ref=e19] [cursor=pointer]:
+        - /url: "#about"
+    - listitem [ref=e20]:
+      - link "Ekibimiz" [ref=e21] [cursor=pointer]:
+        - /url: "#team"
+    - listitem [ref=e22]:
+      - link "Sponsorlar" [ref=e23] [cursor=pointer]:
+        - /url: "#sponsors"
+    - listitem [ref=e24]:
+      - link "Komiteler" [ref=e25] [cursor=pointer]:
+        - /url: "#komiteler"
+    - listitem [ref=e26]:
+      - link "Program" [ref=e27] [cursor=pointer]:
+        - /url: "#program"
+    - listitem [ref=e28]:
+      - link "İletişim" [ref=e29] [cursor=pointer]:
+        - /url: "#contact"
+    - listitem [ref=e30]:
+      - link "Başvur" [ref=e31] [cursor=pointer]:
+        - /url: https://docs.google.com/forms/d/1ZZhDnKlnY8I3jcgfbBd72_pR7xphhxl4y2pHaWWI3jI/viewform?edit_requested=true
+  - generic [ref=e32]:
+    - generic [ref=e34]:
+      - img "MFL FBÇ" [ref=e35]
+      - heading "Maltepe Fen Lisesi Fen Bilimleri Çalıştayı '26" [level=1] [ref=e36]:
+        - text: Maltepe Fen Lisesi
+        - text: Fen Bilimleri Çalıştayı '26
+      - paragraph [ref=e37]: Bilim, bilinmeyene atılan en cesur sorudur; ilerleme ise o sorudan vazgeçmemektir.
+      - generic [ref=e38]:
+        - generic [ref=e39]:
+          - generic [ref=e40]: "22"
+          - generic [ref=e41]: Gün
+        - generic [ref=e42]:
+          - generic [ref=e43]: "04"
+          - generic [ref=e44]: Saat
+        - generic [ref=e45]:
+          - generic [ref=e46]: "40"
+          - generic [ref=e47]: Dakika
+        - generic [ref=e48]:
+          - generic [ref=e49]: "10"
+          - generic [ref=e50]: Saniye
+      - generic [ref=e51]:
+        - link "Başvur" [ref=e52] [cursor=pointer]:
+          - /url: https://docs.google.com/forms/d/1ZZhDnKlnY8I3jcgfbBd72_pR7xphhxl4y2pHaWWI3jI/viewform?edit_requested=true
+        - link "Keşfet" [ref=e53] [cursor=pointer]:
+          - /url: "#theme"
+      - generic [ref=e54]:
+        - img [ref=e55]
+        - text: 9 - 10 Mayıs 2026
+    - link "Aşağı kaydır" [ref=e57] [cursor=pointer]:
+      - /url: "#theme"
+      - img [ref=e58]
+  - generic [ref=e62]:
+    - generic [ref=e63]: 2026 Teması
+    - heading "\"Yarını Şekillendiren Fikirler\"" [level=2] [ref=e64]
+    - paragraph [ref=e65]: Bilim, bilinmeyene atılan en cesur sorudur; ilerleme ise o sorudan vazgeçmemektir.
+  - generic [ref=e68]:
+    - generic [ref=e69]:
+      - img [ref=e71]
+      - heading "Vizyonumuz" [level=3] [ref=e74]
+      - paragraph [ref=e75]: Eleştirel düşünceyi benimseyen, farklı perspektifleri kucaklayan ve toplumsal sorunlara çözüm üreten bir gençlik yetiştirmek.
+    - generic [ref=e76]:
+      - img [ref=e78]
+      - heading "Etkinlik Misyonumuz" [level=3] [ref=e81]
+      - paragraph [ref=e82]: Bu sene dördüncüsünü gerçekleştireceğimiz Fen Bilimleri Çalıştayımızın amacı, alanında başarılı akademisyenlerin yer aldığı 7 farklı komitede üniversite düzeyindeki ders içeriklerinin lise seviyesine uyarlanarak öğrencilere aktarılması; böylece öğrencilerin bilim sevgisi kazanmaları ve ilgi duydukları alanlar hakkında daha detaylı bilgi edinmelerinin sağlanmasıdır.
+  - generic [ref=e84]:
+    - generic [ref=e85]: Bizi Tanıyın
+    - heading "Hakkımızda" [level=2] [ref=e86]
+    - paragraph [ref=e87]: Fen Bilimleri Çalıştayı, her liseli gencin katılabildiği, bilimsel konular ışığında Türkiye'nin seçkin üniversitelerinden gelen akademisyenler eşliğinde çalışmaların yapıldığı ve bolca eğlenilen bir etkinliktir. Maltepe Fen Lisesi Fen Bilimleri Çalıştayı olarak gayemiz, her sene okulumuzda düzenlenen bu müthiş etkinliği en güzel şekilde organize etmektir.
+    - generic [ref=e88]:
+      - generic [ref=e89]:
+        - text: 0+
+        - generic [ref=e90]: Katılımcı
+      - generic [ref=e91]:
+        - text: "0"
+        - generic [ref=e92]: Komite
+      - generic [ref=e93]:
+        - text: 0+
+        - generic [ref=e94]: Konuşmacı
+      - generic [ref=e95]:
+        - text: "0"
+        - generic [ref=e96]: Gün
+  - generic [ref=e98]:
+    - generic [ref=e99]: Deneyim
+    - heading "Workshop ve Etkinlikler" [level=2] [ref=e100]
+    - generic [ref=e101]:
+      - generic [ref=e102]:
+        - paragraph [ref=e103]: Kuantum fiziği, nöropsikoloji, moleküler biyoloji, yapay zekâ ve veri bilimi, doğal dil işleme, uçak ve havacılık teknolojileri, adli bilimler ve akıllı sistemler gibi çok disiplinli komiteleri bünyemizde barındıran bir fen bilimleri çalıştayı olarak; temel bilimlerden uygulamalı mühendisliğe, insan zihninin işleyişinden biyolojik yapıların moleküler düzeyde incelenmesine kadar uzanan geniş bir yelpazede güncel bilimsel gelişmeleri birlikte tartışmayı amaçlıyoruz.
+        - paragraph [ref=e104]: Bu çalıştayda kuantum fiziğinin ileri teknolojilere etkisini, nöropsikoloji ve moleküler biyolojinin sağlık ve davranış bilimlerine katkılarını, yapay zekâ, veri analitiği ve NLP'nin akıllı sistemler ile adli bilimlerdeki kullanım alanlarını ve havacılık teknolojilerindeki yenilikleri bilimsel, etik ve toplumsal boyutlarıyla ele alarak; katılımcıların hem teorik bilgi birikimlerini artırmalarını hem de disiplinler arası etkileşim sayesinde yenilikçi ve bütüncül bakış açıları geliştirmelerini hedefliyoruz.
+      - generic [ref=e105]:
+        - generic [ref=e106]:
+          - img [ref=e107]
+          - generic [ref=e110]: Kuantumdan yapay zekâya geniş bilimsel yelpazeye
+        - generic [ref=e111]:
+          - img [ref=e112]
+          - generic [ref=e115]: Üniversitelerden uzman akademisyen katılımı
+        - generic [ref=e116]:
+          - img [ref=e117]
+          - generic [ref=e120]: Disiplinler arası bilimsel tartışma ortamı
+        - generic [ref=e121]:
+          - img [ref=e122]
+          - generic [ref=e125]: Bilimsel, etik ve toplumsal boyutlarıyla analiz
+  - region "Yedi disiplin, yedi masa, yedi akademik ev sahibi." [ref=e126]:
+    - generic [ref=e127]:
+      - generic [ref=e128]:
+        - heading "Yedi disiplin, yedi masa, yedi akademik ev sahibi." [level=2] [ref=e130]:
+          - text: Yedi disiplin,
+          - emphasis [ref=e131]: yedi masa,
+          - text: yedi akademik ev sahibi.
+        - paragraph [ref=e132]: Her komite kendi oturum salonunda bağımsız ilerler. Kayıt sırasında birinci ve ikinci tercihinizi belirtirsiniz.
+      - generic [ref=e133]:
+        - button "Detayları gör → C/01 Kuantum Fiziği Kuantum mekaniğinin temelleri, kuantum hesaplama ve kuantum iletişim — klasik sezginin sınırları. Davetli Konuşmacılar Onur Pusuluk Kadir Has Üniversitesi İnanç Kanık Radarsan Elif Yunt Türk Alman Üniversitesi" [ref=e134] [cursor=pointer]:
+          - text: Detayları gör →
+          - generic [ref=e135]:
+            - generic [ref=e136]: C/01
+            - img [ref=e138]
+          - heading "Kuantum Fiziği" [level=3] [ref=e143]
+          - paragraph [ref=e144]: Kuantum mekaniğinin temelleri, kuantum hesaplama ve kuantum iletişim — klasik sezginin sınırları.
+          - generic [ref=e145]:
+            - generic [ref=e146]: Davetli Konuşmacılar
+            - generic [ref=e147]:
+              - generic [ref=e148]: Onur Pusuluk
+              - generic [ref=e149]: Kadir Has Üniversitesi
+            - generic [ref=e150]:
+              - generic [ref=e151]: İnanç Kanık
+              - generic [ref=e152]: Radarsan
+            - generic [ref=e153]:
+              - generic [ref=e154]: Elif Yunt
+              - generic [ref=e155]: Türk Alman Üniversitesi
+        - button "Detayları gör → C/02 Nöropsikoloji Beyin, davranış ve bilişsel süreçler — biyoloji ile zihin arasındaki köprü. Davetli Konuşmacı Havva Demir İstanbul Üniversitesi" [ref=e156] [cursor=pointer]:
+          - text: Detayları gör →
+          - generic [ref=e157]:
+            - generic [ref=e158]: C/02
+            - img [ref=e160]
+          - heading "Nöropsikoloji" [level=3] [ref=e169]
+          - paragraph [ref=e170]: Beyin, davranış ve bilişsel süreçler — biyoloji ile zihin arasındaki köprü.
+          - generic [ref=e171]:
+            - generic [ref=e172]: Davetli Konuşmacı
+            - generic [ref=e173]:
+              - generic [ref=e174]: Havva Demir
+              - generic [ref=e175]: İstanbul Üniversitesi
+        - button "Detayları gör → C/03 Yapay Zekâ, Veri & Doğal Dil İşleme Makine öğrenmesi, veri analizi ve dil modelleri — makinenin anlaması, hata yapması ve etiği. Davetli Konuşmacılar Mehmet Ali Bayram Yeditepe Üniversitesi Emre Gül Fi-Product Melis Dünya Sezer Gül Fi-Product" [ref=e176] [cursor=pointer]:
+          - text: Detayları gör →
+          - generic [ref=e177]:
+            - generic [ref=e178]: C/03
+            - img [ref=e180]
+          - heading "Yapay Zekâ, Veri & Doğal Dil İşleme" [level=3] [ref=e182]
+          - paragraph [ref=e183]: Makine öğrenmesi, veri analizi ve dil modelleri — makinenin anlaması, hata yapması ve etiği.
+          - generic [ref=e184]:
+            - generic [ref=e185]: Davetli Konuşmacılar
+            - generic [ref=e186]:
+              - generic [ref=e187]: Mehmet Ali Bayram
+              - generic [ref=e188]: Yeditepe Üniversitesi
+            - generic [ref=e189]:
+              - generic [ref=e190]: Emre Gül
+              - generic [ref=e191]: Fi-Product
+            - generic [ref=e192]:
+              - generic [ref=e193]: Melis Dünya Sezer Gül
+              - generic [ref=e194]: Fi-Product
+        - button "Detayları gör → C/04 Uçak ve Havacılık Aerodinamik, uçuş sistemleri ve havacılığın güncel gündemi — kanattan yörüngeye. Davetli Konuşmacılar Serhan Kök Maltepe Kadir Has BİLSEM Dr. Caner Şentürk İstanbul Beykoz Üniversitesi" [ref=e195] [cursor=pointer]:
+          - text: Detayları gör →
+          - generic [ref=e196]:
+            - generic [ref=e197]: C/04
+            - img [ref=e199]
+          - heading "Uçak ve Havacılık" [level=3] [ref=e204]
+          - paragraph [ref=e205]: Aerodinamik, uçuş sistemleri ve havacılığın güncel gündemi — kanattan yörüngeye.
+          - generic [ref=e206]:
+            - generic [ref=e207]: Davetli Konuşmacılar
+            - generic [ref=e208]:
+              - generic [ref=e209]: Serhan Kök
+              - generic [ref=e210]: Maltepe Kadir Has BİLSEM
+            - generic [ref=e211]:
+              - generic [ref=e212]: Dr. Caner Şentürk
+              - generic [ref=e213]: İstanbul Beykoz Üniversitesi
+        - button "Detayları gör → C/05 Moleküler Biyoloji & Genetik DNA, RNA ve genetik düzenleme — CRISPR'dan gen ifadesine uzanan moleküler yaşam bilimi. Davetli Konuşmacılar Necla Birgül-Iyison Boğaziçi Üniversitesi Yelda Özden Çiftçi Gebze Teknik Üniversitesi Ercan Arıcan İstanbul Üniversitesi Gül Çiçek Kılıç Gebze Teknik Üniversitesi Işık Ertekin Şişli Terakki" [ref=e214] [cursor=pointer]:
+          - text: Detayları gör →
+          - generic [ref=e215]:
+            - generic [ref=e216]: C/05
+            - img [ref=e218]
+          - heading "Moleküler Biyoloji & Genetik" [level=3] [ref=e222]
+          - paragraph [ref=e223]: DNA, RNA ve genetik düzenleme — CRISPR'dan gen ifadesine uzanan moleküler yaşam bilimi.
+          - generic [ref=e224]:
+            - generic [ref=e225]: Davetli Konuşmacılar
+            - generic [ref=e226]:
+              - generic [ref=e227]: Necla Birgül-Iyison
+              - generic [ref=e228]: Boğaziçi Üniversitesi
+            - generic [ref=e229]:
+              - generic [ref=e230]: Yelda Özden Çiftçi
+              - generic [ref=e231]: Gebze Teknik Üniversitesi
+            - generic [ref=e232]:
+              - generic [ref=e233]: Ercan Arıcan
+              - generic [ref=e234]: İstanbul Üniversitesi
+            - generic [ref=e235]:
+              - generic [ref=e236]: Gül Çiçek Kılıç
+              - generic [ref=e237]: Gebze Teknik Üniversitesi
+            - generic [ref=e238]:
+              - generic [ref=e239]: Işık Ertekin
+              - generic [ref=e240]: Şişli Terakki
+        - button "Detayları gör → C/06 Adli Bilimler, Kriminalistik & Toksikoloji DNA analizi, olay yeri incelemesi ve toksikolojik değerlendirme — bilimin mahkemedeki yeri. Davetli Konuşmacılar Miraç Özdemir İstanbul Gelişim Üniversitesi Av. Ece Ertuğ Özkara Serbest Avukat" [ref=e241] [cursor=pointer]:
+          - text: Detayları gör →
+          - generic [ref=e242]:
+            - generic [ref=e243]: C/06
+            - img [ref=e245]
+          - heading "Adli Bilimler, Kriminalistik & Toksikoloji" [level=3] [ref=e251]
+          - paragraph [ref=e252]: DNA analizi, olay yeri incelemesi ve toksikolojik değerlendirme — bilimin mahkemedeki yeri.
+          - generic [ref=e253]:
+            - generic [ref=e254]: Davetli Konuşmacılar
+            - generic [ref=e255]:
+              - generic [ref=e256]: Miraç Özdemir
+              - generic [ref=e257]: İstanbul Gelişim Üniversitesi
+            - generic [ref=e258]:
+              - generic [ref=e259]: Av. Ece Ertuğ Özkara
+              - generic [ref=e260]: Serbest Avukat
+        - button "Detayları gör → C/07 Akıllı Sistemler & Mühendislik Robotik, otomasyon ve Endüstri 4.0 — sensörden karara uzanan mühendislik zinciri. Davetli Konuşmacılar Ali Buldu Marmara Üniversitesi Mehmet Kaan İldiz Üsküdar Üniversitesi" [ref=e261] [cursor=pointer]:
+          - text: Detayları gör →
+          - generic [ref=e262]:
+            - generic [ref=e263]: C/07
+            - img [ref=e265]
+          - heading "Akıllı Sistemler & Mühendislik" [level=3] [ref=e273]
+          - paragraph [ref=e274]: Robotik, otomasyon ve Endüstri 4.0 — sensörden karara uzanan mühendislik zinciri.
+          - generic [ref=e275]:
+            - generic [ref=e276]: Davetli Konuşmacılar
+            - generic [ref=e277]:
+              - generic [ref=e278]: Ali Buldu
+              - generic [ref=e279]: Marmara Üniversitesi
+            - generic [ref=e280]:
+              - generic [ref=e281]: Mehmet Kaan İldiz
+              - generic [ref=e282]: Üsküdar Üniversitesi
+        - link "Kayıt Komitenizi seçin, yerinizi alın." [ref=e283] [cursor=pointer]:
+          - /url: https://forms.google.com/REPLACE_ME
+          - generic [ref=e284]: Kayıt
+          - generic [ref=e285]: Komitenizi seçin, yerinizi alın.
+          - img [ref=e287]
+  - region "İki günlük akış." [ref=e289]:
+    - generic [ref=e290]:
+      - generic [ref=e291]:
+        - heading "İki günlük akış." [level=2] [ref=e292]
+        - paragraph [ref=e293]:
+          - link "Matbu programı görüntüle" [ref=e294] [cursor=pointer]:
+            - /url: assets/images/program-genel.png
+            - text: Matbu programı görüntüle
+            - img [ref=e295]
+      - generic [ref=e297]:
+        - tablist "Program günleri" [ref=e298]:
+          - tab "9 Mayıs Cumartesi" [selected] [ref=e299] [cursor=pointer]:
+            - generic [ref=e300]: 9 Mayıs
+            - generic [ref=e301]: Cumartesi
+          - tab "10 Mayıs Pazar" [ref=e302] [cursor=pointer]:
+            - generic [ref=e303]: 10 Mayıs
+            - generic [ref=e304]: Pazar
+        - tabpanel "9 Mayıs Cumartesi" [ref=e306]:
+          - list [ref=e307]:
+            - listitem [ref=e308]:
+              - generic [ref=e309]: 08:30
+              - generic [ref=e310]:
+                - heading "Kayıt & Açılış Kahvesi" [level=3] [ref=e311]
+                - paragraph [ref=e312]: Ana Giriş · Konferans Salonu Fuayesi
+            - listitem [ref=e313]:
+              - generic [ref=e314]: 09:30
+              - generic [ref=e315]:
+                - 'heading "Açılış Konferansı: Yarını Şekillendiren Fikirler" [level=3] [ref=e316]'
+                - paragraph [ref=e317]: Ana Konferans Salonu
+            - listitem [ref=e318]:
+              - generic [ref=e319]: 11:00
+              - generic [ref=e320]:
+                - heading "Komite Oturumları · 1. Blok" [level=3] [ref=e321]
+                - paragraph [ref=e322]: Dağınık salonlar · 7 komite paralel
+            - listitem [ref=e323]:
+              - generic [ref=e324]: 13:00
+              - generic [ref=e325]:
+                - heading "Öğle Arası & Kampüs Turu" [level=3] [ref=e326]
+                - paragraph [ref=e327]: Merkez Yemekhane
+            - listitem [ref=e328]:
+              - generic [ref=e329]: 14:30
+              - generic [ref=e330]:
+                - heading "Komite Oturumları · 2. Blok" [level=3] [ref=e331]
+                - paragraph [ref=e332]: Dağınık salonlar
+            - listitem [ref=e333]:
+              - generic [ref=e334]: 16:30
+              - generic [ref=e335]:
+                - heading "Disiplinler Arası Panel" [level=3] [ref=e336]
+                - paragraph [ref=e337]: Ana Konferans Salonu
+            - listitem [ref=e338]:
+              - generic [ref=e339]: 18:30
+              - generic [ref=e340]:
+                - heading "Networking Etkinliği" [level=3] [ref=e341]
+                - paragraph [ref=e342]: Kampüs Bahçesi
+  - generic [ref=e344]:
+    - generic [ref=e345]: Organizasyon
+    - heading "Sorumlu Öğretmenlerimiz" [level=2] [ref=e346]
+    - generic [ref=e347]:
+      - generic [ref=e348]:
+        - img [ref=e350]
+        - heading "Murat ÇAVUŞLU" [level=4] [ref=e353]
+        - generic [ref=e354]: Başdanışman Öğretmen
+        - paragraph [ref=e355]: Çalıştayın genel akademik çerçevesini belirlemek, bilimsel standartların korunmasını sağlamak ve tüm komiteler arasında eşgüdümü yürütmekle sorumludur.
+      - generic [ref=e356]:
+        - img [ref=e358]
+        - heading "Berna GÜNGÖR" [level=4] [ref=e361]
+        - generic [ref=e362]: Danışman Öğretmen
+        - paragraph [ref=e363]: Komitelerin akademik ve organizasyonel sürecini yürütmek, öğrencileri bilimsel araştırma yöntemleri konusunda yönlendirmekle görevlidir.
+      - generic [ref=e364]:
+        - img [ref=e366]
+        - heading "Arzu ALPARSLAN" [level=4] [ref=e369]
+        - generic [ref=e370]: Danışman Öğretmen
+        - paragraph [ref=e371]: Komitelerin akademik ve organizasyonel sürecini yürütmek, çalışmaların belirlenen tema ile amaçlara uygunluğunu sağlamakla görevlidir.
+      - generic [ref=e372]:
+        - img [ref=e374]
+        - heading "Hüseyin PALABIYIKOĞLU" [level=4] [ref=e377]
+        - generic [ref=e378]: Danışman Öğretmen
+        - paragraph [ref=e379]: Komitelerin akademik ve organizasyonel sürecini yürütmek, öğrencileri bilimsel araştırma yöntemleri konusunda yönlendirmekle görevlidir.
+    - heading "Ekiplerimiz" [level=3] [ref=e380]
+    - generic [ref=e381]:
+      - generic [ref=e382]:
+        - img "Genel Koordinatör" [ref=e384]
+        - heading "Genel Koordinatör" [level=4] [ref=e386]
+      - generic [ref=e387]:
+        - img "Yardımcı Koordinatör" [ref=e389]
+        - heading "Yardımcı Koordinatör" [level=4] [ref=e391]
+      - generic [ref=e392]:
+        - img "PR Başkanı" [ref=e394]
+        - heading "PR Başkanı" [level=4] [ref=e396]
+      - generic [ref=e397]:
+        - img "Press Başkanı" [ref=e399]
+        - heading "Press Başkanı" [level=4] [ref=e401]
+      - generic [ref=e402]:
+        - img "Akademi Başkanı" [ref=e404]
+        - heading "Akademi Başkanı" [level=4] [ref=e406]
+      - generic [ref=e407]:
+        - img "Lojistik Eş Başkanları" [ref=e409]
+        - heading "Lojistik Eş Başkanları" [level=4] [ref=e411]
+      - generic [ref=e412]:
+        - img "Saha Eş Başkanları" [ref=e414]
+        - heading "Saha Eş Başkanları" [level=4] [ref=e416]
+  - generic [ref=e418]:
+    - generic [ref=e419]: Merak Edilenler
+    - heading "Sıkça Sorulan Sorular" [level=2] [ref=e420]
+    - generic [ref=e421]:
+      - generic [ref=e422]:
+        - button "Çalıştaya kimler katılabilir?" [ref=e423] [cursor=pointer]:
+          - generic [ref=e424]: Çalıştaya kimler katılabilir?
+          - img [ref=e425]
+        - paragraph [ref=e427]: Tüm lise öğrencileri çalıştayımıza katılabilir. Herhangi bir ön koşul veya deneyim şartı bulunmamaktadır.
+      - generic [ref=e428]:
+        - button "Çalıştay ücreti ne kadar?" [ref=e429] [cursor=pointer]:
+          - generic [ref=e430]: Çalıştay ücreti ne kadar?
+          - img [ref=e431]
+        - paragraph [ref=e433]: Katılım ücreti ve ödeme detayları başvuru sürecinde paylaşılacaktır.
+      - generic [ref=e434]:
+        - button "Başvuru nasıl yapılır?" [ref=e435] [cursor=pointer]:
+          - generic [ref=e436]: Başvuru nasıl yapılır?
+          - img [ref=e437]
+        - paragraph [ref=e439]: Sitemizde yer alan "Başvur" butonuna tıklayarak başvuru formunu doldurabilirsiniz. Başvurular değerlendirildikten sonra sonuçlar e-posta ile bildirilecektir.
+      - generic [ref=e440]:
+        - button "Çalıştay nerede gerçekleşecek?" [ref=e441] [cursor=pointer]:
+          - generic [ref=e442]: Çalıştay nerede gerçekleşecek?
+          - img [ref=e443]
+        - paragraph [ref=e445]: Çalıştay, Üsküdar Sağlık Bilimleri Üniversitesi'nde gerçekleşecektir.
+      - generic [ref=e446]:
+        - button "Komitemi nasıl seçeceğim?" [ref=e447] [cursor=pointer]:
+          - generic [ref=e448]: Komitemi nasıl seçeceğim?
+          - img [ref=e449]
+        - paragraph [ref=e451]: Başvuru formunda komite tercihlerinizi belirtebilirsiniz. Tercihleriniz ve kontenjan durumuna göre komite atamanız yapılacaktır.
+      - generic [ref=e452]:
+        - button "Etkinlik kaç gün sürecek?" [ref=e453] [cursor=pointer]:
+          - generic [ref=e454]: Etkinlik kaç gün sürecek?
+          - img [ref=e455]
+        - paragraph [ref=e457]: Çalıştay 9-10 Mayıs 2026 tarihlerinde, 2 gün sürecek şekilde planlanmıştır.
+  - generic [ref=e459]:
+    - generic [ref=e460]: Destekçilerimiz
+    - heading "Sponsorlarımız" [level=2] [ref=e461]
+    - generic [ref=e462]:
+      - img "Eker" [ref=e464]
+      - img "Porty" [ref=e466]
+      - img "Uludağ" [ref=e468]
+  - generic [ref=e470]:
+    - generic [ref=e471]: 9 - 10 Mayıs 2026
+    - heading "Etkinlik Bilgileri" [level=2] [ref=e472]
+    - generic [ref=e473]:
+      - img "Genel Program" [ref=e475]
+      - generic [ref=e476]:
+        - iframe [ref=e477]
+        - link "Google Maps'te Aç" [ref=e478] [cursor=pointer]:
+          - /url: https://maps.app.goo.gl/a2L6AKFRV5w7fnps9
+          - img [ref=e479]
+          - text: Google Maps'te Aç
+  - generic [ref=e483]:
+    - generic [ref=e484]: Geçmişimiz
+    - heading "Geçmiş Çalıştayımız" [level=2] [ref=e485]
+    - heading "'25" [level=3] [ref=e486]
+    - generic [ref=e487]:
+      - img "FBÇ '25" [ref=e489]
+      - img "FBÇ '25" [ref=e491]
+      - img "FBÇ '25" [ref=e493]
+      - img "FBÇ '25" [ref=e495]
+  - generic [ref=e497]:
+    - generic [ref=e498]: Bize Ulaşın
+    - heading "İletişim" [level=2] [ref=e499]
+    - generic [ref=e500]:
+      - generic [ref=e501]:
+        - img [ref=e503]
+        - heading "E-posta" [level=4] [ref=e506]
+        - link "maltepefenfbç@gmail.com" [ref=e507] [cursor=pointer]:
+          - /url: mailto:maltepefenfbç@gmail.com
+      - link "Instagram @mflfenbilimlericalistayi" [ref=e509] [cursor=pointer]:
+        - /url: https://instagram.com/mflfenbilimlericalistayi
+        - img [ref=e511]
+        - heading "Instagram" [level=4] [ref=e514]
+        - generic [ref=e515]: "@mflfenbilimlericalistayi"
+      - generic [ref=e516]:
+        - img [ref=e518]
+        - heading "Konum" [level=4] [ref=e521]
+        - link "Maltepe Fen Lisesi, İstanbul" [ref=e522] [cursor=pointer]:
+          - /url: https://maps.app.goo.gl/Kmb4B191Xa3VnykC6
+    - iframe [ref=e524]
+  - contentinfo [ref=e525]:
+    - generic [ref=e526]:
+      - generic [ref=e527]:
+        - generic [ref=e528]:
+          - generic [ref=e529]:
+            - img "MFL" [ref=e530]
+            - generic [ref=e531]:
+              - generic [ref=e532]: MFL
+              - generic [ref=e533]: FBÇ '26
+          - paragraph [ref=e534]: Maltepe Fen Lisesi Fen Bilimleri Çalıştayı. Gençliğin entelektüel birikimini buluşturan bir platform.
+        - generic [ref=e535]:
+          - heading "Sayfalar" [level=4] [ref=e536]
+          - list [ref=e537]:
+            - listitem [ref=e538]:
+              - link "Hakkımızda" [ref=e539] [cursor=pointer]:
+                - /url: "#about"
+            - listitem [ref=e540]:
+              - link "Ekibimiz" [ref=e541] [cursor=pointer]:
+                - /url: "#team"
+            - listitem [ref=e542]:
+              - link "Komiteler" [ref=e543] [cursor=pointer]:
+                - /url: "#komiteler"
+            - listitem [ref=e544]:
+              - link "Program" [ref=e545] [cursor=pointer]:
+                - /url: "#program"
+            - listitem [ref=e546]:
+              - link "SSS" [ref=e547] [cursor=pointer]:
+                - /url: "#faq"
+        - generic [ref=e548]:
+          - heading "İletişim" [level=4] [ref=e549]
+          - list [ref=e550]:
+            - listitem [ref=e551]:
+              - img [ref=e552]
+              - link "Maltepe Fen Lisesi, İstanbul" [ref=e555] [cursor=pointer]:
+                - /url: https://maps.app.goo.gl/Kmb4B191Xa3VnykC6
+            - listitem [ref=e556]:
+              - img [ref=e557]
+              - text: maltepefenfbç@gmail.com
+        - generic [ref=e560]:
+          - heading "Sosyal Medya" [level=4] [ref=e561]
+          - link "Instagram" [ref=e563] [cursor=pointer]:
+            - /url: https://instagram.com/mflfenbilimlericalistayi
+            - img [ref=e564]
+      - paragraph [ref=e568]: © 2026 Maltepe Fen Lisesi Çalıştay. Tüm hakları saklıdır.

@@ -1,0 +1,697 @@
+- generic [active] [ref=e1]:
+  - link "İçeriğe geç" [ref=e2] [cursor=pointer]:
+    - /url: "#main"
+  - main [ref=e3]:
+    - generic [ref=e4]:
+      - generic [ref=e6]:
+        - generic [ref=e7]: MFL · FBÇ · SAYI 04
+        - generic [ref=e8]: MAYIS 2026
+      - generic [ref=e9]:
+        - heading "Yarını Şekillendiren Fikirler." [level=1] [ref=e10]:
+          - text: Yarını
+          - text: Şekillendiren
+          - text: Fikirler.
+        - paragraph [ref=e11]: Bilim, bilinmeyene atılan en cesur sorudur; ilerleme ise o sorudan vazgeçmemektir.
+      - generic [ref=e12]:
+        - link "Başvur" [ref=e14] [cursor=pointer]:
+          - /url: https://forms.google.com/REPLACE_ME
+          - text: Başvur
+          - img [ref=e15]
+        - generic [ref=e17]:
+          - generic [ref=e18]: 9 — 10 Mayıs 2026
+          - generic [ref=e19]: Üsküdar Sağlık Bilimleri Üniversitesi
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - text: p. 02 · Prologue
+        - separator [ref=e24]
+      - generic [ref=e25]:
+        - heading "Bu sayının meselesi." [level=2] [ref=e26]
+        - paragraph [ref=e28]: "Dördüncü yıl. Alanlarında başarılı akademisyenlerin oturduğu yedi masa. Üniversite düzeyindeki sorular lise seviyesine indiriliyor ve bir haftasonuna sığdırılıyor. Kuantum fiziğinden adli bilimlere, nöropsikolojiden havacılığa uzanan bir yelpaze. Niyet sade: bilim sevgisini soru sormaktan doğan sevgi olarak besleyelim."
+      - generic [ref=e29]:
+        - generic [ref=e30]:
+          - generic [ref=e31]:
+            - generic [ref=e32]: "0"
+            - generic [ref=e33]: +
+          - generic [ref=e34]: Katılımcı
+        - generic [ref=e35]:
+          - generic [ref=e37]: "0"
+          - generic [ref=e38]: Komite
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - generic [ref=e41]: "0"
+            - generic [ref=e42]: +
+          - generic [ref=e43]: Konuşmacı
+        - generic [ref=e44]:
+          - generic [ref=e46]: "0"
+          - generic [ref=e47]: Gün
+    - generic [ref=e48]:
+      - generic [ref=e49]:
+        - text: p. 03 · Table of Contents
+        - separator [ref=e51]
+      - list [ref=e52]:
+        - listitem [ref=e53]:
+          - link "p. 02 Prologue Read →" [ref=e54] [cursor=pointer]:
+            - /url: "#prologue"
+            - generic [ref=e55]: p. 02
+            - generic [ref=e57]: Prologue
+            - generic [ref=e59]: Read →
+        - listitem [ref=e60]:
+          - link "p. 04 Kuantum Fiziği Read →" [ref=e61] [cursor=pointer]:
+            - /url: "#c-01"
+            - generic [ref=e62]: p. 04
+            - generic [ref=e64]: Kuantum Fiziği
+            - generic [ref=e66]: Read →
+        - listitem [ref=e67]:
+          - link "p. 05 Nöropsikoloji Read →" [ref=e68] [cursor=pointer]:
+            - /url: "#c-02"
+            - generic [ref=e69]: p. 05
+            - generic [ref=e71]: Nöropsikoloji
+            - generic [ref=e73]: Read →
+        - listitem [ref=e74]:
+          - link "p. 06 Yapay Zekâ, Veri & Doğal Dil İşleme Read →" [ref=e75] [cursor=pointer]:
+            - /url: "#c-03"
+            - generic [ref=e76]: p. 06
+            - generic [ref=e78]: Yapay Zekâ, Veri & Doğal Dil İşleme
+            - generic [ref=e80]: Read →
+        - listitem [ref=e81]:
+          - link "p. 07 Uçak ve Havacılık Read →" [ref=e82] [cursor=pointer]:
+            - /url: "#c-04"
+            - generic [ref=e83]: p. 07
+            - generic [ref=e85]: Uçak ve Havacılık
+            - generic [ref=e87]: Read →
+        - listitem [ref=e88]:
+          - link "p. 08 Moleküler Biyoloji & Genetik Read →" [ref=e89] [cursor=pointer]:
+            - /url: "#c-05"
+            - generic [ref=e90]: p. 08
+            - generic [ref=e92]: Moleküler Biyoloji & Genetik
+            - generic [ref=e94]: Read →
+        - listitem [ref=e95]:
+          - link "p. 09 Adli Bilimler, Kriminalistik & Toksikoloji Read →" [ref=e96] [cursor=pointer]:
+            - /url: "#c-06"
+            - generic [ref=e97]: p. 09
+            - generic [ref=e99]: Adli Bilimler, Kriminalistik & Toksikoloji
+            - generic [ref=e101]: Read →
+        - listitem [ref=e102]:
+          - link "p. 10 Akıllı Sistemler & Mühendislik Read →" [ref=e103] [cursor=pointer]:
+            - /url: "#c-07"
+            - generic [ref=e104]: p. 10
+            - generic [ref=e106]: Akıllı Sistemler & Mühendislik
+            - generic [ref=e108]: Read →
+        - listitem [ref=e109]:
+          - link "p. 11 The Programme Read →" [ref=e110] [cursor=pointer]:
+            - /url: "#programme"
+            - generic [ref=e111]: p. 11
+            - generic [ref=e113]: The Programme
+            - generic [ref=e115]: Read →
+        - listitem [ref=e116]:
+          - link "p. 12 Contributors Read →" [ref=e117] [cursor=pointer]:
+            - /url: "#contributors"
+            - generic [ref=e118]: p. 12
+            - generic [ref=e120]: Contributors
+            - generic [ref=e122]: Read →
+        - listitem [ref=e123]:
+          - link "p. 13 Reader's Questions Read →" [ref=e124] [cursor=pointer]:
+            - /url: "#readers"
+            - generic [ref=e125]: p. 13
+            - generic [ref=e127]: Reader's Questions
+            - generic [ref=e129]: Read →
+        - listitem [ref=e130]:
+          - link "p. 14 Supporters Read →" [ref=e131] [cursor=pointer]:
+            - /url: "#supporters"
+            - generic [ref=e132]: p. 14
+            - generic [ref=e134]: Supporters
+            - generic [ref=e136]: Read →
+        - listitem [ref=e137]:
+          - link "p. 15 Finale Read →" [ref=e138] [cursor=pointer]:
+            - /url: "#finale"
+            - generic [ref=e139]: p. 15
+            - generic [ref=e141]: Finale
+            - generic [ref=e143]: Read →
+        - listitem [ref=e144]:
+          - link "p. 16 Colophon Read →" [ref=e145] [cursor=pointer]:
+            - /url: "#colophon"
+            - generic [ref=e146]: p. 16
+            - generic [ref=e148]: Colophon
+            - generic [ref=e150]: Read →
+    - region "Kuantum Fiziği" [ref=e151]:
+      - generic [ref=e152]:
+        - generic [ref=e153]: C/01
+        - generic [ref=e154]: p. 04
+      - separator [ref=e156]
+      - generic [ref=e157]:
+        - generic [ref=e158]:
+          - heading "Kuantum Fiziği" [level=2] [ref=e159]
+          - paragraph [ref=e160]: Atom altı dünyanın kuralları klasik sezgiyi bozar. Süperpozisyon, dolanıklık ve kuantum hesaplama üzerinden teknolojinin bir sonraki katmanını masaya yatırıyoruz.
+          - list [ref=e161]:
+            - listitem [ref=e162]:
+              - generic [ref=e163]: —
+              - generic [ref=e164]: Kuantum mekaniği temelleri
+            - listitem [ref=e165]:
+              - generic [ref=e166]: —
+              - generic [ref=e167]: Süperpozisyon ve dolanıklık
+            - listitem [ref=e168]:
+              - generic [ref=e169]: —
+              - generic [ref=e170]: Kuantum hesaplama — qubit, kapı mantığı
+            - listitem [ref=e171]:
+              - generic [ref=e172]: —
+              - generic [ref=e173]: Kuantum iletişim ve güvenlik
+        - complementary [ref=e174]:
+          - text: Davetli Konuşmacılar
+          - list [ref=e175]:
+            - listitem [ref=e176]:
+              - generic [ref=e177]: Onur Pusuluk
+              - generic [ref=e178]: Kadir Has Üniversitesi
+            - listitem [ref=e179]:
+              - generic [ref=e180]: İnanç Kanık
+              - generic [ref=e181]: Radarsan
+            - listitem [ref=e182]:
+              - generic [ref=e183]: Elif Yunt
+              - generic [ref=e184]: Türk Alman Üniversitesi
+    - region "Nöropsikoloji" [ref=e185]:
+      - generic [ref=e186]:
+        - generic [ref=e187]: C/02
+        - generic [ref=e188]: p. 05
+      - separator [ref=e190]
+      - generic [ref=e191]:
+        - generic [ref=e192]:
+          - heading "Nöropsikoloji" [level=2] [ref=e193]
+          - paragraph [ref=e194]: Zihin biyolojiden doğar, ama onu aşar. Beyin bölgelerinin işlevinden karar verme anatomisine, davranışın ve bilincin nörobilimsel temellerini inceliyoruz.
+          - list [ref=e195]:
+            - listitem [ref=e196]:
+              - generic [ref=e197]: —
+              - generic [ref=e198]: Beyin bölgeleri ve fonksiyonları
+            - listitem [ref=e199]:
+              - generic [ref=e200]: —
+              - generic [ref=e201]: "Bilişsel süreçler: algı, dikkat, bellek"
+            - listitem [ref=e202]:
+              - generic [ref=e203]: —
+              - generic [ref=e204]: Nörolojik bozukluklar
+            - listitem [ref=e205]:
+              - generic [ref=e206]: —
+              - generic [ref=e207]: Bilinç ve karar verme
+        - complementary [ref=e208]:
+          - text: Davetli Konuşmacı
+          - list [ref=e209]:
+            - listitem [ref=e210]:
+              - generic [ref=e211]: Havva Demir
+              - generic [ref=e212]: İstanbul Üniversitesi
+    - region "Yapay Zekâ, Veri & Doğal Dil İşleme" [ref=e213]:
+      - generic [ref=e214]:
+        - generic [ref=e215]: C/03
+        - generic [ref=e216]: p. 06
+      - separator [ref=e218]
+      - generic [ref=e219]:
+        - generic [ref=e220]:
+          - heading "Yapay Zekâ, Veri & Doğal Dil İşleme" [level=2] [ref=e221]
+          - paragraph [ref=e222]: Bir makinenin "anladığı" an hâlâ tartışmalıdır. Makine öğrenmesinden büyük dil modellerine, doğal dil işlemeden veri etiğine; teknolojinin en dinamik cephesine bakıyoruz.
+          - list [ref=e223]:
+            - listitem [ref=e224]:
+              - generic [ref=e225]: —
+              - generic [ref=e226]: Makine öğrenmesi temelleri
+            - listitem [ref=e227]:
+              - generic [ref=e228]: —
+              - generic [ref=e229]: Büyük dil modelleri (LLM)
+            - listitem [ref=e230]:
+              - generic [ref=e231]: —
+              - generic [ref=e232]: Doğal dil işleme (NLP)
+            - listitem [ref=e233]:
+              - generic [ref=e234]: —
+              - generic [ref=e235]: Veri etiği ve önyargı
+        - complementary [ref=e236]:
+          - text: Davetli Konuşmacılar
+          - list [ref=e237]:
+            - listitem [ref=e238]:
+              - generic [ref=e239]: Mehmet Ali Bayram
+              - generic [ref=e240]: Yeditepe Üniversitesi
+            - listitem [ref=e241]:
+              - generic [ref=e242]: Emre Gül
+              - generic [ref=e243]: Fi-Product
+            - listitem [ref=e244]:
+              - generic [ref=e245]: Melis Dünya Sezer Gül
+              - generic [ref=e246]: Fi-Product
+    - region "Uçak ve Havacılık" [ref=e247]:
+      - generic [ref=e248]:
+        - generic [ref=e249]: C/04
+        - generic [ref=e250]: p. 07
+      - separator [ref=e252]
+      - generic [ref=e253]:
+        - generic [ref=e254]:
+          - heading "Uçak ve Havacılık" [level=2] [ref=e255]
+          - paragraph [ref=e256]: Bir uçağın havalanması, sıradan görünen bir mucizedir. Aerodinamikten uçuş sistemlerine, sürdürülebilir havacılığa uzanan mühendislik zincirini izliyoruz.
+          - list [ref=e257]:
+            - listitem [ref=e258]:
+              - generic [ref=e259]: —
+              - generic [ref=e260]: Aerodinamik prensipler
+            - listitem [ref=e261]:
+              - generic [ref=e262]: —
+              - generic [ref=e263]: Uçak tasarımı ve yapısal analiz
+            - listitem [ref=e264]:
+              - generic [ref=e265]: —
+              - generic [ref=e266]: Uçuş sistemleri ve aviyonik
+            - listitem [ref=e267]:
+              - generic [ref=e268]: —
+              - generic [ref=e269]: Sürdürülebilir havacılık ve uzay teknolojileri
+        - complementary [ref=e270]:
+          - text: Davetli Konuşmacılar
+          - list [ref=e271]:
+            - listitem [ref=e272]:
+              - generic [ref=e273]: Serhan Kök
+              - generic [ref=e274]: Maltepe Kadir Has BİLSEM
+            - listitem [ref=e275]:
+              - generic [ref=e276]: Dr. Caner Şentürk
+              - generic [ref=e277]: İstanbul Beykoz Üniversitesi
+    - region "Moleküler Biyoloji & Genetik" [ref=e278]:
+      - generic [ref=e279]:
+        - generic [ref=e280]: C/05
+        - generic [ref=e281]: p. 08
+      - separator [ref=e283]
+      - generic [ref=e284]:
+        - generic [ref=e285]:
+          - heading "Moleküler Biyoloji & Genetik" [level=2] [ref=e286]
+          - paragraph [ref=e287]: Yaşam moleküler bir dildir; DNA onun alfabesi. Genetik kodun okunmasından CRISPR ile yeniden yazılmasına, biyoteknolojinin güncel uygulamalarına uzanıyoruz.
+          - list [ref=e288]:
+            - listitem [ref=e289]:
+              - generic [ref=e290]: —
+              - generic [ref=e291]: DNA, RNA ve protein sentezi
+            - listitem [ref=e292]:
+              - generic [ref=e293]: —
+              - generic [ref=e294]: Gen düzenleme (CRISPR-Cas9)
+            - listitem [ref=e295]:
+              - generic [ref=e296]: —
+              - generic [ref=e297]: Genetik hastalıklar ve tanı
+            - listitem [ref=e298]:
+              - generic [ref=e299]: —
+              - generic [ref=e300]: Biyoteknoloji uygulamaları
+        - complementary [ref=e301]:
+          - text: Davetli Konuşmacılar
+          - list [ref=e302]:
+            - listitem [ref=e303]:
+              - generic [ref=e304]: Necla Birgül-Iyison
+              - generic [ref=e305]: Boğaziçi Üniversitesi
+            - listitem [ref=e306]:
+              - generic [ref=e307]: Yelda Özden Çiftçi
+              - generic [ref=e308]: Gebze Teknik Üniversitesi
+            - listitem [ref=e309]:
+              - generic [ref=e310]: Ercan Arıcan
+              - generic [ref=e311]: İstanbul Üniversitesi
+            - listitem [ref=e312]:
+              - generic [ref=e313]: Gül Çiçek Kılıç
+              - generic [ref=e314]: Gebze Teknik Üniversitesi
+            - listitem [ref=e315]:
+              - generic [ref=e316]: Işık Ertekin
+              - generic [ref=e317]: Şişli Terakki
+    - region "Adli Bilimler, Kriminalistik & Toksikoloji" [ref=e318]:
+      - generic [ref=e319]:
+        - generic [ref=e320]: C/06
+        - generic [ref=e321]: p. 09
+      - separator [ref=e323]
+      - generic [ref=e324]:
+        - generic [ref=e325]:
+          - heading "Adli Bilimler, Kriminalistik & Toksikoloji" [level=2] [ref=e326]
+          - paragraph [ref=e327]: Bir suç aydınlatıldığında bilim ile hukuk aynı masaya oturur. DNA analizinden olay yeri incelemesine, toksikolojiden delilin hukuki geçerliliğine kadar izliyoruz.
+          - list [ref=e328]:
+            - listitem [ref=e329]:
+              - generic [ref=e330]: —
+              - generic [ref=e331]: DNA ve biyolojik delil analizi
+            - listitem [ref=e332]:
+              - generic [ref=e333]: —
+              - generic [ref=e334]: Olay yeri inceleme yöntemleri
+            - listitem [ref=e335]:
+              - generic [ref=e336]: —
+              - generic [ref=e337]: Toksikoloji ve zehir bilimi
+            - listitem [ref=e338]:
+              - generic [ref=e339]: —
+              - generic [ref=e340]: Adli delilin hukuki geçerliliği
+        - complementary [ref=e341]:
+          - text: Davetli Konuşmacılar
+          - list [ref=e342]:
+            - listitem [ref=e343]:
+              - generic [ref=e344]: Miraç Özdemir
+              - generic [ref=e345]: İstanbul Gelişim Üniversitesi
+            - listitem [ref=e346]:
+              - generic [ref=e347]: Av. Ece Ertuğ Özkara
+              - generic [ref=e348]: Serbest Avukat
+    - region "Akıllı Sistemler & Mühendislik" [ref=e349]:
+      - generic [ref=e350]:
+        - generic [ref=e351]: C/07
+        - generic [ref=e352]: p. 10
+      - separator [ref=e354]
+      - generic [ref=e355]:
+        - generic [ref=e356]:
+          - heading "Akıllı Sistemler & Mühendislik" [level=2] [ref=e357]
+          - paragraph [ref=e358]: Bir robotun karar verişi, sensör-aktüatör döngüsünün zarif bir koreografisidir. Robotikten IoT'ye, Endüstri 4.0'dan insan-makine etkileşimine bakıyoruz.
+          - list [ref=e359]:
+            - listitem [ref=e360]:
+              - generic [ref=e361]: —
+              - generic [ref=e362]: Robotik ve otonom sistemler
+            - listitem [ref=e363]:
+              - generic [ref=e364]: —
+              - generic [ref=e365]: Gömülü sistemler ve IoT
+            - listitem [ref=e366]:
+              - generic [ref=e367]: —
+              - generic [ref=e368]: Endüstri 4.0 ve otomasyon
+            - listitem [ref=e369]:
+              - generic [ref=e370]: —
+              - generic [ref=e371]: İnsan-makine etkileşimi
+        - complementary [ref=e372]:
+          - text: Davetli Konuşmacılar
+          - list [ref=e373]:
+            - listitem [ref=e374]:
+              - generic [ref=e375]: Ali Buldu
+              - generic [ref=e376]: Marmara Üniversitesi
+            - listitem [ref=e377]:
+              - generic [ref=e378]: Mehmet Kaan İldiz
+              - generic [ref=e379]: Üsküdar Üniversitesi
+    - generic [ref=e380]:
+      - generic [ref=e381]:
+        - generic [ref=e382]: p. 11 · The Programme
+        - link "Matbu program →" [ref=e383] [cursor=pointer]:
+          - /url: /images/programblabla.png
+      - separator [ref=e385]
+      - heading "Program" [level=2] [ref=e386]
+      - generic [ref=e387]:
+        - generic [ref=e388]:
+          - generic [ref=e389]:
+            - generic [ref=e390]:
+              - generic [ref=e391]: 09.05.2026
+              - heading "Saturday" [level=3] [ref=e392]
+            - generic [ref=e393]: 07 slots
+          - separator [ref=e395]
+          - list [ref=e396]:
+            - listitem [ref=e397]:
+              - generic [ref=e398]:
+                - generic [ref=e399]: 08:30
+                - generic [ref=e400]:
+                  - generic [ref=e401]: Kayıt & Açılış Kahvesi
+                  - generic [ref=e402]: Ana Giriş · Konferans Salonu Fuayesi
+            - listitem [ref=e403]:
+              - generic [ref=e404]:
+                - generic [ref=e405]: 09:30
+                - generic [ref=e406]:
+                  - generic [ref=e407]: "Açılış Konferansı: Yarını Şekillendiren Fikirler"
+                  - generic [ref=e408]: Ana Konferans Salonu
+            - listitem [ref=e409]:
+              - generic [ref=e410]:
+                - generic [ref=e411]: 11:00
+                - generic [ref=e412]:
+                  - generic [ref=e413]: Komite Oturumları · 1. Blok
+                  - generic [ref=e414]: Dağınık salonlar · 7 komite paralel
+            - listitem [ref=e415]:
+              - generic [ref=e416]:
+                - generic [ref=e417]: 13:00
+                - generic [ref=e418]:
+                  - generic [ref=e419]: Öğle Arası & Kampüs Turu
+                  - generic [ref=e420]: Merkez Yemekhane
+            - listitem [ref=e421]:
+              - generic [ref=e422]:
+                - generic [ref=e423]: 14:30
+                - generic [ref=e424]:
+                  - generic [ref=e425]: Komite Oturumları · 2. Blok
+                  - generic [ref=e426]: Dağınık salonlar
+            - listitem [ref=e427]:
+              - generic [ref=e428]:
+                - generic [ref=e429]: 16:30
+                - generic [ref=e430]:
+                  - generic [ref=e431]: Disiplinler Arası Panel
+                  - generic [ref=e432]: Ana Konferans Salonu
+            - listitem [ref=e433]:
+              - generic [ref=e434]:
+                - generic [ref=e435]: 18:30
+                - generic [ref=e436]:
+                  - generic [ref=e437]: Networking Etkinliği
+                  - generic [ref=e438]: Kampüs Bahçesi
+        - generic [ref=e439]:
+          - generic [ref=e440]:
+            - generic [ref=e441]:
+              - generic [ref=e442]: 10.05.2026
+              - heading "Sunday" [level=3] [ref=e443]
+            - generic [ref=e444]: 07 slots
+          - separator [ref=e446]
+          - list [ref=e447]:
+            - listitem [ref=e448]:
+              - generic [ref=e449]:
+                - generic [ref=e450]: 09:00
+                - generic [ref=e451]:
+                  - generic [ref=e452]: Sabah Kahvesi & Beklenmedik Sohbetler
+                  - generic [ref=e453]: Fuaye
+            - listitem [ref=e454]:
+              - generic [ref=e455]:
+                - generic [ref=e456]: 10:00
+                - generic [ref=e457]:
+                  - generic [ref=e458]: Komite Oturumları · 3. Blok
+                  - generic [ref=e459]: Dağınık salonlar
+            - listitem [ref=e460]:
+              - generic [ref=e461]:
+                - generic [ref=e462]: 12:00
+                - generic [ref=e463]:
+                  - generic [ref=e464]: "Uzman Paneli: Disiplinler Arası Sorular"
+                  - generic [ref=e465]: Ana Konferans Salonu
+            - listitem [ref=e466]:
+              - generic [ref=e467]:
+                - generic [ref=e468]: 13:00
+                - generic [ref=e469]:
+                  - generic [ref=e470]: Öğle Arası
+                  - generic [ref=e471]: Merkez Yemekhane
+            - listitem [ref=e472]:
+              - generic [ref=e473]:
+                - generic [ref=e474]: 14:30
+                - generic [ref=e475]:
+                  - generic [ref=e476]: Komite Sunumları
+                  - generic [ref=e477]: İki günlük tartışmaların çıktıları
+            - listitem [ref=e478]:
+              - generic [ref=e479]:
+                - generic [ref=e480]: 16:00
+                - generic [ref=e481]:
+                  - generic [ref=e482]: Kapanış Konferansı
+                  - generic [ref=e483]: Ana Konferans Salonu
+            - listitem [ref=e484]:
+              - generic [ref=e485]:
+                - generic [ref=e486]: 17:00
+                - generic [ref=e487]:
+                  - generic [ref=e488]: Sertifika & Kapanış Resepsiyonu
+                  - generic [ref=e489]: Kampüs Bahçesi
+    - region "Bu sayıyı birlikte hazırladık." [ref=e490]:
+      - generic [ref=e491]:
+        - text: p. 12 · Contributors
+        - separator [ref=e493]
+      - heading "Bu sayıyı birlikte hazırladık." [level=2] [ref=e494]:
+        - text: Bu sayıyı
+        - emphasis [ref=e495]: birlikte
+        - text: hazırladık.
+      - generic [ref=e496]:
+        - generic [ref=e497]:
+          - generic [ref=e498]: Advisors · Öğretmenler
+          - generic [ref=e499]: "04"
+        - generic [ref=e500]:
+          - article [ref=e501]:
+            - generic [ref=e503]: M
+            - generic [ref=e504]:
+              - generic [ref=e505]:
+                - heading "Murat ÇAVUŞLU" [level=3] [ref=e506]
+                - generic [ref=e507]: "01"
+              - generic [ref=e508]: Başdanışman Öğretmen
+              - paragraph [ref=e509]: Çalıştayın akademik çerçevesini belirler, bilimsel standartların korunmasını sağlar ve komiteler arası eşgüdümü yürütür.
+          - article [ref=e510]:
+            - generic [ref=e512]: B
+            - generic [ref=e513]:
+              - generic [ref=e514]:
+                - heading "Berna GÜNGÖR" [level=3] [ref=e515]
+                - generic [ref=e516]: "02"
+              - generic [ref=e517]: Danışman Öğretmen
+              - paragraph [ref=e518]: Komitelerin akademik ve organizasyonel sürecini yürütür; öğrencileri bilimsel araştırma yöntemleri konusunda yönlendirir.
+          - article [ref=e519]:
+            - generic [ref=e521]: A
+            - generic [ref=e522]:
+              - generic [ref=e523]:
+                - heading "Arzu ALPARSLAN" [level=3] [ref=e524]
+                - generic [ref=e525]: "03"
+              - generic [ref=e526]: Danışman Öğretmen
+              - paragraph [ref=e527]: Komitelerin akademik ve organizasyonel sürecini yürütür; çalışmaların tema ve amaçlara uygunluğunu sağlar.
+          - article [ref=e528]:
+            - generic [ref=e530]: H
+            - generic [ref=e531]:
+              - generic [ref=e532]:
+                - heading "Hüseyin PALABIYIKOĞLU" [level=3] [ref=e533]
+                - generic [ref=e534]: "04"
+              - generic [ref=e535]: Danışman Öğretmen
+              - paragraph [ref=e536]: Komitelerin akademik ve organizasyonel sürecini yürütür; öğrencileri bilimsel araştırma yöntemleri konusunda yönlendirir.
+      - generic [ref=e537]:
+        - generic [ref=e538]:
+          - generic [ref=e539]: Production Team
+          - generic [ref=e540]: "07"
+        - generic [ref=e541]:
+          - article [ref=e542]:
+            - img "Genel Koordinatör" [ref=e544]
+            - generic [ref=e545]:
+              - generic [ref=e546]:
+                - heading "Genel Koordinatör" [level=3] [ref=e547]
+                - generic [ref=e548]: "05"
+              - generic [ref=e549]: General Coordination
+          - article [ref=e550]:
+            - img "Yardımcı Koordinatör" [ref=e552]
+            - generic [ref=e553]:
+              - generic [ref=e554]:
+                - heading "Yardımcı Koordinatör" [level=3] [ref=e555]
+                - generic [ref=e556]: "06"
+              - generic [ref=e557]: Deputy Coordination
+          - article [ref=e558]:
+            - img "PR Başkanı" [ref=e560]
+            - generic [ref=e561]:
+              - generic [ref=e562]:
+                - heading "PR Başkanı" [level=3] [ref=e563]
+                - generic [ref=e564]: "07"
+              - generic [ref=e565]: Public Relations
+          - article [ref=e566]:
+            - img "Press Başkanı" [ref=e568]
+            - generic [ref=e569]:
+              - generic [ref=e570]:
+                - heading "Press Başkanı" [level=3] [ref=e571]
+                - generic [ref=e572]: "08"
+              - generic [ref=e573]: Press & Media
+          - article [ref=e574]:
+            - img "Akademi Başkanı" [ref=e576]
+            - generic [ref=e577]:
+              - generic [ref=e578]:
+                - heading "Akademi Başkanı" [level=3] [ref=e579]
+                - generic [ref=e580]: "09"
+              - generic [ref=e581]: Academic Content
+          - article [ref=e582]:
+            - img "Lojistik Eş Başkanları" [ref=e584]
+            - generic [ref=e585]:
+              - generic [ref=e586]:
+                - heading "Lojistik Eş Başkanları" [level=3] [ref=e587]
+                - generic [ref=e588]: "10"
+              - generic [ref=e589]: Logistics Operations
+          - article [ref=e590]:
+            - img "Saha Eş Başkanları" [ref=e592]
+            - generic [ref=e593]:
+              - generic [ref=e594]:
+                - heading "Saha Eş Başkanları" [level=3] [ref=e595]
+                - generic [ref=e596]: "11"
+              - generic [ref=e597]: Field Operations
+    - region "Okurdan gelenler." [ref=e598]:
+      - generic [ref=e599]:
+        - text: p. 13 · Reader's Questions
+        - separator [ref=e601]
+      - heading "Okurdan gelenler." [level=2] [ref=e602]
+      - list [ref=e603]:
+        - listitem [ref=e604]:
+          - generic [ref=e605]:
+            - generic [ref=e606]: "01"
+            - separator [ref=e608]
+          - heading "Çalıştaya kimler katılabilir?" [level=3] [ref=e609]
+          - paragraph [ref=e610]: Tüm lise öğrencileri katılabilir. Herhangi bir ön koşul veya deneyim şartı bulunmamaktadır.
+        - listitem [ref=e611]:
+          - generic [ref=e612]:
+            - generic [ref=e613]: "02"
+            - separator [ref=e615]
+          - heading "Çalıştay ücreti ne kadar?" [level=3] [ref=e616]
+          - paragraph [ref=e617]: Katılım ücreti ve ödeme detayları başvuru sürecinde paylaşılacaktır.
+        - listitem [ref=e618]:
+          - generic [ref=e619]:
+            - generic [ref=e620]: "03"
+            - separator [ref=e622]
+          - heading "Başvuru nasıl yapılır?" [level=3] [ref=e623]
+          - paragraph [ref=e624]: Sitedeki "Başvur" bağlantısıyla başvuru formunu doldurabilirsiniz. Sonuçlar değerlendirme sonrası e-posta ile bildirilir.
+        - listitem [ref=e625]:
+          - generic [ref=e626]:
+            - generic [ref=e627]: "04"
+            - separator [ref=e629]
+          - heading "Çalıştay nerede gerçekleşecek?" [level=3] [ref=e630]
+          - paragraph [ref=e631]: Çalıştay, Üsküdar Sağlık Bilimleri Üniversitesi'nde gerçekleşecektir.
+        - listitem [ref=e632]:
+          - generic [ref=e633]:
+            - generic [ref=e634]: "05"
+            - separator [ref=e636]
+          - heading "Komitemi nasıl seçeceğim?" [level=3] [ref=e637]
+          - paragraph [ref=e638]: Başvuru formunda komite tercihlerinizi belirtebilirsiniz. Tercihleriniz ve kontenjan durumuna göre komite atamanız yapılır.
+        - listitem [ref=e639]:
+          - generic [ref=e640]:
+            - generic [ref=e641]: "06"
+            - separator [ref=e643]
+          - heading "Etkinlik kaç gün sürecek?" [level=3] [ref=e644]
+          - paragraph [ref=e645]: Çalıştay 9-10 Mayıs 2026 tarihlerinde, iki gün sürecek şekilde planlanmıştır.
+    - region "Bu sayıya destek verenler." [ref=e646]:
+      - generic [ref=e647]:
+        - text: p. 14 · Supporters
+        - separator [ref=e649]
+      - heading "Bu sayıya destek verenler." [level=2] [ref=e650]
+      - list [ref=e651]:
+        - listitem [ref=e652]:
+          - img "Eker" [ref=e653]
+        - listitem [ref=e654]:
+          - img "Porty" [ref=e655]
+        - listitem [ref=e656]:
+          - img "Uludağ" [ref=e657]
+      - separator [ref=e659]
+    - region "Komitenizi seç, yerini al." [ref=e660]:
+      - generic [ref=e661]:
+        - text: p. 15 · Finale
+        - separator [ref=e663]
+      - heading "Komitenizi seç, yerini al." [level=2] [ref=e664]:
+        - text: Komitenizi seç,
+        - text: yerini al.
+      - link "Başvur" [ref=e666] [cursor=pointer]:
+        - /url: https://forms.google.com/REPLACE_ME
+        - text: Başvur
+        - img [ref=e667]
+      - generic [ref=e669]:
+        - generic [ref=e670]:
+          - generic [ref=e671]: Email
+          - link "maltepefenfbç@gmail.com" [ref=e672] [cursor=pointer]:
+            - /url: mailto:maltepefenfbç@gmail.com
+        - generic [ref=e673]:
+          - generic [ref=e674]: Instagram
+          - link "@mflfenbilimlericalistayi" [ref=e675] [cursor=pointer]:
+            - /url: https://instagram.com/mflfenbilimlericalistayi
+        - generic [ref=e676]:
+          - generic [ref=e677]: Venue
+          - link "Üsküdar Sağlık Bilimleri Üniversitesi" [ref=e678] [cursor=pointer]:
+            - /url: https://maps.app.goo.gl/a2L6AKFRV5w7fnps9
+    - generic "Künye" [ref=e679]:
+      - generic [ref=e680]:
+        - text: p. 16 · Colophon
+        - separator [ref=e682]
+      - heading "Künye" [level=2] [ref=e683]
+      - generic [ref=e684]:
+        - generic [ref=e685]:
+          - generic [ref=e686]: About this issue
+          - paragraph [ref=e687]: "Maltepe Fen Lisesi Fen Bilimleri Çalıştayı '26 · dördüncü sayı. 9 — 10 Mayıs 2026 tarihlerinde Üsküdar Sağlık Bilimleri Üniversitesi kampüsünde. Yayıncı: Maltepe Fen Lisesi."
+        - generic [ref=e688]:
+          - generic [ref=e689]: Set in
+          - list [ref=e690]:
+            - listitem [ref=e691]: Fraunces
+            - listitem [ref=e692]: Inter
+            - listitem [ref=e693]: JetBrains Mono
+          - generic [ref=e694]: Palette
+          - list [ref=e695]:
+            - listitem [ref=e696]: "Void #05070E"
+            - listitem [ref=e697]: "Ink #0E1A33"
+            - listitem [ref=e698]: "Paper #E9EEF5"
+            - listitem [ref=e699]: "Accent #C88A3E"
+        - generic [ref=e700]:
+          - generic [ref=e701]: Design & Code
+          - paragraph [ref=e702]: "Tasarım ve kod: Maltepe Fen Lisesi · Fen Bilimleri Çalıştayı ekibi. Sahne: tek merkezi Three.js yayılımı, yedi imza."
+      - generic [ref=e703]:
+        - separator [ref=e704]
+        - generic [ref=e705]:
+          - generic [ref=e706]: © 2026 Maltepe Fen Lisesi. Tüm hakları saklıdır.
+          - generic [ref=e707]:
+            - generic [ref=e708]: SAYI 04
+            - generic [ref=e709]: ·
+            - generic [ref=e710]: MAYIS 2026
+            - generic [ref=e711]: ·
+            - generic [ref=e712]: Printed for the curious.
+  - generic [ref=e715]:
+    - button "Menu" [ref=e716]:
+      - img [ref=e718]
+      - generic: Menu
+    - button "Inspect" [ref=e722]:
+      - img [ref=e724]
+      - generic: Inspect
+    - button "Audit" [ref=e726]:
+      - img [ref=e728]
+      - generic: Audit
+    - button "Settings" [ref=e731]:
+      - img [ref=e733]
+      - generic: Settings

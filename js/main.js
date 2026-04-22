@@ -1,3 +1,48 @@
+/* ==================== PRELOADER ==================== */
+(function preloader() {
+    const fill = document.getElementById('preloaderFill');
+    const pct = document.getElementById('preloaderPct');
+    const pre = document.getElementById('preloader');
+    if (!pre) return;
+
+    const imgs = Array.from(document.images);
+    let loaded = 0;
+    const total = Math.max(imgs.length, 1);
+
+    function update() {
+        const p = Math.round((loaded / total) * 100);
+        if (fill) fill.style.width = p + '%';
+        if (pct) pct.textContent = p + '%';
+    }
+
+    imgs.forEach(img => {
+        if (img.complete) {
+            loaded++;
+        } else {
+            img.addEventListener('load', () => { loaded++; update(); }, { once: true });
+            img.addEventListener('error', () => { loaded++; update(); }, { once: true });
+        }
+    });
+    update();
+
+    function finish() {
+        if (pre.classList.contains('is-hidden')) return;
+        if (fill) fill.style.width = '100%';
+        if (pct) pct.textContent = '100%';
+        setTimeout(() => {
+            pre.classList.add('is-hidden');
+            document.body.classList.remove('is-loading');
+            window.dispatchEvent(new Event('preloader:done'));
+        }, 350);
+    }
+
+    if (document.readyState === 'complete') finish();
+    else window.addEventListener('load', finish);
+
+    // Hard fallback — never gate longer than 6s even if an asset hangs.
+    setTimeout(finish, 6000);
+})();
+
 /* ==================== GOOGLE FORMS LINK ==================== */
 const GOOGLE_FORMS_URL = 'https://docs.google.com/forms/d/1ZZhDnKlnY8I3jcgfbBd72_pR7xphhxl4y2pHaWWI3jI/viewform?edit_requested=true';
 
@@ -479,3 +524,19 @@ document.querySelectorAll('[data-tabs]').forEach(root => {
 });
 
 statNumbers.forEach(el => statObserver.observe(el));
+
+/* ==================== SCROLL PROGRESS BAR ==================== */
+(function scrollProgress() {
+    const fill = document.getElementById('scrollProgressFill');
+    if (!fill) return;
+    let raf = 0;
+    function tick() {
+        raf = 0;
+        const h = document.documentElement.scrollHeight - window.innerHeight;
+        const p = h > 0 ? (window.scrollY / h) * 100 : 0;
+        fill.style.width = Math.min(100, Math.max(0, p)) + '%';
+    }
+    window.addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(tick); }, { passive: true });
+    window.addEventListener('resize', tick);
+    tick();
+})();

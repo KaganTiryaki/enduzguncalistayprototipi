@@ -36,7 +36,19 @@
     }
     </script>
 </head>
-<body>
+<body class="is-loading">
+    <!-- Preloader (asset gating) -->
+    <div id="preloader" role="status" aria-live="polite" aria-label="Site yükleniyor">
+        <div class="preloader__inner">
+            <div class="preloader__logo">Maltepe FBÇ '26</div>
+            <div class="preloader__bar"><div class="preloader__bar-fill" id="preloaderFill"></div></div>
+            <div class="preloader__pct" id="preloaderPct">0%</div>
+        </div>
+    </div>
+
+    <!-- Scroll progress bar -->
+    <div id="scrollProgress" aria-hidden="true"><div id="scrollProgressFill"></div></div>
+
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
     <!-- ==================== NAVBAR ==================== -->
