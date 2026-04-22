@@ -40,9 +40,12 @@
     <!-- Preloader (asset gating) -->
     <div id="preloader" role="status" aria-live="polite" aria-label="Site yükleniyor">
         <div class="preloader__inner">
-            <div class="preloader__logo">Maltepe FBÇ '26</div>
+            <div class="preloader__logo-wrap">
+                <span class="preloader__ring" aria-hidden="true"></span>
+                <span class="preloader__ring preloader__ring--delay" aria-hidden="true"></span>
+                <img src="assets/images/çalıştay.png" alt="MFL FBÇ '26" class="preloader__logo-img">
+            </div>
             <div class="preloader__bar"><div class="preloader__bar-fill" id="preloaderFill"></div></div>
-            <div class="preloader__pct" id="preloaderPct">0%</div>
         </div>
     </div>
 
