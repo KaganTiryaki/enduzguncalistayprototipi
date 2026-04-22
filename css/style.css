@@ -244,11 +244,15 @@ img {
 .hamburger {
     display: none;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 5px;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 4px;
+    width: var(--touch-min);
+    height: var(--touch-min);
+    padding: 0;
     z-index: 1001;
 }
 

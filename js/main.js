@@ -23,18 +23,37 @@ window.addEventListener('scroll', () => {
 const hamburger = document.getElementById('hamburger');
 const mobileMenu = document.getElementById('mobileMenu');
 
+function openNav() {
+    hamburger.classList.add('active');
+    mobileMenu.classList.add('active');
+    document.body.classList.add('menu-open');
+    hamburger.setAttribute('aria-expanded', 'true');
+}
+
+function closeNav() {
+    hamburger.classList.remove('active');
+    mobileMenu.classList.remove('active');
+    document.body.classList.remove('menu-open');
+    hamburger.setAttribute('aria-expanded', 'false');
+}
+
 hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    mobileMenu.classList.toggle('active');
-    document.body.classList.toggle('menu-open');
+    if (mobileMenu.classList.contains('active')) closeNav();
+    else openNav();
 });
 
 document.querySelectorAll('.mobile-link').forEach(link => {
-    link.addEventListener('click', () => {
-        hamburger.classList.remove('active');
-        mobileMenu.classList.remove('active');
-        document.body.classList.remove('menu-open');
-    });
+    link.addEventListener('click', closeNav);
+});
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && mobileMenu.classList.contains('active')) closeNav();
+});
+
+// Outside-tap: drawer is full-width on mobile, so a click on the menu's own
+// background (outside the .mobile-links list) closes it.
+mobileMenu.addEventListener('click', (e) => {
+    if (e.target === mobileMenu) closeNav();
 });
 
 /* ==================== SMOOTH SCROLL ==================== */
