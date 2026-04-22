@@ -2200,7 +2200,7 @@ img {
 
 .committee-modal__panel {
     position: relative;
-    width: min(720px, 92vw);
+    width: min(780px, 94vw);
     max-height: 92vh;
     background: rgba(12, 22, 42, 0.42);
     border: 1px solid rgba(159, 182, 213, 0.32);
@@ -2266,7 +2266,7 @@ img {
 /* Symbol reveal area — the committee icon draws itself */
 .committee-modal__symbol {
     position: relative;
-    height: 180px;
+    height: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2278,10 +2278,10 @@ img {
     flex-shrink: 0;
 }
 .committee-modal__symbol svg {
-    width: 140px;
-    height: 140px;
+    width: 92px;
+    height: 92px;
     color: var(--accent-light);
-    filter: drop-shadow(0 0 20px rgba(159, 182, 213, 0.5));
+    filter: drop-shadow(0 0 16px rgba(159, 182, 213, 0.5));
 }
 .committee-modal__symbol svg * {
     fill: none !important;
@@ -2322,8 +2322,8 @@ img {
 .committee-modal__symbol::after {
     content: '';
     position: absolute;
-    width: 180px;
-    height: 180px;
+    width: 130px;
+    height: 130px;
     border: 1px solid rgba(159, 182, 213, 0.3);
     border-radius: 50%;
     opacity: 0;
@@ -2339,14 +2339,14 @@ img {
 .committee-modal__inner {
     position: relative;
     z-index: 2;
-    padding: 36px 40px 40px;
+    padding: 22px 32px 26px;
     overflow: visible;
 }
 
 .committee-modal__head {
     border-bottom: 1px solid rgba(129, 159, 205, 0.2);
-    padding-bottom: 22px;
-    margin-bottom: 28px;
+    padding-bottom: 14px;
+    margin-bottom: 18px;
 }
 
 .committee-modal__num,
@@ -2366,44 +2366,44 @@ img {
 
 .committee-modal__num {
     font-family: var(--font-display);
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     letter-spacing: 0.2em;
     color: var(--accent);
     font-weight: 600;
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
 }
 .committee-modal__title {
     font-family: var(--font-display);
-    font-size: clamp(1.7rem, 3vw, 2.4rem);
+    font-size: clamp(1.35rem, 2.2vw, 1.85rem);
     color: var(--white);
-    margin: 0 0 14px;
+    margin: 0 0 8px;
     font-weight: 700;
     line-height: 1.15;
 }
 .committee-modal__tagline {
-    font-size: 1.02rem;
+    font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.8);
     margin: 0;
-    line-height: 1.65;
-    max-width: 720px;
+    line-height: 1.5;
+    max-width: 680px;
 }
 
 .committee-modal__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 32px;
+    gap: 18px 24px;
 }
 .committee-modal__block--full { grid-column: 1 / -1; }
 
 .committee-modal__lbl {
-    font-size: 0.72rem;
+    font-size: 0.66rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--accent);
     font-weight: 600;
     display: block;
-    margin-bottom: 14px;
+    margin-bottom: 8px;
 }
 
 .committee-modal__topics,
@@ -2413,23 +2413,23 @@ img {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
 }
 .committee-modal__topics li,
 .committee-modal__learn li {
-    font-size: 0.92rem;
+    font-size: 0.83rem;
     color: rgba(255, 255, 255, 0.88);
-    line-height: 1.55;
-    padding-left: 22px;
+    line-height: 1.45;
+    padding-left: 18px;
     position: relative;
 }
 .committee-modal__topics li::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 7px;
-    width: 8px;
-    height: 8px;
+    top: 5px;
+    width: 6px;
+    height: 6px;
     border: 1.5px solid var(--accent);
     border-radius: 50%;
     background: rgba(129, 159, 205, 0.2);
@@ -2441,21 +2441,22 @@ img {
     top: 0;
     color: var(--accent-light);
     font-weight: 700;
+    font-size: 0.9rem;
 }
 
 .committee-modal__speakers {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
 }
 .speaker-highlight {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(129, 159, 205, 0.18);
-    border-radius: 8px;
-    padding: 16px 18px;
+    border-radius: 7px;
+    padding: 10px 12px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
     transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
 }
 .speaker-highlight:hover {
@@ -2465,20 +2466,22 @@ img {
 }
 .speaker-highlight__name {
     font-family: var(--font-display);
-    font-size: 1.05rem;
+    font-size: 0.9rem;
     font-weight: 700;
     color: var(--white);
+    line-height: 1.25;
 }
 .speaker-highlight__inst {
-    font-size: 0.82rem;
+    font-size: 0.72rem;
     color: var(--accent);
     font-weight: 600;
+    line-height: 1.3;
 }
 .speaker-highlight__focus {
-    font-size: 0.82rem;
+    font-size: 0.72rem;
     color: rgba(255, 255, 255, 0.7);
-    margin-top: 4px;
-    line-height: 1.5;
+    margin-top: 2px;
+    line-height: 1.4;
 }
 
 body.modal-open { overflow: hidden; }
