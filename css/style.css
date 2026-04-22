@@ -2512,10 +2512,50 @@ img {
 body.modal-open { overflow: hidden; }
 
 @media (max-width: 768px) {
-    .committee-modal__inner { padding: 24px 22px 28px; }
-    .committee-modal__grid { grid-template-columns: 1fr; gap: 24px; }
-    .committee-modal__symbol { height: 140px; }
-    .committee-modal__symbol svg { width: 100px; height: 100px; }
+    .committee-modal {
+        padding: 0;
+    }
+    .committee-modal__panel {
+        width: 100vw;
+        max-width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        max-height: 100vh;
+        max-height: 100dvh;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+    .committee-modal__symbol {
+        height: 100px;
+    }
+    .committee-modal__symbol svg {
+        width: 78px;
+        height: 78px;
+    }
+    .committee-modal__symbol::after {
+        width: 110px;
+        height: 110px;
+    }
+    .committee-modal__inner {
+        padding: 18px 20px 22px;
+    }
+    .committee-modal__grid {
+        grid-template-columns: 1fr;
+        gap: 16px 0;
+    }
+    .committee-modal__title {
+        font-size: clamp(1.2rem, 5vw, 1.6rem);
+    }
+    .committee-modal__close {
+        width: 44px;
+        height: 44px;
+        top: 12px;
+        right: 12px;
+    }
+    .committee-modal__speakers {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* ==================== EXPERIMENTAL — COMMITTEES CAROUSEL ==================== */
