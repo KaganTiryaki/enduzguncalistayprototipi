@@ -552,12 +552,38 @@ const sectionObserver = new IntersectionObserver((entries) => {
 
 sectionEls.forEach(el => sectionObserver.observe(el));
 
-// ===== MOUSE PARALLAX =====
+// ===== MOUSE / GYRO PARALLAX =====
 const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
 window.addEventListener('mousemove', (e) => {
     mouse.tx = (e.clientX / window.innerWidth - 0.5) * 2;
     mouse.ty = (e.clientY / window.innerHeight - 0.5) * 2;
 });
+
+if (isMobile && typeof DeviceOrientationEvent !== 'undefined') {
+    const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+    const onOrient = (e) => {
+        // gamma: left-right tilt [-90..90], beta: front-back tilt [-180..180]
+        // Subtract 35° baseline so phone held at typical reading angle is neutral.
+        const gx = (e.gamma ?? 0) / 30;             // ±~3 → clamped to ±1
+        const gy = ((e.beta ?? 35) - 35) / 30;
+        mouse.tx = clamp(gx, -1, 1);
+        mouse.ty = clamp(gy, -1, 1);
+    };
+
+    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
+        // iOS 13+ requires a user gesture to grant access. Try silently on the
+        // first tap; if denied, gyro parallax stays off (no error UI).
+        document.addEventListener('touchend', async function once() {
+            document.removeEventListener('touchend', once);
+            try {
+                const r = await DeviceOrientationEvent.requestPermission();
+                if (r === 'granted') window.addEventListener('deviceorientation', onOrient);
+            } catch (_) { /* permission denied — silent */ }
+        }, { once: true });
+    } else {
+        window.addEventListener('deviceorientation', onOrient);
+    }
+}
 
 // ===== RESIZE =====
 let resizeTimeout;
