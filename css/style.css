@@ -342,8 +342,8 @@ img {
 }
 
 .hero-logo {
-    width: 150px;
-    height: 150px;
+    width: clamp(110px, 22vw, 180px);
+    height: clamp(110px, 22vw, 180px);
     border-radius: 50%;
     object-fit: contain;
     margin-bottom: 24px;
@@ -1637,7 +1637,12 @@ img {
 }
 
 /* Small Mobile */
-@media (max-width: 400px) {
+@media (max-width: 480px) {
+    .hero-buttons .btn {
+        max-width: none;
+        width: 100%;
+    }
+
     .countdown-number {
         font-size: 1.6rem;
         min-width: 48px;
