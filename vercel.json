@@ -1,0 +1,5 @@
+{
+  "rewrites": [
+    { "source": "/yemek/k/:kod", "destination": "/yemek/k.html?kod=:kod" }
+  ]
+}

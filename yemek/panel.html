@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel — Yemek QR</title>
+  <link rel="stylesheet" href="yemek.css">
+</head>
+<body class="y-panel">
+  <!-- PIN Gate -->
+  <section id="p-pin-gate" class="y-card p-pin-card">
+    <h2>Yönetici Girişi</h2>
+    <input type="password" id="p-pin-input" maxlength="8" inputmode="numeric" placeholder="PIN">
+    <button id="p-pin-submit" class="y-btn y-btn-primary">Giriş</button>
+    <p id="p-pin-hata" class="y-hata" hidden></p>
+  </section>
+
+  <main id="p-main" hidden>
+    <header class="p-header">
+      <h1>Yemek QR — Yönetim</h1>
+      <div id="p-sayac" class="p-sayac">—</div>
+    </header>
+
+    <nav class="p-tabs">
+      <button class="p-tab p-tab-aktif" data-tab="liste">Liste</button>
+      <button class="p-tab" data-tab="ekle">Toplu Ekle</button>
+    </nav>
+
+    <section id="p-tab-liste" class="p-section">
+      <div class="p-liste-ust">
+        <input type="text" id="p-arama" placeholder="Ad / okul / kod ara">
+        <button id="p-yenile" class="y-btn y-btn-secondary p-btn-sm">Yenile</button>
+      </div>
+      <div class="p-tablo-wrap">
+        <table class="p-tablo">
+          <thead>
+            <tr>
+              <th>Ad Soyad</th>
+              <th>Okul</th>
+              <th>Kod</th>
+              <th>9 May</th>
+              <th>10 May</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="p-liste-govde"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="p-tab-ekle" class="p-section" hidden>
+      <h2>CSV / Excel yükle</h2>
+      <p>Kolonlar: <code>ad_soyad</code>, <code>okul</code> (opsiyonel). Her satır bir katılımcı.</p>
+      <input type="file" id="p-csv-file" accept=".csv,.txt">
+      <div id="p-csv-onizleme" class="p-csv-onizleme" hidden></div>
+      <button id="p-csv-yukle" class="y-btn y-btn-primary" hidden>Sisteme Ekle</button>
+
+      <hr style="margin: 2rem 0; border: 0; border-top: 1px solid var(--y-gray-light);">
+
+      <h2>Tek tek ekle</h2>
+      <form id="p-tek-form">
+        <input type="text" id="p-tek-ad" placeholder="Ad Soyad" required>
+        <input type="text" id="p-tek-okul" placeholder="Okul">
+        <button type="submit" class="y-btn y-btn-primary">Ekle</button>
+      </form>
+    </section>
+
+    <section id="p-linkler" class="p-section" hidden>
+      <h2>Oluşturulan linkler</h2>
+      <p>Aşağıyı kopyalayıp WhatsApp/email ile paylaşabilirsin:</p>
+      <textarea id="p-link-metin" rows="10" readonly></textarea>
+      <button id="p-link-kopyala" class="y-btn y-btn-primary">Kopyala</button>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script type="module" src="js/panel.js"></script>
+</body>
+</html>

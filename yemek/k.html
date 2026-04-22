@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Çalıştay Yemek QR — MFL FBÇ '26</title>
+  <link rel="stylesheet" href="yemek.css">
+</head>
+<body class="y-katilimci" data-mod="link">
+  <main class="y-wrap">
+    <header class="y-header">
+      <h1>Çalıştay Yemek</h1>
+      <p class="y-sub">MFL FBÇ '26 — 9-10 Mayıs</p>
+    </header>
+
+    <section id="y-qr" class="y-card" hidden>
+      <div class="y-katilimci-bilgi">
+        <h2 id="y-ad">—</h2>
+        <p id="y-okul">—</p>
+      </div>
+      <div id="y-qr-canvas" class="y-qr-canvas"></div>
+      <div class="y-durum-listesi">
+        <div class="y-durum-item" id="y-gun1">
+          <span class="y-gun-label">9 Mayıs (Cumartesi)</span>
+          <span class="y-gun-badge">—</span>
+        </div>
+        <div class="y-durum-item" id="y-gun2">
+          <span class="y-gun-label">10 Mayıs (Pazar)</span>
+          <span class="y-gun-badge">—</span>
+        </div>
+      </div>
+      <button id="y-cikis" class="y-btn y-btn-secondary">Farklı katılımcı girişi</button>
+    </section>
+
+    <section id="y-giris" class="y-card" hidden>
+      <h2>Katılımcı kodu</h2>
+      <p>Sana gönderilen 6 haneli kodu gir:</p>
+      <input type="text" id="y-kod-input" maxlength="6" autocapitalize="characters" autocomplete="off">
+      <button id="y-kod-submit" class="y-btn y-btn-primary">QR'ımı Göster</button>
+      <p id="y-giris-hata" class="y-hata" hidden></p>
+    </section>
+
+    <div id="y-offline-banner" class="y-offline" hidden>
+      ⚠️ Çevrimdışı — son bilinen durum gösteriliyor
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+  <script type="module" src="js/katilimci.js"></script>
+</body>
+</html>
