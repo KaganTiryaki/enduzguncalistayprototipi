@@ -2923,7 +2923,7 @@ body.is-loading {
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: radial-gradient(ellipse at center, #0e1f3a 0%, #060d1c 70%);
+    background: #0a1628;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2934,65 +2934,63 @@ body.is-loading {
     visibility: hidden;
     pointer-events: none;
 }
-.preloader__inner {
-    display: flex;
+#preloader {
     flex-direction: column;
-    align-items: center;
-    gap: 2.5rem;
-    width: min(220px, 60vw);
+    gap: 32px;
 }
-.preloader__logo-wrap {
+.preloader__scene {
     position: relative;
-    width: 130px;
-    height: 130px;
+    width: 180px;
+    height: 180px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 .preloader__logo-img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    filter: drop-shadow(0 0 24px rgba(159, 182, 213, 0.45));
-    animation: preloaderLogoPulse 2.4s ease-in-out infinite;
-}
-.preloader__ring {
-    position: absolute;
-    inset: -8px;
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
-    border: 1px solid rgba(159, 182, 213, 0.4);
-    opacity: 0;
-    animation: preloaderRing 2.4s ease-out infinite;
-    pointer-events: none;
+    object-fit: contain;
+    animation: preloaderPulse 2.4s ease-in-out infinite;
 }
-.preloader__ring--delay {
-    animation-delay: 1.2s;
+.preloader__orbit {
+    position: absolute;
+    border-radius: 50%;
 }
-@keyframes preloaderLogoPulse {
-    0%, 100% { transform: scale(1); opacity: 0.92; }
-    50%      { transform: scale(1.04); opacity: 1; }
+.preloader__orbit--outer {
+    inset: 0;
+    background: conic-gradient(from 0deg, transparent 0%, rgba(159, 182, 213, 0.65) 45%, transparent 60%);
+    -webkit-mask: radial-gradient(closest-side, transparent 82px, #000 84px, #000 89px, transparent 91px);
+            mask: radial-gradient(closest-side, transparent 82px, #000 84px, #000 89px, transparent 91px);
+    animation: preloaderSpin 3.2s linear infinite;
 }
-@keyframes preloaderRing {
-    0%   { transform: scale(0.85); opacity: 0.7; }
-    100% { transform: scale(1.4);  opacity: 0; }
+.preloader__orbit--inner {
+    inset: 16px;
+    background: conic-gradient(from 180deg, transparent 0%, rgba(129, 159, 205, 0.5) 40%, transparent 58%);
+    -webkit-mask: radial-gradient(closest-side, transparent 66px, #000 68px, #000 72px, transparent 74px);
+            mask: radial-gradient(closest-side, transparent 66px, #000 68px, #000 72px, transparent 74px);
+    animation: preloaderSpin 5s linear infinite reverse;
+}
+@keyframes preloaderSpin {
+    to { transform: rotate(360deg); }
+}
+@keyframes preloaderPulse {
+    0%, 100% { transform: scale(1);    filter: drop-shadow(0 0 18px rgba(159, 182, 213, 0.4)); }
+    50%      { transform: scale(1.04); filter: drop-shadow(0 0 34px rgba(159, 182, 213, 0.75)); }
 }
 .preloader__bar {
-    width: 100%;
+    width: min(220px, 55vw);
     height: 2px;
     background: rgba(255, 255, 255, 0.12);
-    border-radius: 1px;
+    border-radius: 2px;
     overflow: hidden;
 }
 .preloader__bar-fill {
     width: 0%;
     height: 100%;
-    background: linear-gradient(90deg, rgba(159, 182, 213, 0.6), var(--white));
-    transition: width 0.25s ease;
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
-}
-@media (prefers-reduced-motion: reduce) {
-    .preloader__logo-img,
-    .preloader__ring { animation: none; }
+    background: var(--white);
+    transition: width 0.2s ease;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
 }
 
 /* ==================== IMAGE LIGHTBOX ==================== */
