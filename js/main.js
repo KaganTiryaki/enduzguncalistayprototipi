@@ -352,6 +352,43 @@ if (committeeModal) {
     // Expose for carousel integration (new experimental committees section)
     window.openCommitteeModal = openCommittee;
 
+    // Swipe-down to close (mobile). Touch events only fire on touch devices,
+    // so this is a no-op on desktop without a separate guard.
+    const swipePanel = committeeModal.querySelector('.committee-modal__panel');
+    let touchStartY = 0;
+    let touchStartTime = 0;
+    let dragging = false;
+
+    swipePanel.addEventListener('touchstart', (e) => {
+        if (!committeeModal.classList.contains('is-open')) return;
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = performance.now();
+        dragging = true;
+        swipePanel.style.transition = 'none';
+    }, { passive: true });
+
+    swipePanel.addEventListener('touchmove', (e) => {
+        if (!dragging) return;
+        const delta = e.touches[0].clientY - touchStartY;
+        if (delta < 0) return; // ignore upward drag
+        swipePanel.style.transform = `translateY(${delta}px)`;
+    }, { passive: true });
+
+    swipePanel.addEventListener('touchend', (e) => {
+        if (!dragging) return;
+        dragging = false;
+        const delta = e.changedTouches[0].clientY - touchStartY;
+        const elapsed = performance.now() - touchStartTime;
+        const velocity = delta / Math.max(elapsed, 1);
+        swipePanel.style.transition = '';
+        if (delta > 80 || velocity > 0.5) {
+            closeCommittee();
+            setTimeout(() => { swipePanel.style.transform = ''; }, 450);
+        } else {
+            swipePanel.style.transform = '';
+        }
+    }, { passive: true });
+
     // Legacy card binding kept for any non-carousel .committee cards still in DOM
     document.querySelectorAll('.committee:not(.committee--cta)').forEach(card => {
         const num = card.querySelector('.committee__num')?.textContent?.trim();
