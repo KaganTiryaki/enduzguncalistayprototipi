@@ -2814,3 +2814,44 @@ body.committees-visible #committees-stage {
     }
 }
 
+/* ==================== MOBILE GLOBAL — Aşama 1 ==================== */
+/* Section padding shrink + multi-column grids fall back to single column.
+   Goes after all per-component @media blocks so it overrides them in cascade order. */
+@media (max-width: 768px) {
+    .section {
+        padding: 60px 0;
+    }
+    .vm-grid,
+    .stats-grid,
+    .activities-grid,
+    .team-grid,
+    .subteam-grid,
+    .sponsors-grid,
+    .contact-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+@media (max-width: 480px) {
+    .section {
+        padding: 44px 0;
+    }
+}
+
+/* Disable hover-only lift/glow effects on touch-only devices.
+   pointer/hover queries respect the actual input device, not just viewport size,
+   so a tablet with a stylus still gets desktop hover behavior. */
+@media (hover: none) {
+    .vm-card:hover,
+    .stat-item:hover,
+    .activity-card:hover,
+    .team-card:hover,
+    .subteam-card:hover,
+    .speaker-highlight:hover,
+    .committee:hover,
+    .btn-primary:hover,
+    .btn-secondary:hover,
+    .nav-cta:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
