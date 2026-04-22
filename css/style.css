@@ -304,6 +304,11 @@ img {
 }
 
 .mobile-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--touch-min);
+    padding: 8px 16px;
     font-size: 1.5rem;
     font-weight: 600;
     color: var(--white);
@@ -481,6 +486,11 @@ img {
     bottom: 32px;
     left: 50%;
     transform: translateX(-50%);
+    min-width: var(--touch-min);
+    min-height: var(--touch-min);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     color: rgba(255, 255, 255, 0.4);
     animation: bounce 2s infinite;
 }
