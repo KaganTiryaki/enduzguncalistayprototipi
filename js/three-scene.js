@@ -40,8 +40,8 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
 camera.position.set(0, 0, 60);
 
-const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: !isMobile });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.5 : 2));
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(0x000000, 0);
 
@@ -675,7 +675,7 @@ function animate() {
         });
 
         nextCometTime -= dt;
-        if (nextCometTime <= 0) {
+        if (!isMobile && nextCometTime <= 0) {
             const free = comets.find(c => !c.userData.active);
             if (free) launchComet(free);
             nextCometTime = 3 + Math.random() * 4;

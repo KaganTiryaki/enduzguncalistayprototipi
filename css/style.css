@@ -2826,6 +2826,15 @@ body.committees-visible #committees-stage {
     }
 }
 
+/* ==================== MOBILE BG-CANVAS PERF — Aşama 2 (B variant) ==================== */
+/* Lighter background presence on phones — Three.js scene still runs but stays
+   in the visual background. JS-side: DPR cap 1.5, antialias off, comets disabled. */
+@media (max-width: 768px) {
+    #bg-canvas {
+        opacity: 0.55;
+    }
+}
+
 /* ==================== MOBILE COMMITTEES — Aşama 2 (B variant) ==================== */
 /* Below 768px the Three.js committees-stage is not initialized (carousel.js
    early-returns on mobile). The canvas stays in DOM but is hidden, and the
