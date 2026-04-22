@@ -525,6 +525,43 @@ document.querySelectorAll('[data-tabs]').forEach(root => {
 
 statNumbers.forEach(el => statObserver.observe(el));
 
+/* ==================== IMAGE LIGHTBOX ==================== */
+(function lightbox() {
+    const lb = document.getElementById('lightbox');
+    const img = document.getElementById('lightboxImg');
+    const cap = document.getElementById('lightboxCaption');
+    const btn = document.getElementById('lightboxClose');
+    if (!lb || !img || !btn) return;
+
+    function open(src, alt) {
+        img.src = src;
+        img.alt = alt || '';
+        cap.textContent = alt || '';
+        lb.classList.add('is-open');
+        lb.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('lightbox-open');
+    }
+
+    function close() {
+        lb.classList.remove('is-open');
+        lb.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('lightbox-open');
+        setTimeout(() => { img.src = ''; }, 300);
+    }
+
+    document.addEventListener('click', (e) => {
+        const z = e.target.closest('.zoomable');
+        if (!z || z.tagName !== 'IMG') return;
+        e.preventDefault();
+        open(z.currentSrc || z.src, z.alt);
+    });
+    btn.addEventListener('click', close);
+    lb.addEventListener('click', (e) => { if (e.target === lb) close(); });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lb.classList.contains('is-open')) close();
+    });
+})();
+
 /* ==================== SCROLL PROGRESS BAR ==================== */
 (function scrollProgress() {
     const fill = document.getElementById('scrollProgressFill');

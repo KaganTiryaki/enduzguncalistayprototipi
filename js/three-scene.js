@@ -34,7 +34,9 @@ const SECTION_MODES = {
     contact: 'constellation'
 };
 
-const DARK_SECTIONS = new Set(['hero', 'theme', 'workshop', 'program', 'team', 'eventinfo']);
+// All sections kept in "dark" particle theme — light theme caused jarring
+// "blashbang" flashes on white/off-white sections (vision, about, faq, sponsors, contact).
+const DARK_SECTIONS = new Set(['hero', 'theme', 'vision', 'workshop', 'program', 'team', 'about', 'faq', 'sponsors', 'eventinfo', 'past', 'contact']);
 
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);

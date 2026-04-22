@@ -46,6 +46,11 @@
     /* Fluid type scale — mobile-first, desktop scales up via clamp */
     --text-h1: clamp(1.9rem, 5vw, 3.4rem);
     --text-body: clamp(0.95rem, 1.4vw, 1.05rem);
+
+    /* Text colors for light-bg sections (vm/about/faq/sponsors) — higher
+       contrast than --text-muted (#7B93B8) which gets washed out on #E4ECF6 */
+    --text-on-light: #2d3e5c;
+    --text-on-light-muted: #5a6e8a;
 }
 
 /* ==================== RESET ==================== */
@@ -570,7 +575,7 @@ img {
 
 /* ==================== VISION & MISSION ==================== */
 .section-vm {
-    background: var(--off-white);
+    background: #E4ECF6;
 }
 
 .vm-grid {
@@ -616,13 +621,13 @@ img {
 }
 
 .vm-text {
-    color: var(--text-muted);
+    color: var(--text-on-light-muted);
     line-height: 1.7;
 }
 
 /* ==================== ABOUT / STATS ==================== */
 .section-about {
-    background: var(--white);
+    background: #EDF2F8;
 }
 
 .stats-grid {
@@ -1012,7 +1017,7 @@ img {
 
 /* ==================== FAQ ==================== */
 .section-faq {
-    background: var(--white);
+    background: #EDF2F8;
 }
 
 .faq-list {
@@ -1069,13 +1074,13 @@ img {
 }
 
 .faq-answer p {
-    color: var(--text-muted);
+    color: var(--text-on-light-muted);
     line-height: 1.7;
 }
 
 /* ==================== SPONSORS ==================== */
 .section-sponsors {
-    background: var(--off-white);
+    background: #E4ECF6;
 }
 
 .sponsors-grid {
@@ -1095,7 +1100,8 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--gray-light);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(10, 22, 40, 0.06);
     transition: all var(--transition);
 }
 
@@ -2024,11 +2030,17 @@ img {
     opacity: 0.72;
 }
 .timeline__time {
+    display: inline-block;
     font-family: var(--font-display);
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     font-weight: 700;
-    color: var(--accent-light);
-    letter-spacing: 0.05em;
+    color: var(--white);
+    background: rgba(129, 159, 205, 0.22);
+    border: 1px solid rgba(159, 182, 213, 0.45);
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
 }
 .timeline__title {
     font-family: var(--font-display);
@@ -2060,21 +2072,21 @@ img {
    Each section gets a translucent overlay instead of an opaque bg. */
 
 .section-theme { background: rgba(58, 100, 167, 0.70); }
-.section-vm { background: rgba(245, 247, 250, 0.72); }
-.section-about { background: rgba(255, 255, 255, 0.72); }
+.section-vm { background: rgba(228, 236, 246, 0.62); }
+.section-about { background: rgba(237, 242, 248, 0.62); }
 .section-activities { background: rgba(44, 86, 165, 0.72); }
 .section-workshop {
     background: linear-gradient(135deg, rgba(58, 100, 167, 0.72), rgba(68, 114, 182, 0.72));
 }
 .section-committees { background: rgba(58, 100, 167, 0.70); }
 .section-team { background: rgba(44, 86, 165, 0.72); }
-.section-faq { background: rgba(255, 255, 255, 0.72); }
-.section-sponsors { background: rgba(245, 247, 250, 0.72); }
+.section-faq { background: rgba(237, 242, 248, 0.62); }
+.section-sponsors { background: rgba(228, 236, 246, 0.62); }
 .section-eventinfo { background: rgba(44, 86, 165, 0.72); }
 .section-past { background: rgba(58, 100, 167, 0.70); }
 .section-contact { background: rgba(44, 86, 165, 0.78); }
 
-.section--paper { background: rgba(245, 247, 250, 0.72); }
+.section--paper { background: rgba(237, 242, 248, 0.62); }
 .section--ink { background: rgba(44, 86, 165, 0.72); }
 
 /* Hero keeps its gradient but semi-transparent to let canvas glow through */
@@ -2952,6 +2964,74 @@ body.is-loading {
     font-size: 0.8rem;
     color: var(--accent-light);
     font-variant-numeric: tabular-nums;
+}
+
+/* ==================== IMAGE LIGHTBOX ==================== */
+.lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(5, 12, 22, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    padding: 2rem;
+}
+.lightbox.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+.lightbox__img {
+    max-width: 95vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+.lightbox__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: var(--touch-min);
+    height: var(--touch-min);
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--white);
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.lightbox__close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+.lightbox__caption {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--accent-light);
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 0 1rem;
+}
+.zoomable {
+    cursor: zoom-in;
+    transition: transform 0.2s ease;
+}
+@media (hover: hover) {
+    .zoomable:hover {
+        transform: scale(1.02);
+    }
+}
+body.lightbox-open {
+    overflow: hidden;
 }
 
 /* ==================== SCROLL PROGRESS ==================== */

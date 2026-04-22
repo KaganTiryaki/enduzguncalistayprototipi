@@ -101,7 +101,7 @@
     <section class="hero" id="hero">
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <img src="assets/images/çalıştay.png" alt="MFL FBÇ" class="hero-logo">
+            <img src="assets/images/çalıştay.png" alt="MFL FBÇ" class="hero-logo zoomable">
             <h1 class="hero-title">Maltepe Fen Lisesi<br><span class="hero-highlight">Fen Bilimleri Çalıştayı '26</span></h1>
             <p class="hero-subtitle">Bilim, bilinmeyene atılan en cesur sorudur; ilerleme ise o sorudan vazgeçmemektir.</p>
 
@@ -853,7 +853,7 @@
 
             <div class="eventinfo-content">
                 <div class="eventinfo-program reveal">
-                    <img src="assets/images/programblabla.png" alt="Genel Program" class="eventinfo-img">
+                    <img src="assets/images/programblabla.png" alt="Genel Program" class="eventinfo-img zoomable">
                 </div>
                 <div class="eventinfo-map reveal">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3010.5!2d29.0212792!3d41.0044719!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab83e40f4ea3d%3A0xcf11899ee923db00!2sSa%C4%9Fl%C4%B1k+Bilimleri+%C3%9Cniversitesi!5e0!3m2!1str!2str" width="100%" height="100%" style="border:0; border-radius:16px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -875,16 +875,16 @@
             <h3 class="past-year">'25</h3>
             <div class="past-gallery past-gallery--4">
                 <div class="past-photo reveal">
-                    <img src="assets/images/25-1ncu-foto.png" alt="FBÇ '25">
+                    <img src="assets/images/25-1ncu-foto.png" alt="FBÇ '25" class="zoomable">
                 </div>
                 <div class="past-photo reveal">
-                    <img src="assets/images/25-2nci-foto.png" alt="FBÇ '25">
+                    <img src="assets/images/25-2nci-foto.png" alt="FBÇ '25" class="zoomable">
                 </div>
                 <div class="past-photo reveal">
-                    <img src="assets/images/25-3ncu-foto.png" alt="FBÇ '25">
+                    <img src="assets/images/25-3ncu-foto.png" alt="FBÇ '25" class="zoomable">
                 </div>
                 <div class="past-photo reveal">
-                    <img src="assets/images/25-4nci-foto.png" alt="FBÇ '25">
+                    <img src="assets/images/25-4nci-foto.png" alt="FBÇ '25" class="zoomable">
                 </div>
             </div>
         </div>
@@ -898,11 +898,13 @@
 
             <div class="contact-grid">
                 <div class="contact-item reveal">
-                    <div class="contact-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                    </div>
-                    <h4>E-posta</h4>
-                    <a href="mailto:maltepefenfbç@gmail.com">maltepefenfbç@gmail.com</a>
+                    <a href="mailto:maltepefenfbç@gmail.com" class="contact-link-wrap">
+                        <div class="contact-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        </div>
+                        <h4>E-posta</h4>
+                        <span>maltepefenfbç@gmail.com</span>
+                    </a>
                 </div>
                 <div class="contact-item reveal">
                     <a href="https://instagram.com/mflfenbilimlericalistayi" target="_blank" rel="noopener noreferrer" class="contact-link-wrap">
@@ -914,11 +916,13 @@
                     </a>
                 </div>
                 <div class="contact-item reveal">
-                    <div class="contact-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    </div>
-                    <h4>Konum</h4>
-                    <a href="https://maps.app.goo.gl/Kmb4B191Xa3VnykC6" target="_blank" rel="noopener noreferrer">Maltepe Fen Lisesi, İstanbul</a>
+                    <a href="https://maps.app.goo.gl/Kmb4B191Xa3VnykC6" target="_blank" rel="noopener noreferrer" class="contact-link-wrap">
+                        <div class="contact-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        </div>
+                        <h4>Konum</h4>
+                        <span>Maltepe Fen Lisesi, İstanbul</span>
+                    </a>
                 </div>
             </div>
 
@@ -1000,6 +1004,13 @@
 
     <!-- Lenis smooth scroll -->
     <script defer src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+
+    <!-- Image lightbox -->
+    <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Görsel önizleme">
+        <button class="lightbox__close" id="lightboxClose" type="button" aria-label="Kapat">&times;</button>
+        <img class="lightbox__img" id="lightboxImg" alt="">
+        <div class="lightbox__caption" id="lightboxCaption"></div>
+    </div>
 
     <script src="js/main.js"></script>
     <!-- Full-page background scene: covers all sections except #komiteler (which
