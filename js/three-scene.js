@@ -200,6 +200,7 @@ const orbHalo = new THREE.Mesh(
 );
 orbGroup.add(orbHalo);
 orbGroup.position.set(0, 0, 10);
+orbGroup.visible = !isMobile; // mouse-follower orb makes no sense on touch devices
 scene.add(orbGroup);
 
 // ===== BURST PARTICLES =====
@@ -590,7 +591,7 @@ function animate() {
     camera.position.y = -mouse.y * 3;
     camera.lookAt(0, 0, 0);
 
-    {
+    if (!isMobile) {
         const targetScreenX = (mouse.tx + 1) / 2 * window.innerWidth;
         const targetScreenY = (1 - (mouse.ty + 1) / 2) * window.innerHeight;
         const ndc = new THREE.Vector3(

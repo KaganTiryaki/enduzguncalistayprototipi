@@ -405,39 +405,51 @@ if (committeeModal) {
     });
 }
 
-/* ==================== CARD 3D TILT ==================== */
+/* ==================== CARD 3D TILT + TAP BURST ==================== */
 const tiltSelector = '.committee, .committee-card, .activity-card, .team-card, .subteam-card, .sponsor-card, .vm-card, .info-card, .past-card, .eventinfo-program, .eventinfo-map';
-document.querySelectorAll(tiltSelector).forEach(card => {
-    card.addEventListener('mousemove', (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width;
-        const y = (e.clientY - rect.top) / rect.height;
-        const rx = (y - 0.5) * -14;
-        const ry = (x - 0.5) * 14;
-        card.style.setProperty('--rx', `${rx}deg`);
-        card.style.setProperty('--ry', `${ry}deg`);
-        card.style.setProperty('--mx', `${x * 100}%`);
-        card.style.setProperty('--my', `${y * 100}%`);
-        card.classList.add('hover-tilt');
+const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
 
-        // Dispatch world-space event for Three.js
-        window.dispatchEvent(new CustomEvent('card-hover', {
-            detail: { x: e.clientX, y: e.clientY, active: true }
-        }));
-    });
-    card.addEventListener('mouseleave', () => {
-        card.style.removeProperty('--rx');
-        card.style.removeProperty('--ry');
-        card.classList.remove('hover-tilt');
-        window.dispatchEvent(new CustomEvent('card-hover', {
-            detail: { x: 0, y: 0, active: false }
-        }));
-    });
-    card.addEventListener('mouseenter', (e) => {
-        window.dispatchEvent(new CustomEvent('card-enter', {
-            detail: { x: e.clientX, y: e.clientY }
-        }));
-    });
+document.querySelectorAll(tiltSelector).forEach(card => {
+    if (hasFinePointer) {
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width;
+            const y = (e.clientY - rect.top) / rect.height;
+            const rx = (y - 0.5) * -14;
+            const ry = (x - 0.5) * 14;
+            card.style.setProperty('--rx', `${rx}deg`);
+            card.style.setProperty('--ry', `${ry}deg`);
+            card.style.setProperty('--mx', `${x * 100}%`);
+            card.style.setProperty('--my', `${y * 100}%`);
+            card.classList.add('hover-tilt');
+            window.dispatchEvent(new CustomEvent('card-hover', {
+                detail: { x: e.clientX, y: e.clientY, active: true }
+            }));
+        });
+        card.addEventListener('mouseleave', () => {
+            card.style.removeProperty('--rx');
+            card.style.removeProperty('--ry');
+            card.classList.remove('hover-tilt');
+            window.dispatchEvent(new CustomEvent('card-hover', {
+                detail: { x: 0, y: 0, active: false }
+            }));
+        });
+        card.addEventListener('mouseenter', (e) => {
+            window.dispatchEvent(new CustomEvent('card-enter', {
+                detail: { x: e.clientX, y: e.clientY }
+            }));
+        });
+    } else {
+        // Touch devices: tap → burst spark at touch point (mouse-follower orb is
+        // skipped on mobile inside three-scene.js)
+        card.addEventListener('touchstart', (e) => {
+            const t = e.touches[0];
+            if (!t) return;
+            window.dispatchEvent(new CustomEvent('card-enter', {
+                detail: { x: t.clientX, y: t.clientY }
+            }));
+        }, { passive: true });
+    }
 });
 
 /* ==================== PROGRAM TABS ==================== */
