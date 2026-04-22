@@ -24,6 +24,30 @@ ready(() => {
     const slides = Array.from(document.querySelectorAll('.committee-slide'));
     if (!section || !canvas || slides.length === 0) return;
 
+    // Mobile path: skip Three.js stage + GTA camera entirely. Render slides as
+    // a vertical card list and let tap → modal (handled in main.js).
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    if (isMobile) {
+        slides.forEach((slide) => {
+            slide.setAttribute('role', 'button');
+            slide.setAttribute('tabindex', '0');
+            slide.addEventListener('click', (e) => {
+                if (e.target.closest('a, button')) return;
+                const num = slide.querySelector('.committee__num')?.textContent?.trim();
+                if (num && typeof window.openCommitteeModal === 'function') {
+                    window.openCommitteeModal(num, slide);
+                }
+            });
+            slide.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    slide.click();
+                }
+            });
+        });
+        return;
+    }
+
     const dpr = Math.min(window.devicePixelRatio || 1, 1.75);
     const stage = initStage(canvas, { palette: PALETTE, dpr });
 

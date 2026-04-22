@@ -2826,6 +2826,32 @@ body.committees-visible #committees-stage {
     }
 }
 
+/* ==================== MOBILE COMMITTEES — Aşama 2 (B variant) ==================== */
+/* Below 768px the Three.js committees-stage is not initialized (carousel.js
+   early-returns on mobile). The canvas stays in DOM but is hidden, and the
+   .committees-stack becomes a plain vertical card list. */
+@media (max-width: 768px) {
+    #committees-stage {
+        display: none;
+    }
+    .committees-stack {
+        gap: 20px;
+        padding: 32px 0 40px;
+    }
+    .committee-slide {
+        padding: 22px 24px;
+        gap: 12px;
+        backdrop-filter: blur(8px) saturate(120%);
+        -webkit-backdrop-filter: blur(8px) saturate(120%);
+    }
+    .committee-slide__title {
+        font-size: 1.25rem;
+    }
+    .committee-slide__lede {
+        font-size: 0.92rem;
+    }
+}
+
 /* ==================== MOBILE GLOBAL — Aşama 1 ==================== */
 /* Section padding shrink + multi-column grids fall back to single column.
    Goes after all per-component @media blocks so it overrides them in cascade order. */
