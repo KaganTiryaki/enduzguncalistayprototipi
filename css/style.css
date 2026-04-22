@@ -1643,6 +1643,20 @@ img {
         width: 100%;
     }
 
+    .countdown {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        max-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .countdown-item {
+        min-height: 80px;
+        justify-content: center;
+    }
+
     .countdown-number {
         font-size: 1.6rem;
         min-width: 48px;
