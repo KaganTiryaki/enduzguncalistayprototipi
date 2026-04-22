@@ -3,7 +3,10 @@ import * as THREE from 'three';
 const canvas = document.getElementById('bg-canvas');
 if (!canvas) throw new Error('bg-canvas not found');
 
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+// Site is animation-first (orbital ambient shapes, mode transitions, hero countdown).
+// Honoring prefers-reduced-motion would freeze the entire scene to a still image,
+// which defeats the design intent. Subtle motion is preserved for all users.
+const prefersReducedMotion = false;
 const isMobile = window.innerWidth < 768;
 
 const PALETTE = {
@@ -90,9 +93,9 @@ const farMat = new THREE.PointsMaterial({
 const farField = new THREE.Points(farGeo, farMat);
 scene.add(farField);
 
-// ===== AMBIENT FLOATING POLYHEDRONS =====
+// ===== AMBIENT ORBITING POLYHEDRONS (solar-system layout) =====
 const ambientShapes = [];
-const ambientCount = isMobile ? 4 : 9;
+const ambientCount = isMobile ? 6 : 12;
 const shapeTypes = [
     () => new THREE.TetrahedronGeometry(Math.random() * 1.5 + 0.8),
     () => new THREE.OctahedronGeometry(Math.random() * 1.5 + 0.8),
@@ -100,6 +103,9 @@ const shapeTypes = [
     () => new THREE.TorusGeometry(Math.random() * 1.2 + 0.6, 0.1, 8, 24),
     () => new THREE.BoxGeometry(Math.random() * 1.5 + 0.8, Math.random() * 1.5 + 0.8, Math.random() * 1.5 + 0.8)
 ];
+// Inner / middle / outer bands — closer orbits spin faster (Keplerian feel).
+const bandRadii = [22, 40, 60];
+const bandSpeeds = [0.28, 0.15, 0.08];
 for (let i = 0; i < ambientCount; i++) {
     const geo = shapeTypes[Math.floor(Math.random() * shapeTypes.length)]();
     const mat = new THREE.MeshBasicMaterial({
@@ -109,18 +115,23 @@ for (let i = 0; i < ambientCount; i++) {
         opacity: 0.55 + Math.random() * 0.35
     });
     const mesh = new THREE.Mesh(geo, mat);
-    mesh.position.set(
-        (Math.random() - 0.5) * 120,
-        (Math.random() - 0.5) * 120,
-        -20 - Math.random() * 40
-    );
+    const band = i % 3;
+    const tiltX = (Math.random() - 0.5) * 1.0;
+    const tiltZ = (Math.random() - 0.5) * 1.0;
+    const orbit = {
+        radius: bandRadii[band] + (Math.random() - 0.5) * 10,
+        angularSpeed: bandSpeeds[band] * (0.75 + Math.random() * 0.5) * (Math.random() < 0.25 ? -1 : 1),
+        phase: Math.random() * Math.PI * 2,
+        cosTiltX: Math.cos(tiltX), sinTiltX: Math.sin(tiltX),
+        cosTiltZ: Math.cos(tiltZ), sinTiltZ: Math.sin(tiltZ)
+    };
     mesh.userData.rotSpeed = {
         x: (Math.random() - 0.5) * 0.4,
         y: (Math.random() - 0.5) * 0.4,
         z: (Math.random() - 0.5) * 0.2
     };
+    mesh.userData.orbit = orbit;
     mesh.userData.floatOffset = Math.random() * Math.PI * 2;
-    mesh.userData.basePos = mesh.position.clone();
     scene.add(mesh);
     ambientShapes.push(mesh);
 }
@@ -643,15 +654,24 @@ function animate() {
         particleGeo.attributes.position.needsUpdate = true;
         particles.rotation.y += dt * 0.02;
 
-        farField.rotation.y += dt * 0.005;
-        farField.rotation.x += dt * 0.003;
+        farField.rotation.y += dt * 0.015;
+        farField.rotation.x += dt * 0.008;
 
         ambientShapes.forEach((shape) => {
-            shape.rotation.x += dt * shape.userData.rotSpeed.x;
-            shape.rotation.y += dt * shape.userData.rotSpeed.y;
-            shape.rotation.z += dt * shape.userData.rotSpeed.z;
-            shape.position.y = shape.userData.basePos.y + Math.sin(t * 0.5 + shape.userData.floatOffset) * 1.5;
-            shape.position.x = shape.userData.basePos.x + Math.cos(t * 0.3 + shape.userData.floatOffset) * 1;
+            const ud = shape.userData;
+            const rs = ud.rotSpeed;
+            shape.rotation.x += dt * rs.x;
+            shape.rotation.y += dt * rs.y;
+            shape.rotation.z += dt * rs.z;
+            const o = ud.orbit;
+            const angle = o.phase + t * o.angularSpeed;
+            const ox = Math.cos(angle) * o.radius;
+            const oz = Math.sin(angle) * o.radius;
+            const y1 = -oz * o.sinTiltX;
+            const z1 =  oz * o.cosTiltX;
+            shape.position.x = ox * o.cosTiltZ - y1 * o.sinTiltZ;
+            shape.position.y = (ox * o.sinTiltZ + y1 * o.cosTiltZ) + Math.sin(t * 0.4 + ud.floatOffset) * 0.8;
+            shape.position.z = z1;
         });
 
         nextCometTime -= dt;
