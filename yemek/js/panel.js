@@ -31,6 +31,8 @@ const el = {
   linkler:     document.getElementById('p-linkler'),
   linkMetin:   document.getElementById('p-link-metin'),
   linkKopyala: document.getElementById('p-link-kopyala'),
+  linkMail:    document.getElementById('p-link-mail'),
+  linkMailSonuc: document.getElementById('p-link-mail-sonuc'),
   mailDavet:   document.getElementById('p-mail-davet'),
   mailSonuc:   document.getElementById('p-mail-sonuc'),
 };
@@ -257,10 +259,16 @@ el.tekForm.addEventListener('submit', async (e) => {
 });
 
 // --- Link çıktısı ---
+let sonEklenenler = [];
 function linkleriGoster(kayitlar) {
+  sonEklenenler = kayitlar;
   const metin = kayitlar.map(k => `${k.ad_soyad}${k.email ? ' (' + k.email + ')' : ''}: ${BASE_URL}${k.kod}`).join('\n');
   el.linkler.hidden = false;
   el.linkMetin.value = metin;
+  el.linkMailSonuc.hidden = true;
+  const emailli = kayitlar.filter(k => k.email).length;
+  el.linkMail.disabled = emailli === 0;
+  el.linkMail.textContent = emailli > 0 ? `Davet Maili Gönder (${emailli} kişi)` : 'Davet Maili (email yok)';
   el.linkler.scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -268,6 +276,40 @@ el.linkKopyala.addEventListener('click', async () => {
   await navigator.clipboard.writeText(el.linkMetin.value);
   el.linkKopyala.textContent = 'Kopyalandı ✓';
   setTimeout(() => { el.linkKopyala.textContent = 'Kopyala'; }, 2000);
+});
+
+el.linkMail.addEventListener('click', async () => {
+  const emailliler = sonEklenenler.filter(k => k.email);
+  if (emailliler.length === 0) return;
+  if (!confirm(`${emailliler.length} kişiye davet maili gönderilecek. Devam?`)) return;
+
+  el.linkMail.disabled = true;
+  const eski = el.linkMail.textContent;
+  el.linkMail.textContent = 'Gönderiliyor...';
+
+  let sent = 0, failed = 0;
+  const fails = [];
+  for (const k of emailliler) {
+    try {
+      const { data, error } = await supabase.functions.invoke('yemek-mail', {
+        body: { action: 'davet_tek', kod: k.kod }
+      });
+      if (error) throw error;
+      if (data?.ok) sent++;
+      else { failed++; fails.push(`${k.ad_soyad}: ${data?.error || 'bilinmiyor'}`); }
+    } catch (e) {
+      failed++;
+      fails.push(`${k.ad_soyad}: ${e.message}`);
+    }
+  }
+
+  el.linkMailSonuc.hidden = false;
+  let msg = `✓ ${sent} mail gönderildi.`;
+  if (failed > 0) msg += `<br>⚠️ ${failed} hata:<br><small>${fails.slice(0, 5).join('<br>')}</small>`;
+  el.linkMailSonuc.innerHTML = msg;
+
+  el.linkMail.disabled = false;
+  el.linkMail.textContent = eski;
 });
 
 // --- Mail davet ---
