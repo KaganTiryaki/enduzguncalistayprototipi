@@ -126,7 +126,7 @@ h3 { font-weight: 600; font-size: 1rem; }
 }
 
 /* Form */
-input[type="text"], input[type="password"], input[type="file"] {
+input[type="text"], input[type="password"], input[type="email"], input[type="file"] {
   width: 100%;
   padding: 0.9rem 1rem;
   font-size: 1.1rem;
@@ -141,10 +141,12 @@ input[type="text"], input[type="password"], input[type="file"] {
   text-transform: uppercase;
 }
 
-input[type="text"]:focus, input[type="password"]:focus {
+input[type="text"]:focus, input[type="password"]:focus, input[type="email"]:focus {
   outline: none;
   border-color: var(--y-navy-medium);
 }
+
+input[type="email"] { text-transform: none; letter-spacing: normal; }
 
 /* Butonlar */
 .y-btn {
