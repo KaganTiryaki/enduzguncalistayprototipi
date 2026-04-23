@@ -1,7 +1,15 @@
 {
-  "rewrites": [
+  "redirects": [
     {
       "source": "/",
+      "has": [{ "type": "host", "value": "yemek.maltepefencalistay.org" }],
+      "destination": "/giris",
+      "permanent": false
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/giris",
       "has": [{ "type": "host", "value": "yemek.maltepefencalistay.org" }],
       "destination": "/yemek/index.html"
     },
