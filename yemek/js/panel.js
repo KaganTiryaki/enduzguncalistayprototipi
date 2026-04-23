@@ -19,6 +19,13 @@ const el = {
   tabListe:  document.getElementById('p-tab-liste'),
   tabEkle:   document.getElementById('p-tab-ekle'),
   tabMail:   document.getElementById('p-tab-mail'),
+  tabKabul:  document.getElementById('p-tab-kabul'),
+  kabulKomite:   document.getElementById('p-kabul-komite'),
+  kabulTarih:    document.getElementById('p-kabul-tarih'),
+  kabulListe:    document.getElementById('p-kabul-liste'),
+  kabulOnizleme: document.getElementById('p-kabul-onizleme'),
+  kabulGonder:   document.getElementById('p-kabul-gonder'),
+  kabulSonuc:    document.getElementById('p-kabul-sonuc'),
   arama:     document.getElementById('p-arama'),
   yenile:    document.getElementById('p-yenile'),
   listeGovde: document.getElementById('p-liste-govde'),
@@ -89,6 +96,7 @@ el.tabs.forEach(t => {
     el.tabListe.hidden = tab !== 'liste';
     el.tabEkle.hidden = tab !== 'ekle';
     el.tabMail.hidden = tab !== 'mail';
+    el.tabKabul.hidden = tab !== 'kabul';
   });
 });
 
@@ -341,5 +349,74 @@ el.mailDavet.addEventListener('click', async () => {
   } finally {
     el.mailDavet.disabled = false;
     el.mailDavet.textContent = eski;
+  }
+});
+
+// --- Kabul Maili ---
+function kabulListesiParse(metin) {
+  const satirlar = metin.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+  const sonuc = [];
+  const hatali = [];
+  for (const s of satirlar) {
+    // virgül veya tab ile ayır
+    const parcalar = s.split(/[,\t;]/).map(p => p.trim()).filter(Boolean);
+    if (parcalar.length < 2) { hatali.push(s); continue; }
+    // Son parça email, önceki(ler) ad soyad
+    const email = parcalar[parcalar.length - 1].toLowerCase();
+    const adSoyad = parcalar.slice(0, -1).join(' ').trim();
+    if (!adSoyad || !email.includes('@')) { hatali.push(s); continue; }
+    sonuc.push({ ad_soyad: adSoyad, email });
+  }
+  return { kayitlar: sonuc, hatali };
+}
+
+el.kabulListe.addEventListener('input', () => {
+  const { kayitlar, hatali } = kabulListesiParse(el.kabulListe.value);
+  if (kayitlar.length === 0 && hatali.length === 0) {
+    el.kabulOnizleme.hidden = true;
+    el.kabulGonder.hidden = true;
+    return;
+  }
+  el.kabulOnizleme.hidden = false;
+  el.kabulOnizleme.innerHTML = `
+    <strong>${kayitlar.length} kişi hazır</strong>
+    ${hatali.length > 0 ? `<p style="color: var(--y-warn);">⚠️ ${hatali.length} satır parse edilemedi (format: <code>Ad Soyad, email</code>)</p>` : ''}
+    <ul>${kayitlar.slice(0, 5).map(r => `<li>${escapeHtml(r.ad_soyad)} <small>(${escapeHtml(r.email)})</small> → "Merhaba ${escapeHtml(r.ad_soyad.split(/\s+/)[0])}"</li>`).join('')}${kayitlar.length > 5 ? `<li>...ve ${kayitlar.length - 5} daha</li>` : ''}</ul>
+  `;
+  el.kabulGonder.hidden = kayitlar.length === 0;
+  el.kabulGonder.textContent = `Kabul Maili Gönder (${kayitlar.length} kişi)`;
+});
+
+el.kabulGonder.addEventListener('click', async () => {
+  const komite = el.kabulKomite.value.trim();
+  const sonTarih = el.kabulTarih.value.trim();
+  const { kayitlar } = kabulListesiParse(el.kabulListe.value);
+
+  if (!komite) { alert('Komite seç'); return; }
+  if (!sonTarih) { alert('Son ödeme tarihi gir'); return; }
+  if (kayitlar.length === 0) return;
+  if (!confirm(`${komite} komitesinden ${kayitlar.length} kişiye kabul maili gönderilecek (son tarih: ${sonTarih}). Devam?`)) return;
+
+  el.kabulGonder.disabled = true;
+  const eski = el.kabulGonder.textContent;
+  el.kabulGonder.textContent = 'Gönderiliyor...';
+  el.kabulSonuc.hidden = true;
+
+  try {
+    const { data, error } = await supabase.functions.invoke('yemek-mail', {
+      body: { action: 'kabul_toplu', komite, sonTarih, kisiler: kayitlar }
+    });
+    if (error) throw error;
+
+    el.kabulSonuc.hidden = false;
+    let msg = `✓ <strong>${komite}</strong>: ${data.sent} mail gönderildi.`;
+    if (data.failed > 0) msg += `<br>⚠️ ${data.failed} hata:<br><small>${(data.fails || []).slice(0, 10).join('<br>')}</small>`;
+    el.kabulSonuc.innerHTML = msg;
+  } catch (e) {
+    el.kabulSonuc.hidden = false;
+    el.kabulSonuc.textContent = 'Hata: ' + e.message;
+  } finally {
+    el.kabulGonder.disabled = false;
+    el.kabulGonder.textContent = eski;
   }
 });

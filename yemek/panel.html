@@ -25,6 +25,7 @@
       <button class="p-tab p-tab-aktif" data-tab="liste">Liste</button>
       <button class="p-tab" data-tab="ekle">Toplu Ekle</button>
       <button class="p-tab" data-tab="mail">Mail</button>
+      <button class="p-tab" data-tab="kabul">Kabul Maili</button>
     </nav>
 
     <section id="p-tab-liste" class="p-section">
@@ -76,6 +77,37 @@ Ayşe Demir,ayse@mail.com</pre>
       <p><strong>Önemli:</strong> Aynı kişiye birden fazla mail gitmemesi için sadece <em>PIN'i olmayanlara</em> gönderilir.</p>
       <button id="p-mail-davet" class="y-btn y-btn-primary">Davet Mailleri Gönder</button>
       <div id="p-mail-sonuc" class="y-bilgi" hidden></div>
+    </section>
+
+    <section id="p-tab-kabul" class="p-section" hidden>
+      <h2>Kabul maili gönder</h2>
+      <p>Her komite için ayrı ayrı gönder. Komite seç → listeyi yapıştır → butona bas.</p>
+
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:12px;margin:16px 0;">
+        <label>
+          <strong>Komite</strong>
+          <select id="p-kabul-komite" style="width:100%;padding:8px;">
+            <option value="">— seç —</option>
+            <option value="Kuantum Fiziği">Kuantum Fiziği</option>
+            <option value="Nöropsikoloji">Nöropsikoloji</option>
+            <option value="Moleküler Biyoloji ve Genetik">Moleküler Biyoloji ve Genetik</option>
+            <option value="AI/Data/NLP">AI/Data/NLP</option>
+            <option value="Uçak ve Havacılık">Uçak ve Havacılık</option>
+            <option value="Adli Bilimler, Kriminalistik ve Toksikoloji">Adli Bilimler, Kriminalistik ve Toksikoloji</option>
+            <option value="Akıllı Sistemler ve Mühendislik Gelişim Projesi">Akıllı Sistemler ve Mühendislik Gelişim Projesi</option>
+          </select>
+        </label>
+        <label>
+          <strong>Son ödeme tarihi</strong>
+          <input type="text" id="p-kabul-tarih" value="29.04.2026" style="width:100%;padding:8px;">
+        </label>
+      </div>
+
+      <p><strong>Kişi listesi</strong> — her satıra bir kişi. Format: <code>Ad Soyad, email</code> (virgül veya tab)</p>
+      <textarea id="p-kabul-liste" rows="10" placeholder="Ahmet Yılmaz, ahmet@mail.com&#10;Zeynep Kaya, zeynep@mail.com&#10;..."></textarea>
+      <div id="p-kabul-onizleme" class="p-csv-onizleme" hidden></div>
+      <button id="p-kabul-gonder" class="y-btn y-btn-primary" hidden>Kabul Maili Gönder</button>
+      <div id="p-kabul-sonuc" class="y-bilgi" hidden></div>
     </section>
 
     <section id="p-linkler" class="p-section" hidden>

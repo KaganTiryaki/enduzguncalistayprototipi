@@ -6,7 +6,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const BREVO_API = "https://api.brevo.com/v3/smtp/email";
 const FROM_EMAIL = "noreply@maltepefencalistay.org";
-const FROM_NAME = "MFL Çalıştay Yemek";
+const FROM_NAME = "Maltepe Fen Çalıştay";
 const SITE_URL = "https://yemek.maltepefencalistay.org";
 
 const corsHeaders = {
@@ -74,6 +74,58 @@ function davetHtml(adSoyad: string, link: string) {
   </div>
   <div style="text-align:center;color:#888;font-size:12px;padding-top:16px;border-top:1px solid #e0e0e0;">
     MFL FBÇ '26 — 9-10 Mayıs 2026 · Maltepe Fen Lisesi
+  </div>
+</div>`;
+}
+
+function kabulHtml(ilkIsim: string, adSoyad: string, komite: string, sonTarih: string) {
+  return `
+<div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;padding:24px;color:#1a1a1a;line-height:1.6;">
+  <div style="text-align:center;padding:24px 0;border-bottom:2px solid #2C56A5;">
+    <h1 style="color:#2C56A5;margin:0;font-size:22px;">Maltepe Fen Lisesi Fen Bilimleri Çalıştayı Başvuru Onayı</h1>
+  </div>
+  <div style="padding:24px 0;">
+    <p style="margin:0 0 16px 0;">Merhabalar <strong>${ilkIsim}</strong>,</p>
+
+    <p>
+      Maltepe Fen Lisesi tarafından düzenlenecek olan Fen Bilimleri Çalıştayı için yapmış olduğunuz başvuru, değerlendirme komitemiz tarafından özenle incelenmiş ve başvurunuzun <strong>${komite}</strong> komitesine kabul edilmesine karar verilmiştir. İlginiz ve başvurunuz için teşekkür ederiz.
+    </p>
+
+    <p>
+      Katılımınızın kesinleşmesi için, <strong>${sonTarih}</strong> tarihine kadar aşağıda belirtilen IBAN numarasına çalıştay katılım ücretini yatırmanız gerekmektedir:
+    </p>
+
+    <div style="background:#f4f7fc;border-left:3px solid #2C56A5;padding:16px 20px;margin:20px 0;border-radius:4px;">
+      <p style="margin:4px 0;"><strong>IBAN:</strong> TR12 0006 4000 0011 0341 1339 52</p>
+      <p style="margin:4px 0;"><strong>Alıcı Adı:</strong> Demir Murat Sönmez</p>
+      <p style="margin:4px 0;"><strong>Tutar:</strong> 750 TL</p>
+    </div>
+
+    <p>Açıklama kısmına lütfen şu şekilde yazınız:</p>
+    <div style="background:#fff6e0;border:1px dashed #d4a34a;padding:12px 16px;margin:8px 0 16px 0;border-radius:4px;font-family:monospace;font-size:14px;">
+      ${adSoyad} - MFL FBÇ - ${komite} - Bağış
+    </div>
+    <p style="color:#666;font-size:14px;font-style:italic;">
+      (Belirtilen format dışındaki açıklamalarla yapılan ödemeler geçersiz sayılacak ve para iadesi yapılmayacaktır.)
+    </p>
+
+    <p>
+      Son ödeme tarihi, zaruri durumlar haricinde kesinlikle geçirilmemelidir. Ödemede gecikme yaşanacaksa, mutlaka öncesinde aşağıdaki numaraya sebebiyle birlikte bilgilendirme yapılmalıdır:
+    </p>
+    <p style="text-align:center;font-size:18px;font-weight:600;color:#2C56A5;margin:12px 0 24px 0;">
+      +90 543 881 38 36
+    </p>
+
+    <p>Sizleri aramızda görmekten büyük mutluluk duyacağız.<br>
+    Fen dolu bir çalıştayda görüşmek üzere!</p>
+
+    <p style="margin-top:28px;">
+      Saygılarımızla,<br>
+      <strong>Maltepe Fen Lisesi Fen Bilimleri Çalıştayı Ekibi</strong>
+    </p>
+  </div>
+  <div style="text-align:center;color:#888;font-size:12px;padding-top:16px;border-top:1px solid #e0e0e0;">
+    <a href="https://www.instagram.com/mflfenbilimlericalistayi/" style="color:#2C56A5;text-decoration:none;">@mflfenbilimlericalistayi</a>
   </div>
 </div>`;
 }
@@ -170,6 +222,45 @@ serve(async (req) => {
       const link = `${SITE_URL}/k/${data.kod}`;
       await brevoSend(data.email, "MFL Çalıştay — Yemek QR Kodun", davetHtml(data.ad_soyad, link));
       return jsonResp({ ok: true });
+    }
+
+    // ============================================================
+    // action: "kabul_toplu" — verilen listeye kabul maili at
+    // body: { komite: string, sonTarih: string, kisiler: [{ ad_soyad, email }, ...] }
+    // ============================================================
+    if (action === "kabul_toplu") {
+      const komite = String(body.komite || "").trim();
+      const sonTarih = String(body.sonTarih || "").trim();
+      const kisiler = Array.isArray(body.kisiler) ? body.kisiler : [];
+      if (!komite) return jsonResp({ error: "komite_gerekli" }, 400);
+      if (!sonTarih) return jsonResp({ error: "son_tarih_gerekli" }, 400);
+      if (kisiler.length === 0) return jsonResp({ error: "liste_bos" }, 400);
+
+      let sent = 0;
+      let failed = 0;
+      const fails: string[] = [];
+
+      for (const k of kisiler) {
+        const adSoyad = String(k.ad_soyad || "").trim();
+        const email = String(k.email || "").trim().toLowerCase();
+        if (!email) { failed++; fails.push(`${adSoyad || "(isimsiz)"}: email_yok`); continue; }
+
+        const ilkIsim = adSoyad.split(/\s+/)[0] || "arkadaşım";
+
+        try {
+          await brevoSend(
+            email,
+            "Maltepe Fen Lisesi Fen Bilimleri Çalıştayı Başvuru Onayı",
+            kabulHtml(ilkIsim, adSoyad, komite, sonTarih)
+          );
+          sent++;
+        } catch (e) {
+          failed++;
+          fails.push(`${adSoyad} (${email}): ${(e as Error).message}`);
+        }
+      }
+
+      return jsonResp({ sent, failed, fails, toplam: kisiler.length, komite });
     }
 
     // ============================================================
