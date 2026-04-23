@@ -81,13 +81,21 @@ function davetHtml(adSoyad: string, link: string) {
 </div>`;
 }
 
-function kabulHtml(ilkIsim: string, adSoyad: string, komite: string, sonTarih: string) {
+function kabulHtml(ilkIsim: string, adSoyad: string, komite: string, sonTarih: string, duzeltme = false) {
+  const duzeltmeBanner = duzeltme ? `
+  <div style="background:#fff5f5;border:2px solid #c33;padding:16px 20px;margin:0 0 20px 0;border-radius:4px;">
+    <p style="margin:0 0 8px 0;color:#c33;font-weight:700;font-size:15px;">⚠️ DÜZELTME — ÖNEMLİ</p>
+    <p style="margin:0;color:#1a1a1a;font-size:14px;line-height:1.5;">
+      Az önce tarafınıza gönderdiğimiz başvuru onayı mailinde <strong>komite adı sehven yanlış</strong> yazılmıştır. Lütfen önceki maili <strong>dikkate almayınız</strong>. Aşağıda doğru bilgiler yer almaktadır. Yaşattığımız karışıklık için özür dileriz.
+    </p>
+  </div>` : '';
   return `
 <div style="font-family:Arial,sans-serif;max-width:620px;margin:0 auto;padding:24px;color:#1a1a1a;line-height:1.6;">
   <div style="text-align:center;padding:24px 0;border-bottom:2px solid #2C56A5;">
     <h1 style="color:#2C56A5;margin:0;font-size:22px;">Maltepe Fen Lisesi Fen Bilimleri Çalıştayı Başvuru Onayı</h1>
   </div>
   <div style="padding:24px 0;">
+    ${duzeltmeBanner}
     <p style="margin:0 0 16px 0;">Merhabalar <strong>${ilkIsim}</strong>,</p>
 
     <p>
@@ -238,6 +246,7 @@ serve(async (req) => {
     if (action === "kabul_toplu") {
       const komite = String(body.komite || "").trim();
       const sonTarih = String(body.sonTarih || "").trim();
+      const duzeltme = body.duzeltme === true;
       const kisiler = Array.isArray(body.kisiler) ? body.kisiler : [];
       if (!komite) return jsonResp({ error: "komite_gerekli" }, 400);
       if (!sonTarih) return jsonResp({ error: "son_tarih_gerekli" }, 400);
@@ -246,6 +255,10 @@ serve(async (req) => {
       let sent = 0;
       let failed = 0;
       const fails: string[] = [];
+
+      const konu = duzeltme
+        ? "DÜZELTME — Maltepe Fen Lisesi Fen Bilimleri Çalıştayı Başvuru Onayı"
+        : "Maltepe Fen Lisesi Fen Bilimleri Çalıştayı Başvuru Onayı";
 
       for (const k of kisiler) {
         const adSoyad = String(k.ad_soyad || "").trim();
@@ -257,8 +270,8 @@ serve(async (req) => {
         try {
           await brevoSend(
             email,
-            "Maltepe Fen Lisesi Fen Bilimleri Çalıştayı Başvuru Onayı",
-            kabulHtml(ilkIsim, adSoyad, komite, sonTarih)
+            konu,
+            kabulHtml(ilkIsim, adSoyad, komite, sonTarih, duzeltme)
           );
           sent++;
         } catch (e) {
@@ -267,7 +280,7 @@ serve(async (req) => {
         }
       }
 
-      return jsonResp({ sent, failed, fails, toplam: kisiler.length, komite });
+      return jsonResp({ sent, failed, fails, toplam: kisiler.length, komite, duzeltme });
     }
 
     // ============================================================

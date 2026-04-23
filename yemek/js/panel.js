@@ -22,6 +22,7 @@ const el = {
   tabKabul:  document.getElementById('p-tab-kabul'),
   kabulKomite:   document.getElementById('p-kabul-komite'),
   kabulTarih:    document.getElementById('p-kabul-tarih'),
+  kabulDuzeltme: document.getElementById('p-kabul-duzeltme'),
   kabulListe:    document.getElementById('p-kabul-liste'),
   kabulOnizleme: document.getElementById('p-kabul-onizleme'),
   kabulGonder:   document.getElementById('p-kabul-gonder'),
@@ -390,12 +391,16 @@ el.kabulListe.addEventListener('input', () => {
 el.kabulGonder.addEventListener('click', async () => {
   const komite = el.kabulKomite.value.trim();
   const sonTarih = el.kabulTarih.value.trim();
+  const duzeltme = el.kabulDuzeltme.checked;
   const { kayitlar } = kabulListesiParse(el.kabulListe.value);
 
   if (!komite) { alert('Komite seç'); return; }
   if (!sonTarih) { alert('Son ödeme tarihi gir'); return; }
   if (kayitlar.length === 0) return;
-  if (!confirm(`${komite} komitesinden ${kayitlar.length} kişiye kabul maili gönderilecek (son tarih: ${sonTarih}). Devam?`)) return;
+  const onayMesaj = duzeltme
+    ? `⚠️ DÜZELTME MAİLİ: ${komite} komitesi için ${kayitlar.length} kişiye yollanacak. Üstte "önceki maili dikkate almayın" uyarısı olacak. Devam?`
+    : `${komite} komitesinden ${kayitlar.length} kişiye kabul maili gönderilecek (son tarih: ${sonTarih}). Devam?`;
+  if (!confirm(onayMesaj)) return;
 
   el.kabulGonder.disabled = true;
   const eski = el.kabulGonder.textContent;
@@ -404,7 +409,7 @@ el.kabulGonder.addEventListener('click', async () => {
 
   try {
     const { data, error } = await supabase.functions.invoke('yemek-mail', {
-      body: { action: 'kabul_toplu', komite, sonTarih, kisiler: kayitlar }
+      body: { action: 'kabul_toplu', komite, sonTarih, duzeltme, kisiler: kayitlar }
     });
     if (error) throw error;
 
