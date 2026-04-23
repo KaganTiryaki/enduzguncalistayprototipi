@@ -13,13 +13,14 @@
       <p class="y-sub">MFL FBÇ '26 — 9-10 Mayıs</p>
     </header>
 
-    <!-- 1. Kod giriş -->
-    <section id="y-giris-kod" class="y-card" hidden>
-      <h2>Katılımcı kodu</h2>
-      <p>Sana gönderilen 6 haneli kodu gir:</p>
-      <input type="text" id="y-kod-input" maxlength="6" autocapitalize="characters" autocomplete="off">
-      <button id="y-kod-submit" class="y-btn y-btn-primary">Devam</button>
-      <p id="y-giris-hata" class="y-hata" hidden></p>
+    <!-- 1. Email + PIN giriş -->
+    <section id="y-giris-mail" class="y-card" hidden>
+      <h2>Giriş</h2>
+      <input type="email" id="y-mail-input" placeholder="email@example.com" autocomplete="email">
+      <input type="password" id="y-mail-pin" maxlength="8" inputmode="numeric" placeholder="PIN" autocomplete="current-password">
+      <button id="y-mail-submit" class="y-btn y-btn-primary">Giriş</button>
+      <p id="y-mail-hata" class="y-hata" hidden></p>
+      <button type="button" id="y-mail-unuttum" class="y-btn-link">Şifremi unuttum</button>
     </section>
 
     <!-- 2. PIN oluştur (ilk kez) -->

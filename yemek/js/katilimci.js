@@ -1,55 +1,57 @@
 // yemek/js/katilimci.js
-// Katılımcı akışı: kod → PIN oluştur veya PIN gir → QR.
+// Katılımcı akışı: email+PIN giriş (ana yol) · /k/KOD link (ilk kurulum için).
 
 import { supabase } from './supabase-client.js';
 import { LOCAL_STORAGE_ANAHTAR, GUN1_TARIH, GUN2_TARIH } from './config.js';
 import { saatFormatla } from './util.js';
 
 const el = {
-  kodSec:      document.getElementById('y-giris-kod'),
-  kodInput:    document.getElementById('y-kod-input'),
-  kodSubmit:   document.getElementById('y-kod-submit'),
-  kodHata:     document.getElementById('y-giris-hata'),
+  mailSec:      document.getElementById('y-giris-mail'),
+  mailInput:    document.getElementById('y-mail-input'),
+  mailPin:      document.getElementById('y-mail-pin'),
+  mailSubmit:   document.getElementById('y-mail-submit'),
+  mailHata:     document.getElementById('y-mail-hata'),
+  mailUnuttum:  document.getElementById('y-mail-unuttum'),
 
-  olusturSec:  document.getElementById('y-pin-olustur'),
-  olusturSelam:document.getElementById('y-olustur-selam'),
-  olusturIn1:  document.getElementById('y-pin-olustur-input1'),
-  olusturIn2:  document.getElementById('y-pin-olustur-input2'),
-  olusturBtn:  document.getElementById('y-pin-olustur-submit'),
-  olusturHata: document.getElementById('y-pin-olustur-hata'),
+  olusturSec:   document.getElementById('y-pin-olustur'),
+  olusturSelam: document.getElementById('y-olustur-selam'),
+  olusturIn1:   document.getElementById('y-pin-olustur-input1'),
+  olusturIn2:   document.getElementById('y-pin-olustur-input2'),
+  olusturBtn:   document.getElementById('y-pin-olustur-submit'),
+  olusturHata:  document.getElementById('y-pin-olustur-hata'),
 
-  girisSec:    document.getElementById('y-pin-giris'),
-  girisSelam:  document.getElementById('y-giris-selam'),
-  girisIn:     document.getElementById('y-pin-giris-input'),
-  girisBtn:    document.getElementById('y-pin-giris-submit'),
-  girisHata:   document.getElementById('y-pin-giris-hata'),
-  unuttumBtn:  document.getElementById('y-unuttum-btn'),
+  girisSec:     document.getElementById('y-pin-giris'),
+  girisSelam:   document.getElementById('y-giris-selam'),
+  girisIn:      document.getElementById('y-pin-giris-input'),
+  girisBtn:     document.getElementById('y-pin-giris-submit'),
+  girisHata:    document.getElementById('y-pin-giris-hata'),
+  unuttumBtn:   document.getElementById('y-unuttum-btn'),
 
-  unuttumSec:  document.getElementById('y-unuttum'),
-  unuttumEmail:document.getElementById('y-unuttum-email'),
+  unuttumSec:   document.getElementById('y-unuttum'),
+  unuttumEmail: document.getElementById('y-unuttum-email'),
   unuttumSubmit:document.getElementById('y-unuttum-submit'),
-  unuttumBilgi:document.getElementById('y-unuttum-bilgi'),
-  unuttumGeri: document.getElementById('y-unuttum-geri'),
+  unuttumBilgi: document.getElementById('y-unuttum-bilgi'),
+  unuttumGeri:  document.getElementById('y-unuttum-geri'),
 
-  resetSec:    document.getElementById('y-reset'),
-  resetIn1:    document.getElementById('y-reset-pin1'),
-  resetIn2:    document.getElementById('y-reset-pin2'),
-  resetBtn:    document.getElementById('y-reset-submit'),
-  resetHata:   document.getElementById('y-reset-hata'),
+  resetSec:     document.getElementById('y-reset'),
+  resetIn1:     document.getElementById('y-reset-pin1'),
+  resetIn2:     document.getElementById('y-reset-pin2'),
+  resetBtn:     document.getElementById('y-reset-submit'),
+  resetHata:    document.getElementById('y-reset-hata'),
 
-  qrSec:       document.getElementById('y-qr'),
-  ad:          document.getElementById('y-ad'),
-  qrCanvas:    document.getElementById('y-qr-canvas'),
-  gun1:        document.getElementById('y-gun1').querySelector('.y-gun-badge'),
-  gun2:        document.getElementById('y-gun2').querySelector('.y-gun-badge'),
-  cikis:       document.getElementById('y-cikis'),
-  offline:     document.getElementById('y-offline-banner'),
+  qrSec:        document.getElementById('y-qr'),
+  ad:           document.getElementById('y-ad'),
+  qrCanvas:     document.getElementById('y-qr-canvas'),
+  gun1:         document.getElementById('y-gun1').querySelector('.y-gun-badge'),
+  gun2:         document.getElementById('y-gun2').querySelector('.y-gun-badge'),
+  cikis:        document.getElementById('y-cikis'),
+  offline:      document.getElementById('y-offline-banner'),
 };
 
 const state = { kod: null, resetToken: null };
 
 // --- UI yardımcıları ---
-const ALL_SECS = [el.kodSec, el.olusturSec, el.girisSec, el.unuttumSec, el.resetSec, el.qrSec];
+const ALL_SECS = [el.mailSec, el.olusturSec, el.girisSec, el.unuttumSec, el.resetSec, el.qrSec];
 function showOnly(sec) {
   ALL_SECS.forEach(s => s.hidden = true);
   sec.hidden = false;
@@ -73,7 +75,7 @@ const kodLocalAl = () => localStorage.getItem(LOCAL_STORAGE_ANAHTAR);
 const kodLocalKaydet = k => localStorage.setItem(LOCAL_STORAGE_ANAHTAR, k);
 const kodLocalSil = () => localStorage.removeItem(LOCAL_STORAGE_ANAHTAR);
 
-// --- Durum sorgula (view'den, pin_var dahil) ---
+// --- Durum sorgula (view'den) ---
 async function durumAl(kod) {
   const { data, error } = await supabase
     .from('katilimci_goster')
@@ -84,7 +86,7 @@ async function durumAl(kod) {
   return data;
 }
 
-// --- QR ---
+// --- QR render ---
 function qrUret(icerik) {
   el.qrCanvas.innerHTML = '';
   new QRCode(el.qrCanvas, {
@@ -117,21 +119,21 @@ function qrGoster(k) {
   rozetGuncelle(el.gun1, k.gun1_ogle, GUN1_TARIH);
   rozetGuncelle(el.gun2, k.gun2_ogle, GUN2_TARIH);
   localStorage.setItem('mfl_yemek_cache_' + k.kod, JSON.stringify(k));
+  kodLocalKaydet(k.kod);
   showOnly(el.qrSec);
 }
 
-// --- Kod alındıktan sonra doğru akışa yönlendir ---
+// --- /k/KOD üzerinden gelinen akış (ilk PIN setup veya direkt link ile giriş) ---
 async function kodIsle(kod) {
   try {
     const d = await durumAl(kod);
     if (!d) {
       kodLocalSil();
-      hata(el.kodHata, 'Bu kod sistemde bulunamadı.');
-      showOnly(el.kodSec);
+      showOnly(el.mailSec);
+      hata(el.mailHata, 'Bu kod bulunamadı. Email ile giriş yap.');
       return;
     }
     state.kod = d.kod;
-    kodLocalKaydet(d.kod);
 
     if (d.pin_var) {
       el.girisSelam.textContent = `Merhaba ${d.ad_soyad}`;
@@ -149,19 +151,41 @@ async function kodIsle(kod) {
     }
   } catch (e) {
     console.error(e);
-    hata(el.kodHata, 'Bağlantı hatası. İnternetini kontrol et.');
-    showOnly(el.kodSec);
+    showOnly(el.mailSec);
+    hata(el.mailHata, 'Bağlantı hatası. Email ile giriş dene.');
   }
 }
 
-// --- Event handlers ---
-el.kodSubmit.addEventListener('click', () => {
-  const kod = (el.kodInput.value || '').trim().toUpperCase();
-  if (kod.length < 4) { hata(el.kodHata, 'Kodu tam gir (6 karakter).'); return; }
-  kodIsle(kod);
+// --- Mail + PIN ile giriş ---
+el.mailSubmit.addEventListener('click', async () => {
+  const email = el.mailInput.value.trim().toLowerCase();
+  const pin = el.mailPin.value.trim();
+  hataTemizle(el.mailHata);
+  if (!email || !email.includes('@')) { hata(el.mailHata, 'Geçerli bir email gir'); return; }
+  if (pin.length < 4) { hata(el.mailHata, 'PIN en az 4 hane'); return; }
+  try {
+    const { data, error } = await supabase.rpc('pin_dogrula_email', { p_email: email, p_pin: pin });
+    if (error) throw error;
+    if (data.durum === 'ok') { qrGoster(data.katilimci); return; }
+    if (data.durum === 'email_yok') { hata(el.mailHata, 'Bu email sistemde yok. Yöneticiyle iletişime geç.'); return; }
+    if (data.durum === 'pin_yok') { hata(el.mailHata, 'Henüz PIN oluşturmamışsın. Email kutundaki davet linkinden PIN oluştur.'); return; }
+    if (data.durum === 'yanlis') { hata(el.mailHata, 'PIN hatalı'); el.mailPin.value = ''; el.mailPin.focus(); return; }
+    hata(el.mailHata, 'Hata: ' + data.durum);
+  } catch (e) {
+    hata(el.mailHata, 'Bağlantı hatası: ' + e.message);
+  }
 });
-el.kodInput.addEventListener('keydown', e => { if (e.key === 'Enter') el.kodSubmit.click(); });
+el.mailPin.addEventListener('keydown', e => { if (e.key === 'Enter') el.mailSubmit.click(); });
+el.mailInput.addEventListener('keydown', e => { if (e.key === 'Enter') el.mailPin.focus(); });
 
+el.mailUnuttum.addEventListener('click', () => {
+  el.unuttumEmail.value = el.mailInput.value.trim();
+  el.unuttumBilgi.hidden = true;
+  showOnly(el.unuttumSec);
+  setTimeout(() => el.unuttumEmail.focus(), 50);
+});
+
+// --- PIN oluştur (davet linkinden gelen ilk ziyaret) ---
 el.olusturBtn.addEventListener('click', async () => {
   const p1 = el.olusturIn1.value.trim();
   const p2 = el.olusturIn2.value.trim();
@@ -182,6 +206,7 @@ el.olusturBtn.addEventListener('click', async () => {
   }
 });
 
+// --- PIN gir (davet linkinden gelen sonraki ziyaret) ---
 el.girisBtn.addEventListener('click', async () => {
   const pin = el.girisIn.value.trim();
   if (!pin) return;
@@ -198,8 +223,8 @@ el.girisBtn.addEventListener('click', async () => {
     if (data.durum === 'pin_yok') { kodIsle(state.kod); return; }
     if (data.durum === 'kod_yok') {
       kodLocalSil();
-      hata(el.kodHata, 'Kod bulunamadı.');
-      showOnly(el.kodSec);
+      showOnly(el.mailSec);
+      hata(el.mailHata, 'Kod bulunamadı.');
       return;
     }
     hata(el.girisHata, 'Hata: ' + data.durum);
@@ -215,7 +240,9 @@ el.unuttumBtn.addEventListener('click', () => {
   showOnly(el.unuttumSec);
   setTimeout(() => el.unuttumEmail.focus(), 50);
 });
-el.unuttumGeri.addEventListener('click', () => { showOnly(el.girisSec); });
+el.unuttumGeri.addEventListener('click', () => {
+  showOnly(state.kod ? el.girisSec : el.mailSec);
+});
 
 el.unuttumSubmit.addEventListener('click', async () => {
   const email = el.unuttumEmail.value.trim();
@@ -252,7 +279,8 @@ el.resetBtn.addEventListener('click', async () => {
       url.searchParams.delete('reset');
       window.history.replaceState({}, '', url.toString());
       state.resetToken = null;
-      kodIsle(state.kod);
+      if (state.kod) kodIsle(state.kod);
+      else showOnly(el.mailSec);
       return;
     }
     if (data.durum === 'token_suresi_doldu') { hata(el.resetHata, 'Link süresi dolmuş. Yeniden talep et.'); return; }
@@ -266,14 +294,15 @@ el.resetBtn.addEventListener('click', async () => {
 el.cikis.addEventListener('click', () => {
   kodLocalSil();
   state.kod = null;
-  el.kodInput.value = '';
-  showOnly(el.kodSec);
-  setTimeout(() => el.kodInput.focus(), 50);
+  el.mailInput.value = '';
+  el.mailPin.value = '';
+  showOnly(el.mailSec);
+  setTimeout(() => el.mailInput.focus(), 50);
 });
 
 // --- Başlangıç ---
 (async function init() {
-  const kod = kodUrldenAl() || kodLocalAl();
+  const kod = kodUrldenAl();
   const token = tokenUrldenAl();
 
   if (token && kod) {
@@ -284,8 +313,12 @@ el.cikis.addEventListener('click', () => {
     return;
   }
 
-  if (kod) { await kodIsle(kod); return; }
+  if (kod) {
+    await kodIsle(kod);
+    return;
+  }
 
-  showOnly(el.kodSec);
-  setTimeout(() => el.kodInput.focus(), 50);
+  // Varsayılan: email + PIN girişi
+  showOnly(el.mailSec);
+  setTimeout(() => el.mailInput.focus(), 50);
 })();
