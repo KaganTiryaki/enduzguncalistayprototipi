@@ -203,6 +203,42 @@ input[type="text"]:focus, input[type="password"]:focus {
 }
 
 /* ============================================
+   ROL SEÇİM
+   ============================================ */
+.y-secim { display: flex; flex-direction: column; gap: 1rem; }
+.y-secim h2 { text-align: center; margin-bottom: 0.5rem; color: var(--y-navy-dark); }
+
+.y-secim-btn {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem 1.25rem;
+  border-radius: var(--y-radius);
+  text-decoration: none;
+  color: var(--y-white);
+  transition: transform 0.08s, box-shadow 0.15s;
+  background: var(--y-navy-primary);
+}
+
+.y-secim-btn:hover { box-shadow: 0 6px 18px rgba(44, 86, 165, 0.3); }
+.y-secim-btn:active { transform: scale(0.98); }
+
+.y-secim-gorevli { background: var(--y-navy-dark); }
+
+.y-secim-ikon {
+  font-size: 2rem;
+  width: 56px; height: 56px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.15);
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.y-secim-metin { display: flex; flex-direction: column; gap: 0.2rem; }
+.y-secim-metin strong { font-size: 1.1rem; font-weight: 700; }
+.y-secim-metin small { font-size: 0.85rem; opacity: 0.8; }
+
+/* ============================================
    GÖREVLİ TARAMA
    ============================================ */
 .y-tara { background: #0E1A30; color: var(--y-white); min-height: 100vh; }

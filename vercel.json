@@ -17,11 +17,22 @@
       "has": [{ "type": "host", "value": "yemek.maltepefencalistay.org" }],
       "destination": "/admin",
       "permanent": false
+    },
+    {
+      "source": "/index.html",
+      "has": [{ "type": "host", "value": "yemek.maltepefencalistay.org" }],
+      "destination": "/ogrenci",
+      "permanent": false
     }
   ],
   "rewrites": [
     {
       "source": "/giris",
+      "has": [{ "type": "host", "value": "yemek.maltepefencalistay.org" }],
+      "destination": "/yemek/secim.html"
+    },
+    {
+      "source": "/ogrenci",
       "has": [{ "type": "host", "value": "yemek.maltepefencalistay.org" }],
       "destination": "/yemek/index.html"
     },
