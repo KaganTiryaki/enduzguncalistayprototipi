@@ -235,7 +235,7 @@ async function manuelAra() {
   if (q.length < 2) { el.manuelSonuclar.innerHTML = ''; return; }
 
   const { data, error } = await supabase
-    .from('katilimcilar')
+    .from('katilimci_goster')
     .select('kod, ad_soyad, gun1_ogle, gun2_ogle')
     .or(`kod.ilike.%${q}%,ad_soyad.ilike.%${q}%`)
     .limit(10);

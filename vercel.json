@@ -49,7 +49,7 @@
     {
       "source": "/k/:kod",
       "has": [{ "type": "host", "value": "yemek.maltepefencalistay.org" }],
-      "destination": "/yemek/k.html?kod=:kod"
+      "destination": "/yemek/index.html?kod=:kod"
     },
     {
       "source": "/:path*",
@@ -58,7 +58,7 @@
     },
     {
       "source": "/yemek/k/:kod",
-      "destination": "/yemek/k.html?kod=:kod"
+      "destination": "/yemek/index.html?kod=:kod"
     }
   ]
 }

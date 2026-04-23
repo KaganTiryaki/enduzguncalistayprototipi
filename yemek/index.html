@@ -13,23 +13,61 @@
       <p class="y-sub">MFL FBÇ '26 — 9-10 Mayıs</p>
     </header>
 
-    <!-- Kod giriş ekranı (QR kod yoksa) -->
-    <section id="y-giris" class="y-card" hidden>
+    <!-- 1. Kod giriş -->
+    <section id="y-giris-kod" class="y-card" hidden>
       <h2>Katılımcı kodu</h2>
       <p>Sana gönderilen 6 haneli kodu gir:</p>
       <input type="text" id="y-kod-input" maxlength="6" autocapitalize="characters" autocomplete="off">
-      <button id="y-kod-submit" class="y-btn y-btn-primary">QR'ımı Göster</button>
+      <button id="y-kod-submit" class="y-btn y-btn-primary">Devam</button>
       <p id="y-giris-hata" class="y-hata" hidden></p>
     </section>
 
-    <!-- QR gösterim ekranı -->
+    <!-- 2. PIN oluştur (ilk kez) -->
+    <section id="y-pin-olustur" class="y-card" hidden>
+      <h2>PIN Oluştur</h2>
+      <p id="y-olustur-selam" class="y-selam">—</p>
+      <p>4-8 haneli bir PIN belirle. Sonraki girişlerde bunu kullanacaksın.</p>
+      <input type="password" id="y-pin-olustur-input1" maxlength="8" inputmode="numeric" placeholder="PIN">
+      <input type="password" id="y-pin-olustur-input2" maxlength="8" inputmode="numeric" placeholder="PIN tekrar">
+      <button id="y-pin-olustur-submit" class="y-btn y-btn-primary">Kaydet</button>
+      <p id="y-pin-olustur-hata" class="y-hata" hidden></p>
+    </section>
+
+    <!-- 3. PIN giriş -->
+    <section id="y-pin-giris" class="y-card" hidden>
+      <h2>PIN Gir</h2>
+      <p id="y-giris-selam" class="y-selam">—</p>
+      <input type="password" id="y-pin-giris-input" maxlength="8" inputmode="numeric" placeholder="PIN">
+      <button id="y-pin-giris-submit" class="y-btn y-btn-primary">Giriş</button>
+      <p id="y-pin-giris-hata" class="y-hata" hidden></p>
+      <button type="button" id="y-unuttum-btn" class="y-btn-link">Şifremi unuttum</button>
+    </section>
+
+    <!-- 4. Şifre sıfırlama talebi -->
+    <section id="y-unuttum" class="y-card" hidden>
+      <h2>Şifre Sıfırlama</h2>
+      <p>Sisteme kayıtlı e-posta adresini gir. Sıfırlama linki mailine gelecek.</p>
+      <input type="email" id="y-unuttum-email" placeholder="email@example.com" autocomplete="email">
+      <button id="y-unuttum-submit" class="y-btn y-btn-primary">Gönder</button>
+      <p id="y-unuttum-bilgi" class="y-bilgi" hidden></p>
+      <button type="button" id="y-unuttum-geri" class="y-btn-link">Geri</button>
+    </section>
+
+    <!-- 5. Reset (token ile) -->
+    <section id="y-reset" class="y-card" hidden>
+      <h2>Yeni PIN Belirle</h2>
+      <input type="password" id="y-reset-pin1" maxlength="8" inputmode="numeric" placeholder="Yeni PIN">
+      <input type="password" id="y-reset-pin2" maxlength="8" inputmode="numeric" placeholder="Tekrar">
+      <button id="y-reset-submit" class="y-btn y-btn-primary">Kaydet ve Giriş</button>
+      <p id="y-reset-hata" class="y-hata" hidden></p>
+    </section>
+
+    <!-- 6. QR ekranı -->
     <section id="y-qr" class="y-card" hidden>
       <div class="y-katilimci-bilgi">
         <h2 id="y-ad">—</h2>
       </div>
-
       <div id="y-qr-canvas" class="y-qr-canvas"></div>
-
       <div class="y-durum-listesi">
         <div class="y-durum-item" id="y-gun1">
           <span class="y-gun-label">9 Mayıs (Cumartesi)</span>
@@ -40,8 +78,7 @@
           <span class="y-gun-badge">—</span>
         </div>
       </div>
-
-      <button id="y-cikis" class="y-btn y-btn-secondary">Farklı katılımcı girişi</button>
+      <button id="y-cikis" class="y-btn y-btn-secondary">Çıkış</button>
     </section>
 
     <div id="y-offline-banner" class="y-offline" hidden>

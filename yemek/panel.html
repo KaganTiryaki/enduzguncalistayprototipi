@@ -24,11 +24,12 @@
     <nav class="p-tabs">
       <button class="p-tab p-tab-aktif" data-tab="liste">Liste</button>
       <button class="p-tab" data-tab="ekle">Toplu Ekle</button>
+      <button class="p-tab" data-tab="mail">Mail</button>
     </nav>
 
     <section id="p-tab-liste" class="p-section">
       <div class="p-liste-ust">
-        <input type="text" id="p-arama" placeholder="Ad / kod ara">
+        <input type="text" id="p-arama" placeholder="Ad / kod / email ara">
         <button id="p-yenile" class="y-btn y-btn-secondary p-btn-sm">Yenile</button>
       </div>
       <div class="p-tablo-wrap">
@@ -37,6 +38,8 @@
             <tr>
               <th>Ad Soyad</th>
               <th>Kod</th>
+              <th>Email</th>
+              <th>PIN</th>
               <th>9 May</th>
               <th>10 May</th>
               <th></th>
@@ -48,8 +51,11 @@
     </section>
 
     <section id="p-tab-ekle" class="p-section" hidden>
-      <h2>CSV / Excel yükle</h2>
-      <p>Tek kolon: <code>ad_soyad</code>. Her satır bir katılımcı.</p>
+      <h2>CSV yükle</h2>
+      <p>Kolonlar: <code>ad_soyad</code> ve <code>email</code>. Örnek:</p>
+      <pre class="p-kod-blok">ad_soyad,email
+Ahmet Yılmaz,ahmet@mail.com
+Ayşe Demir,ayse@mail.com</pre>
       <input type="file" id="p-csv-file" accept=".csv,.txt">
       <div id="p-csv-onizleme" class="p-csv-onizleme" hidden></div>
       <button id="p-csv-yukle" class="y-btn y-btn-primary" hidden>Sisteme Ekle</button>
@@ -59,13 +65,22 @@
       <h2>Tek tek ekle</h2>
       <form id="p-tek-form">
         <input type="text" id="p-tek-ad" placeholder="Ad Soyad" required>
+        <input type="email" id="p-tek-email" placeholder="email@example.com">
         <button type="submit" class="y-btn y-btn-primary">Ekle</button>
       </form>
     </section>
 
+    <section id="p-tab-mail" class="p-section" hidden>
+      <h2>Davet mailleri</h2>
+      <p>PIN'i henüz oluşturmamış ve email'i olan tüm katılımcılara davet maili gönderir.</p>
+      <p><strong>Önemli:</strong> Aynı kişiye birden fazla mail gitmemesi için sadece <em>PIN'i olmayanlara</em> gönderilir.</p>
+      <button id="p-mail-davet" class="y-btn y-btn-primary">Davet Mailleri Gönder</button>
+      <div id="p-mail-sonuc" class="y-bilgi" hidden></div>
+    </section>
+
     <section id="p-linkler" class="p-section" hidden>
       <h2>Oluşturulan linkler</h2>
-      <p>Aşağıyı kopyalayıp WhatsApp/email ile paylaşabilirsin:</p>
+      <p>Aşağıyı kopyalayıp WhatsApp ile de paylaşabilirsin:</p>
       <textarea id="p-link-metin" rows="10" readonly></textarea>
       <button id="p-link-kopyala" class="y-btn y-btn-primary">Kopyala</button>
     </section>

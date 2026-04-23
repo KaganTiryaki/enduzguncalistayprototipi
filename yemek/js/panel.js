@@ -18,6 +18,7 @@ const el = {
   tabs:      document.querySelectorAll('.p-tab'),
   tabListe:  document.getElementById('p-tab-liste'),
   tabEkle:   document.getElementById('p-tab-ekle'),
+  tabMail:   document.getElementById('p-tab-mail'),
   arama:     document.getElementById('p-arama'),
   yenile:    document.getElementById('p-yenile'),
   listeGovde: document.getElementById('p-liste-govde'),
@@ -26,9 +27,12 @@ const el = {
   csvYukle:    document.getElementById('p-csv-yukle'),
   tekForm:     document.getElementById('p-tek-form'),
   tekAd:       document.getElementById('p-tek-ad'),
+  tekEmail:    document.getElementById('p-tek-email'),
   linkler:     document.getElementById('p-linkler'),
   linkMetin:   document.getElementById('p-link-metin'),
   linkKopyala: document.getElementById('p-link-kopyala'),
+  mailDavet:   document.getElementById('p-mail-davet'),
+  mailSonuc:   document.getElementById('p-mail-sonuc'),
 };
 
 let csvKayitlari = null;
@@ -79,26 +83,27 @@ el.tabs.forEach(t => {
   t.addEventListener('click', () => {
     el.tabs.forEach(x => x.classList.remove('p-tab-aktif'));
     t.classList.add('p-tab-aktif');
-    el.tabListe.hidden = t.dataset.tab !== 'liste';
-    el.tabEkle.hidden = t.dataset.tab !== 'ekle';
+    const tab = t.dataset.tab;
+    el.tabListe.hidden = tab !== 'liste';
+    el.tabEkle.hidden = tab !== 'ekle';
+    el.tabMail.hidden = tab !== 'mail';
   });
 });
 
-// --- Liste yenile + arama ---
+// --- Liste (katilimci_admin view'i üzerinden) ---
 async function listeleYenile(aramaQ = '') {
   let q = supabase
-    .from('katilimcilar')
-    .select('id, kod, ad_soyad, gun1_ogle, gun2_ogle')
+    .from('katilimci_admin')
+    .select('id, kod, ad_soyad, email, gun1_ogle, gun2_ogle, pin_var')
     .order('ad_soyad');
 
   if (aramaQ.trim().length >= 2) {
     const s = aramaQ.trim();
-    q = q.or(`ad_soyad.ilike.%${s}%,kod.ilike.%${s}%`);
+    q = q.or(`ad_soyad.ilike.%${s}%,kod.ilike.%${s}%,email.ilike.%${s}%`);
   }
 
   const { data, error } = await q;
   if (error) { alert(error.message); return; }
-
   listeyiRenderle(data || []);
 }
 
@@ -109,6 +114,8 @@ function listeyiRenderle(kayitlar) {
     tr.innerHTML = `
       <td>${escapeHtml(k.ad_soyad)}</td>
       <td><code>${k.kod}</code></td>
+      <td class="p-email">${k.email ? escapeHtml(k.email) : '<span class="p-bos">—</span>'}</td>
+      <td>${k.pin_var ? '<span class="p-pin-ok">✓</span>' : '<span class="p-bos">—</span>'}</td>
       <td>${gunHucresi(k.gun1_ogle, k.id, 'gun1_ogle')}</td>
       <td>${gunHucresi(k.gun2_ogle, k.id, 'gun2_ogle')}</td>
       <td>
@@ -169,9 +176,9 @@ el.yenile.addEventListener('click', () => listeleYenile(el.arama.value));
 
 // --- Sayaç ---
 async function sayacGuncelle() {
-  const { count: toplam } = await supabase.from('katilimcilar').select('*', { count: 'exact', head: true });
-  const { count: g1 } = await supabase.from('katilimcilar').select('*', { count: 'exact', head: true }).not('gun1_ogle', 'is', null);
-  const { count: g2 } = await supabase.from('katilimcilar').select('*', { count: 'exact', head: true }).not('gun2_ogle', 'is', null);
+  const { count: toplam } = await supabase.from('katilimci_admin').select('*', { count: 'exact', head: true });
+  const { count: g1 } = await supabase.from('katilimci_admin').select('*', { count: 'exact', head: true }).not('gun1_ogle', 'is', null);
+  const { count: g2 } = await supabase.from('katilimci_admin').select('*', { count: 'exact', head: true }).not('gun2_ogle', 'is', null);
   el.sayac.textContent = `Toplam: ${toplam || 0} · 9 May: ${g1 || 0} · 10 May: ${g2 || 0}`;
 }
 
@@ -185,13 +192,16 @@ el.csvFile.addEventListener('change', (e) => {
     skipEmptyLines: true,
     complete: (sonuc) => {
       csvKayitlari = (sonuc.data || []).map(r => ({
-        ad_soyad: (r.ad_soyad || r['Ad Soyad'] || r.ad || '').trim()
+        ad_soyad: (r.ad_soyad || r['Ad Soyad'] || r.ad || '').trim(),
+        email: (r.email || r.Email || r['E-posta'] || '').trim().toLowerCase() || null,
       })).filter(r => r.ad_soyad);
 
+      const emailsiz = csvKayitlari.filter(r => !r.email).length;
       el.csvOnizleme.hidden = false;
       el.csvOnizleme.innerHTML = `
         <strong>${csvKayitlari.length} kayıt hazır</strong>
-        <ul>${csvKayitlari.slice(0, 5).map(r => `<li>${escapeHtml(r.ad_soyad)}</li>`).join('')}${csvKayitlari.length > 5 ? `<li>...ve ${csvKayitlari.length - 5} daha</li>` : ''}</ul>
+        ${emailsiz > 0 ? `<p style="color: var(--y-warn);">⚠️ ${emailsiz} kişinin email'i eksik — onlara davet maili gitmez</p>` : ''}
+        <ul>${csvKayitlari.slice(0, 5).map(r => `<li>${escapeHtml(r.ad_soyad)} ${r.email ? `<small>(${escapeHtml(r.email)})</small>` : ''}</li>`).join('')}${csvKayitlari.length > 5 ? `<li>...ve ${csvKayitlari.length - 5} daha</li>` : ''}</ul>
       `;
       el.csvYukle.hidden = false;
     }
@@ -209,7 +219,7 @@ el.csvYukle.addEventListener('click', async () => {
   const { data, error } = await supabase
     .from('katilimcilar')
     .insert(kayitlarKodlu)
-    .select();
+    .select('kod, ad_soyad, email');
 
   if (error) { alert('Hata: ' + error.message); return; }
 
@@ -227,18 +237,20 @@ el.tekForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const kayit = {
     ad_soyad: el.tekAd.value.trim(),
+    email: el.tekEmail.value.trim().toLowerCase() || null,
     kod: randomKod()
   };
 
   const { data, error } = await supabase
     .from('katilimcilar')
     .insert(kayit)
-    .select()
+    .select('kod, ad_soyad, email')
     .single();
 
   if (error) { alert('Hata: ' + error.message); return; }
 
   el.tekAd.value = '';
+  el.tekEmail.value = '';
   linkleriGoster([data]);
   await listeleYenile();
   await sayacGuncelle();
@@ -246,7 +258,7 @@ el.tekForm.addEventListener('submit', async (e) => {
 
 // --- Link çıktısı ---
 function linkleriGoster(kayitlar) {
-  const metin = kayitlar.map(k => `${k.ad_soyad}: ${BASE_URL}${k.kod}`).join('\n');
+  const metin = kayitlar.map(k => `${k.ad_soyad}${k.email ? ' (' + k.email + ')' : ''}: ${BASE_URL}${k.kod}`).join('\n');
   el.linkler.hidden = false;
   el.linkMetin.value = metin;
   el.linkler.scrollIntoView({ behavior: 'smooth' });
@@ -256,4 +268,36 @@ el.linkKopyala.addEventListener('click', async () => {
   await navigator.clipboard.writeText(el.linkMetin.value);
   el.linkKopyala.textContent = 'Kopyalandı ✓';
   setTimeout(() => { el.linkKopyala.textContent = 'Kopyala'; }, 2000);
+});
+
+// --- Mail davet ---
+el.mailDavet.addEventListener('click', async () => {
+  if (!confirm('PIN\'i olmayan tüm email\'li katılımcılara davet maili gönderilecek. Devam?')) return;
+
+  el.mailDavet.disabled = true;
+  const eski = el.mailDavet.textContent;
+  el.mailDavet.textContent = 'Gönderiliyor...';
+  el.mailSonuc.hidden = true;
+
+  try {
+    const { data, error } = await supabase.functions.invoke('yemek-mail', {
+      body: { action: 'davet' }
+    });
+    if (error) throw error;
+
+    el.mailSonuc.hidden = false;
+    if (data.sent === 0 && data.toplam === 0) {
+      el.mailSonuc.innerHTML = '✓ Gönderilecek katılımcı yok (herkesin ya PIN\'i var ya email\'i yok).';
+    } else {
+      let msg = `✓ ${data.sent} mail başarıyla gönderildi.`;
+      if (data.failed > 0) msg += `<br>⚠️ ${data.failed} hata:<br><small>${(data.fails || []).slice(0, 5).join('<br>')}</small>`;
+      el.mailSonuc.innerHTML = msg;
+    }
+  } catch (e) {
+    el.mailSonuc.hidden = false;
+    el.mailSonuc.textContent = 'Hata: ' + e.message;
+  } finally {
+    el.mailDavet.disabled = false;
+    el.mailDavet.textContent = eski;
+  }
 });
