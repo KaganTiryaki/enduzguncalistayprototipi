@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Görevli Tarama — Yemek QR</title>
+  <link rel="stylesheet" href="yemek.css">
+</head>
+<body class="y-tara">
+  <!-- PIN Gate -->
+  <section id="t-pin-gate" class="y-card t-pin-card">
+    <h2>Görevli Girişi</h2>
+    <p>4 haneli PIN'i gir:</p>
+    <input type="password" id="t-pin-input" maxlength="8" inputmode="numeric">
+    <button id="t-pin-submit" class="y-btn y-btn-primary">Giriş</button>
+    <p id="t-pin-hata" class="y-hata" hidden></p>
+  </section>
+
+  <!-- Scanner Ana Arayüz -->
+  <main id="t-main" hidden>
+    <header class="t-header">
+      <div>
+        <h1>Yemek Tarama</h1>
+        <p id="t-sayim">—</p>
+      </div>
+      <button id="t-manuel-btn" class="y-btn-sec-small">Manuel giriş</button>
+    </header>
+
+    <div id="t-scanner" class="t-scanner"></div>
+
+    <div id="t-sonuc" class="t-sonuc t-sonuc-idle">
+      <div class="t-sonuc-ikon">📷</div>
+      <div class="t-sonuc-metin">Tarama bekliyor...</div>
+    </div>
+
+    <section class="t-son-taramalar">
+      <h3>Son taramalar</h3>
+      <ul id="t-gecmis"></ul>
+    </section>
+  </main>
+
+  <!-- Manuel Giriş Modal -->
+  <div id="t-manuel-modal" class="t-modal" hidden>
+    <div class="t-modal-inner">
+      <h2>Manuel Giriş</h2>
+      <p>Telefon unutan için: kod veya isim ara</p>
+      <input type="text" id="t-manuel-arama" placeholder="Kod / isim">
+      <ul id="t-manuel-sonuclar" class="t-manuel-sonuclar"></ul>
+      <button id="t-manuel-kapat" class="y-btn y-btn-secondary">Kapat</button>
+    </div>
+  </div>
+
+  <script src="vendor/html5-qrcode.min.js"></script>
+  <script type="module" src="js/tara.js"></script>
+</body>
+</html>

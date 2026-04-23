@@ -1,0 +1,18 @@
+{
+  "rewrites": [
+    {
+      "source": "/k/:kod",
+      "has": [{ "type": "host", "value": "yemek.maltepefencalistay.org" }],
+      "destination": "/yemek/k.html?kod=:kod"
+    },
+    {
+      "source": "/:path*",
+      "has": [{ "type": "host", "value": "yemek.maltepefencalistay.org" }],
+      "destination": "/yemek/:path*"
+    },
+    {
+      "source": "/yemek/k/:kod",
+      "destination": "/yemek/k.html?kod=:kod"
+    }
+  ]
+}
