@@ -7,6 +7,8 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const BREVO_API = "https://api.brevo.com/v3/smtp/email";
 const FROM_EMAIL = "noreply@maltepefencalistay.org";
 const FROM_NAME = "Maltepe Fen Çalıştay";
+const REPLY_TO_EMAIL = "maltepefenfbc@gmail.com";
+const REPLY_TO_NAME = "MFL FBÇ Ekibi";
 const SITE_URL = "https://yemek.maltepefencalistay.org";
 
 const corsHeaders = {
@@ -35,6 +37,7 @@ async function brevoSend(to: string, subject: string, html: string) {
     },
     body: JSON.stringify({
       sender: { name: FROM_NAME, email: FROM_EMAIL },
+      replyTo: { name: REPLY_TO_NAME, email: REPLY_TO_EMAIL },
       to: [{ email: to }],
       subject,
       htmlContent: html,
@@ -122,6 +125,10 @@ function kabulHtml(ilkIsim: string, adSoyad: string, komite: string, sonTarih: s
     <p style="margin-top:28px;">
       Saygılarımızla,<br>
       <strong>Maltepe Fen Lisesi Fen Bilimleri Çalıştayı Ekibi</strong>
+    </p>
+
+    <p style="color:#666;font-size:13px;margin-top:20px;">
+      Sorularınız için: <a href="mailto:maltepefenfbc@gmail.com" style="color:#2C56A5;">maltepefenfbc@gmail.com</a>
     </p>
   </div>
   <div style="text-align:center;color:#888;font-size:12px;padding-top:16px;border-top:1px solid #e0e0e0;">
