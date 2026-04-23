@@ -119,6 +119,12 @@ h3 { font-weight: 600; font-size: 1rem; }
   color: var(--y-text-muted);
 }
 
+.y-badge-gecti {
+  background: rgba(128, 128, 128, 0.15);
+  color: #8a8a8a;
+  text-decoration: line-through;
+}
+
 /* Form */
 input[type="text"], input[type="password"], input[type="file"] {
   width: 100%;

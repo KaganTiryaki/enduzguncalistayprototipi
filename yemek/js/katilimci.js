@@ -2,7 +2,7 @@
 // Katılımcı sayfası: kod bul, veri çek, QR üret, durum göster.
 
 import { supabase } from './supabase-client.js';
-import { LOCAL_STORAGE_ANAHTAR } from './config.js';
+import { LOCAL_STORAGE_ANAHTAR, GUN1_TARIH, GUN2_TARIH } from './config.js';
 import { saatFormatla } from './util.js';
 
 const el = {
@@ -69,10 +69,15 @@ function qrUret(icerik) {
 }
 
 // --- Durum rozeti ---
-function durumRozetiGuncelle(badgeEl, zaman) {
+function durumRozetiGuncelle(badgeEl, zaman, gunTarihi) {
+  const bugun = new Date().toISOString().slice(0, 10);
+
   if (zaman) {
     badgeEl.textContent = `Aldın (${saatFormatla(zaman)})`;
     badgeEl.className = 'y-gun-badge y-badge-aldi';
+  } else if (bugun > gunTarihi) {
+    badgeEl.textContent = 'Kaçırıldı';
+    badgeEl.className = 'y-gun-badge y-badge-gecti';
   } else {
     badgeEl.textContent = 'Henüz alınmadı';
     badgeEl.className = 'y-gun-badge y-badge-bekle';
@@ -97,8 +102,8 @@ async function goster(kod) {
 
     el.ad.textContent = k.ad_soyad;
     qrUret(k.kod);
-    durumRozetiGuncelle(el.gun1, k.gun1_ogle);
-    durumRozetiGuncelle(el.gun2, k.gun2_ogle);
+    durumRozetiGuncelle(el.gun1, k.gun1_ogle, GUN1_TARIH);
+    durumRozetiGuncelle(el.gun2, k.gun2_ogle, GUN2_TARIH);
     kodLocalKaydet(k.kod);
 
     localStorage.setItem('mfl_yemek_cache_' + k.kod, JSON.stringify(k));
@@ -109,8 +114,8 @@ async function goster(kod) {
       const k = JSON.parse(cache);
       el.ad.textContent = k.ad_soyad;
       qrUret(k.kod);
-      durumRozetiGuncelle(el.gun1, k.gun1_ogle);
-      durumRozetiGuncelle(el.gun2, k.gun2_ogle);
+      durumRozetiGuncelle(el.gun1, k.gun1_ogle, GUN1_TARIH);
+      durumRozetiGuncelle(el.gun2, k.gun2_ogle, GUN2_TARIH);
       el.offline.hidden = false;
     } else {
       el.qr.hidden = true;
