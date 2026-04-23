@@ -5,6 +5,18 @@
       "has": [{ "type": "host", "value": "yemek.maltepefencalistay.org" }],
       "destination": "/giris",
       "permanent": false
+    },
+    {
+      "source": "/tara.html",
+      "has": [{ "type": "host", "value": "yemek.maltepefencalistay.org" }],
+      "destination": "/gorevli",
+      "permanent": false
+    },
+    {
+      "source": "/panel.html",
+      "has": [{ "type": "host", "value": "yemek.maltepefencalistay.org" }],
+      "destination": "/admin",
+      "permanent": false
     }
   ],
   "rewrites": [
@@ -12,6 +24,16 @@
       "source": "/giris",
       "has": [{ "type": "host", "value": "yemek.maltepefencalistay.org" }],
       "destination": "/yemek/index.html"
+    },
+    {
+      "source": "/gorevli",
+      "has": [{ "type": "host", "value": "yemek.maltepefencalistay.org" }],
+      "destination": "/yemek/tara.html"
+    },
+    {
+      "source": "/admin",
+      "has": [{ "type": "host", "value": "yemek.maltepefencalistay.org" }],
+      "destination": "/yemek/panel.html"
     },
     {
       "source": "/k/:kod",
