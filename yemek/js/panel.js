@@ -24,7 +24,6 @@ const el = {
   csvYukle:    document.getElementById('p-csv-yukle'),
   tekForm:     document.getElementById('p-tek-form'),
   tekAd:       document.getElementById('p-tek-ad'),
-  tekOkul:     document.getElementById('p-tek-okul'),
   linkler:     document.getElementById('p-linkler'),
   linkMetin:   document.getElementById('p-link-metin'),
   linkKopyala: document.getElementById('p-link-kopyala'),
@@ -87,12 +86,12 @@ el.tabs.forEach(t => {
 async function listeleYenile(aramaQ = '') {
   let q = supabase
     .from('katilimcilar')
-    .select('id, kod, ad_soyad, okul, gun1_ogle, gun2_ogle')
+    .select('id, kod, ad_soyad, gun1_ogle, gun2_ogle')
     .order('ad_soyad');
 
   if (aramaQ.trim().length >= 2) {
     const s = aramaQ.trim();
-    q = q.or(`ad_soyad.ilike.%${s}%,okul.ilike.%${s}%,kod.ilike.%${s}%`);
+    q = q.or(`ad_soyad.ilike.%${s}%,kod.ilike.%${s}%`);
   }
 
   const { data, error } = await q;
@@ -107,7 +106,6 @@ function listeyiRenderle(kayitlar) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${escapeHtml(k.ad_soyad)}</td>
-      <td>${escapeHtml(k.okul || '')}</td>
       <td><code>${k.kod}</code></td>
       <td>${gunHucresi(k.gun1_ogle, k.id, 'gun1_ogle')}</td>
       <td>${gunHucresi(k.gun2_ogle, k.id, 'gun2_ogle')}</td>
@@ -185,14 +183,13 @@ el.csvFile.addEventListener('change', (e) => {
     skipEmptyLines: true,
     complete: (sonuc) => {
       csvKayitlari = (sonuc.data || []).map(r => ({
-        ad_soyad: (r.ad_soyad || r['Ad Soyad'] || r.ad || '').trim(),
-        okul: (r.okul || r['Okul'] || '').trim()
+        ad_soyad: (r.ad_soyad || r['Ad Soyad'] || r.ad || '').trim()
       })).filter(r => r.ad_soyad);
 
       el.csvOnizleme.hidden = false;
       el.csvOnizleme.innerHTML = `
         <strong>${csvKayitlari.length} kayıt hazır</strong>
-        <ul>${csvKayitlari.slice(0, 5).map(r => `<li>${escapeHtml(r.ad_soyad)} — ${escapeHtml(r.okul)}</li>`).join('')}${csvKayitlari.length > 5 ? `<li>...ve ${csvKayitlari.length - 5} daha</li>` : ''}</ul>
+        <ul>${csvKayitlari.slice(0, 5).map(r => `<li>${escapeHtml(r.ad_soyad)}</li>`).join('')}${csvKayitlari.length > 5 ? `<li>...ve ${csvKayitlari.length - 5} daha</li>` : ''}</ul>
       `;
       el.csvYukle.hidden = false;
     }
@@ -228,7 +225,6 @@ el.tekForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const kayit = {
     ad_soyad: el.tekAd.value.trim(),
-    okul: el.tekOkul.value.trim() || null,
     kod: randomKod()
   };
 
@@ -241,7 +237,6 @@ el.tekForm.addEventListener('submit', async (e) => {
   if (error) { alert('Hata: ' + error.message); return; }
 
   el.tekAd.value = '';
-  el.tekOkul.value = '';
   linkleriGoster([data]);
   await listeleYenile();
   await sayacGuncelle();

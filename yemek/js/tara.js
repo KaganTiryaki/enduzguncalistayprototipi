@@ -102,7 +102,7 @@ async function onQrOkundu(kod) {
 
 function taramaSonucUygula(data, kod) {
   if (data.durum === 'ok') {
-    sonucGoster('ok', '✅', `${data.ad_soyad}\n${data.okul || ''}\nAfiyet olsun`);
+    sonucGoster('ok', '✅', `${data.ad_soyad}\nAfiyet olsun`);
     bipCal('ok');
     gecmiseEkle({ ad_soyad: data.ad_soyad, zaman: data.saat, durum: 'ok', kod });
   } else if (data.durum === 'zaten_aldi') {
@@ -236,8 +236,8 @@ async function manuelAra() {
 
   const { data, error } = await supabase
     .from('katilimcilar')
-    .select('kod, ad_soyad, okul, gun1_ogle, gun2_ogle')
-    .or(`kod.ilike.%${q}%,ad_soyad.ilike.%${q}%,okul.ilike.%${q}%`)
+    .select('kod, ad_soyad, gun1_ogle, gun2_ogle')
+    .or(`kod.ilike.%${q}%,ad_soyad.ilike.%${q}%`)
     .limit(10);
 
   if (error) { console.error(error); return; }
@@ -248,7 +248,7 @@ async function manuelAra() {
     li.innerHTML = `
       <div>
         <strong>${k.ad_soyad}</strong>
-        <small>${k.okul || ''} · ${k.kod}</small>
+        <small>${k.kod}</small>
       </div>
       <button data-kod="${k.kod}" class="y-btn y-btn-primary">Onayla</button>
     `;

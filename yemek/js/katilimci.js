@@ -12,7 +12,6 @@ const el = {
   girisHata:   document.getElementById('y-giris-hata'),
   qr:          document.getElementById('y-qr'),
   ad:          document.getElementById('y-ad'),
-  okul:        document.getElementById('y-okul'),
   qrCanvas:    document.getElementById('y-qr-canvas'),
   gun1:        document.getElementById('y-gun1').querySelector('.y-gun-badge'),
   gun2:        document.getElementById('y-gun2').querySelector('.y-gun-badge'),
@@ -48,7 +47,7 @@ function kodLocalSil() {
 async function katilimciGetir(kod) {
   const { data, error } = await supabase
     .from('katilimcilar')
-    .select('kod, ad_soyad, okul, gun1_ogle, gun2_ogle')
+    .select('kod, ad_soyad, gun1_ogle, gun2_ogle')
     .eq('kod', kod)
     .maybeSingle();
 
@@ -59,13 +58,13 @@ async function katilimciGetir(kod) {
 // --- QR üretme ---
 function qrUret(icerik) {
   el.qrCanvas.innerHTML = '';
-  QRCode.toCanvas(icerik, {
+  new QRCode(el.qrCanvas, {
+    text: icerik,
     width: 280,
-    margin: 2,
-    color: { dark: '#2C56A5', light: '#FFFFFF' }
-  }, (err, canvas) => {
-    if (err) { console.error(err); return; }
-    el.qrCanvas.appendChild(canvas);
+    height: 280,
+    colorDark: '#2C56A5',
+    colorLight: '#FFFFFF',
+    correctLevel: QRCode.CorrectLevel.H
   });
 }
 
@@ -97,7 +96,6 @@ async function goster(kod) {
     }
 
     el.ad.textContent = k.ad_soyad;
-    el.okul.textContent = k.okul || '';
     qrUret(k.kod);
     durumRozetiGuncelle(el.gun1, k.gun1_ogle);
     durumRozetiGuncelle(el.gun2, k.gun2_ogle);
@@ -110,7 +108,6 @@ async function goster(kod) {
     if (cache) {
       const k = JSON.parse(cache);
       el.ad.textContent = k.ad_soyad;
-      el.okul.textContent = k.okul || '';
       qrUret(k.kod);
       durumRozetiGuncelle(el.gun1, k.gun1_ogle);
       durumRozetiGuncelle(el.gun2, k.gun2_ogle);
