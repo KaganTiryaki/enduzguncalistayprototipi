@@ -4,7 +4,9 @@
 import { supabase } from './supabase-client.js';
 import { randomKod, saatFormatla } from './util.js';
 
-const BASE_URL = window.location.origin + '/yemek/k/';
+const BASE_URL = window.location.hostname.startsWith('yemek.')
+  ? window.location.origin + '/k/'
+  : window.location.origin + '/yemek/k/';
 
 const el = {
   pinGate:   document.getElementById('p-pin-gate'),
