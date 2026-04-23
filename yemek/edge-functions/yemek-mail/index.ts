@@ -5,7 +5,7 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const BREVO_API = "https://api.brevo.com/v3/smtp/email";
-const FROM_EMAIL = "noreply@maltepefencalistay.org";
+const FROM_EMAIL = "maltepefenfbc@gmail.com";
 const FROM_NAME = "Maltepe Fen Çalıştay";
 const REPLY_TO_EMAIL = "maltepefenfbc@gmail.com";
 const REPLY_TO_NAME = "MFL FBÇ Ekibi";
@@ -104,12 +104,12 @@ function kabulHtml(ilkIsim: string, adSoyad: string, komite: string, sonTarih: s
       <p style="margin:4px 0;"><strong>Tutar:</strong> 750 TL</p>
     </div>
 
-    <p>Açıklama kısmına lütfen şu şekilde yazınız:</p>
+    <p>Açıklama kısmına lütfen <strong>tam olarak</strong> aşağıdaki şekilde yazınız — <strong style="color:#c33;">özellikle komite adınızı (${komite}) mutlaka belirtin</strong>, aksi halde ödemeniz hangi katılımcıya ait olduğu anlaşılamaz:</p>
     <div style="background:#fff6e0;border:1px dashed #d4a34a;padding:12px 16px;margin:8px 0 16px 0;border-radius:4px;font-family:monospace;font-size:14px;">
-      ${adSoyad} - MFL FBÇ - ${komite} - Bağış
+      ${adSoyad} - MFL FBÇ - <strong>${komite}</strong> - Bağış
     </div>
     <p style="color:#666;font-size:14px;font-style:italic;">
-      (Belirtilen format dışındaki açıklamalarla yapılan ödemeler geçersiz sayılacak ve para iadesi yapılmayacaktır.)
+      (Belirtilen format dışındaki — komite adı yazılmamış veya farklı yazılmış — açıklamalarla yapılan ödemeler geçersiz sayılacak ve para iadesi yapılmayacaktır.)
     </p>
 
     <p>
