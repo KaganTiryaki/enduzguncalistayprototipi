@@ -180,7 +180,7 @@
         mailResult.hidden = true;
 
         try {
-            const fnUrl = `${cfg.SUPABASE_URL}/functions/v1/send-kabul-mail`;
+            const fnUrl = `${cfg.SUPABASE_URL}/functions/v1/yemek-mail`;
             const r = await fetch(fnUrl, {
                 method: 'POST',
                 headers: {
@@ -189,6 +189,7 @@
                     'apikey': cfg.SUPABASE_ANON_KEY
                 },
                 body: JSON.stringify({
+                    action: 'kabul_toplu',
                     p_staff_code: staffPin,
                     komite: com,
                     sonTarih: tarih,
