@@ -321,6 +321,124 @@ function buildAtom() {
 }
 
 // --- Orbital mode: 7 spheres (committees) orbiting central core ---
+// Yardımcı fonksiyon: Yandan Beyin + Yoğun Nöral Ağ
+function buildBrainIcon(S = 0.22) {
+    const group = new THREE.Group();
+    const cOL  = 0xCCE4FF; // outline
+    const cGL  = 0x5090D0; // glow
+    const cGY  = 0x6090C0; // gyri
+    const cND  = 0xEEF6FF; // node
+    const cCH  = 0x88C0FF; // hot conn
+    const cCL  = 0x4070B8; // cool conn
+
+    const addCurve = (d, col, op, n=24) => {
+        const c = new THREE.CubicBezierCurve3(
+            new THREE.Vector3(d[0],d[1],0), new THREE.Vector3(d[2],d[3],0),
+            new THREE.Vector3(d[4],d[5],0), new THREE.Vector3(d[6],d[7],0)
+        );
+        group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(c.getPoints(n)),
+            new THREE.LineBasicMaterial({color:col,transparent:true,opacity:op})));
+    };
+
+    // ── SİLUET ──────────────────────────────────────────────────────────────
+    const sh = new THREE.Shape();
+    sh.moveTo(3.5*S,-2.0*S);
+    sh.bezierCurveTo(4.6*S,-1.5*S, 5.4*S,0.5*S,  5.2*S,2.8*S);
+    sh.bezierCurveTo(5.0*S,4.8*S,  3.5*S,6.5*S,  1.5*S,7.0*S);
+    sh.bezierCurveTo(0.0*S,7.4*S, -2.0*S,7.4*S, -3.8*S,6.5*S);
+    sh.bezierCurveTo(-5.0*S,5.8*S,-6.0*S,4.2*S, -6.0*S,2.5*S);
+    sh.bezierCurveTo(-6.0*S,0.8*S,-5.5*S,-0.5*S,-4.8*S,-1.5*S);
+    sh.bezierCurveTo(-4.0*S,-2.5*S,-2.8*S,-2.8*S,-1.5*S,-2.8*S);
+    sh.bezierCurveTo(0.0*S,-2.8*S, 2.0*S,-2.6*S, 3.0*S,-2.3*S);
+    sh.bezierCurveTo(3.3*S,-2.2*S, 3.5*S,-2.1*S, 3.5*S,-2.0*S);
+    const v3 = sh.getPoints(100).map(p=>new THREE.Vector3(p.x,p.y,0));
+    group.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(v3),
+        new THREE.LineBasicMaterial({color:cGL,transparent:true,opacity:0.5})));
+    group.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(v3),
+        new THREE.LineBasicMaterial({color:cOL,transparent:true,opacity:0.98})));
+
+    // ── GYRİ (sadece ana referans çizgiler) ─────────────────────────────────
+    addCurve([2.0*S,7.0*S, 1.5*S,4.5*S, 1.2*S,2.0*S, 1.8*S,-0.8*S], cGY, 0.55, 28); // Rolando
+    addCurve([4.0*S,-0.2*S,2.0*S,0.8*S, 0.0*S,1.0*S,-2.5*S,0.5*S],  cGY, 0.5,  28); // Sylvian
+    addCurve([4.9*S,1.8*S, 3.2*S,3.2*S, 1.0*S,3.5*S,-1.0*S,3.2*S],  cGY, 0.4);
+    addCurve([4.6*S,0.5*S, 3.0*S,1.8*S, 0.8*S,2.2*S,-1.5*S,2.0*S],  cGY, 0.35);
+    addCurve([-0.5*S,7.2*S,-1.5*S,6.8*S,-2.5*S,6.0*S,-3.5*S,5.2*S], cGY, 0.4);
+    addCurve([-1.8*S,6.0*S,-2.8*S,5.5*S,-4.0*S,4.5*S,-5.0*S,3.5*S], cGY, 0.35);
+    addCurve([-3.0*S,5.0*S,-4.0*S,4.2*S,-5.2*S,3.0*S,-5.8*S,1.5*S], cGY, 0.3);
+
+    // ── CEREBELLUM ──────────────────────────────────────────────────────────
+    const cs = new THREE.Shape();
+    cs.moveTo(-2.0*S,-2.6*S);
+    cs.bezierCurveTo(-2.8*S,-3.2*S,-4.8*S,-3.8*S,-5.5*S,-2.2*S);
+    cs.bezierCurveTo(-6.0*S,-0.8*S,-5.2*S,0.2*S,-4.0*S,0.0*S);
+    cs.bezierCurveTo(-3.2*S,-0.2*S,-2.8*S,-1.2*S,-2.4*S,-1.8*S);
+    cs.bezierCurveTo(-2.2*S,-2.2*S,-2.0*S,-2.4*S,-2.0*S,-2.6*S);
+    const cv3 = cs.getPoints(36).map(p=>new THREE.Vector3(p.x,p.y,0));
+    group.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(cv3),
+        new THREE.LineBasicMaterial({color:cOL,transparent:true,opacity:0.85})));
+    [[-2.5,-2.7,-2.7,-1.7],[-3.0,-3.1,-3.2,-1.4],[-3.6,-3.4,-3.8,-1.0],
+     [-4.2,-3.4,-4.4,-0.6],[-4.8,-3.1,-5.0,-0.2],[-5.3,-2.5,-5.5,0.1]].forEach(d=>{
+        group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
+            new THREE.Vector3(d[0]*S,d[1]*S,0),new THREE.Vector3(d[2]*S,d[3]*S,0)]),
+            new THREE.LineBasicMaterial({color:cGY,transparent:true,opacity:0.4})));
+    });
+
+    // ── BEYİN SAPI ──────────────────────────────────────────────────────────
+    group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(0.8*S,-2.6*S,0),new THREE.Vector3(0.5*S,-3.6*S,0),
+        new THREE.Vector3(0.1*S,-4.8*S,0)]),
+        new THREE.LineBasicMaterial({color:cOL,transparent:true,opacity:0.75})));
+
+    // ── NÖRAL AĞ — 50 node grid (beyin içine yerleştirilmiş) ────────────────
+    // Koordinatlar S=1 biriminde; gerçek pozisyon = [x*S, y*S]
+    const grid = [
+        [-1.5,6.5],[0.0,6.8],[1.5,6.5],
+        [-3.0,5.5],[-1.5,5.5],[0.0,5.5],[1.5,5.5],[3.0,5.5],
+        [-4.0,4.5],[-2.5,4.5],[-1.0,4.5],[0.5,4.5],[2.0,4.5],[3.5,4.5],
+        [-4.5,3.5],[-3.0,3.5],[-1.5,3.5],[0.0,3.5],[1.5,3.5],[3.0,3.5],[4.5,3.5],
+        [-5.0,2.5],[-3.5,2.5],[-2.0,2.5],[-0.5,2.5],[1.0,2.5],[2.5,2.5],[4.0,2.5],
+        [-4.5,1.5],[-3.0,1.5],[-1.5,1.5],[0.0,1.5],[1.5,1.5],[3.0,1.5],[4.5,1.5],
+        [-3.5,0.5],[-2.0,0.5],[-0.5,0.5],[1.0,0.5],[2.5,0.5],[4.0,0.5],
+        [-2.5,-0.5],[-1.0,-0.5],[0.5,-0.5],[2.0,-0.5],[3.5,-0.5],
+        [-0.5,-1.5],[1.0,-1.5],[2.5,-1.5],
+        [0.5,-2.3],[2.0,-2.3],
+    ];
+
+    const nodes = [];
+    grid.forEach((p,i) => {
+        const node = new THREE.Mesh(
+            new THREE.SphereGeometry(i%5===0?0.14:0.09, 6, 6),
+            new THREE.MeshBasicMaterial({color:cND,transparent:true,opacity:1.0})
+        );
+        node.position.set(p[0]*S, p[1]*S, 0.05);
+        node.userData.phase = Math.random()*Math.PI*2;
+        group.add(node);
+        nodes.push(node);
+    });
+
+    // Bağlantılar — 2 mesafe eşiği
+    for (let i=0;i<nodes.length;i++) {
+        for (let j=i+1;j<nodes.length;j++) {
+            const d = nodes[i].position.distanceTo(nodes[j].position);
+            if (d < 1.7*S) {
+                group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(
+                    [nodes[i].position.clone(),nodes[j].position.clone()]),
+                    new THREE.LineBasicMaterial({color:cCH,transparent:true,opacity:0.65})));
+            } else if (d < 3.0*S) {
+                group.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(
+                    [nodes[i].position.clone(),nodes[j].position.clone()]),
+                    new THREE.LineBasicMaterial({color:cCL,transparent:true,opacity:0.2})));
+            }
+        }
+    }
+
+    group.userData.nodes = nodes;
+    group.position.set(0.5*S, -2.5*S, 0);
+    return group;
+}
+
+
+
 function buildOrbital() {
     const g = new THREE.Group();
     const core = new THREE.Mesh(
@@ -331,22 +449,29 @@ function buildOrbital() {
     for (let i = 0; i < 7; i++) {
         const angle = (i / 7) * Math.PI * 2;
         const r = 14;
-        const sphere = new THREE.Mesh(
-            new THREE.SphereGeometry(0.9, 16, 16),
-            new THREE.MeshBasicMaterial({ color: 0x819FCD, transparent: true, opacity: 0.85 })
-        );
-        sphere.userData.baseAngle = angle;
-        sphere.userData.radius = r;
-        sphere.userData.tilt = (Math.random() - 0.5) * 0.4;
-        g.add(sphere);
+        
+        let obj;
+        if (i === 1) { // C/02 Nöropsikoloji için beyin ikonu
+            obj = buildBrainIcon(0.18);
+        } else {
+            obj = new THREE.Mesh(
+                new THREE.SphereGeometry(0.9, 16, 16),
+                new THREE.MeshBasicMaterial({ color: 0x819FCD, transparent: true, opacity: 0.85 })
+            );
+        }
+        
+        obj.userData.baseAngle = angle;
+        obj.userData.radius = r;
+        obj.userData.tilt = (Math.random() - 0.5) * 0.4;
+        g.add(obj);
 
         // Connecting line to core
         const lineGeo = new THREE.BufferGeometry().setFromPoints([
             new THREE.Vector3(0, 0, 0),
-            new THREE.Vector3(Math.cos(angle) * r, Math.sin(angle) * r * Math.cos(sphere.userData.tilt), Math.sin(angle) * r * Math.sin(sphere.userData.tilt))
+            new THREE.Vector3(Math.cos(angle) * r, Math.sin(angle) * r * Math.cos(obj.userData.tilt), Math.sin(angle) * r * Math.sin(obj.userData.tilt))
         ]);
         const line = new THREE.Line(lineGeo, new THREE.LineBasicMaterial({ color: 0x5381BE, transparent: true, opacity: 0.55 }));
-        sphere.userData.line = line;
+        obj.userData.line = line;
         g.add(line);
     }
     return g;
@@ -490,7 +615,7 @@ function buildDNA() {
     return g;
 }
 
-// --- Neural mode: neural network layers ---
+// --- Neural mode: simplified neural network layers ---
 function buildNeural() {
     const g = new THREE.Group();
     const layers = [4, 6, 6, 3];
@@ -503,7 +628,7 @@ function buildNeural() {
         const xOffset = (li - (layers.length - 1) / 2) * layerSpacing;
         for (let i = 0; i < count; i++) {
             const y = (i - (count - 1) / 2) * 2.5;
-            const node = new THREE.Mesh(new THREE.SphereGeometry(0.4, 12, 12), nodeMat.clone());
+            const node = new THREE.Mesh(new THREE.SphereGeometry(0.35, 12, 12), nodeMat.clone());
             node.position.set(xOffset, y, 0);
             node.userData.basePos = node.position.clone();
             node.userData.phase = Math.random() * Math.PI * 2;
@@ -514,7 +639,7 @@ function buildNeural() {
         nodes.push(layerNodes);
     });
     // Connections
-    const connMat = new THREE.LineBasicMaterial({ color: 0x5381BE, transparent: true, opacity: 0.5 });
+    const connMat = new THREE.LineBasicMaterial({ color: 0x5381BE, transparent: true, opacity: 0.45 });
     const conns = [];
     for (let li = 0; li < nodes.length - 1; li++) {
         nodes[li].forEach(a => {
@@ -523,8 +648,6 @@ function buildNeural() {
                     new THREE.BufferGeometry().setFromPoints([a.position, b.position]),
                     connMat.clone()
                 );
-                line.userData.a = a;
-                line.userData.b = b;
                 line.userData.phase = Math.random() * Math.PI * 2;
                 g.add(line);
                 conns.push(line);
@@ -825,6 +948,21 @@ function animateMode(group, name, t) {
                     const r = child.userData.radius;
                     const tilt = child.userData.tilt;
                     child.position.set(Math.cos(a) * r, Math.sin(a) * r * Math.cos(tilt), Math.sin(a) * r * Math.sin(tilt));
+                    
+                    // Beyin ikonu (Group tipindeki): kameraya paralel yüzlesin + node pulse
+                    if (child.type === 'Group') {
+                        child.rotation.y = -group.rotation.y;
+                        child.rotation.z = Math.sin(t * 0.5) * 0.08;
+                        // İç node'ları pulse et
+                        if (child.userData.nodes) {
+                            child.userData.nodes.forEach(n => {
+                                const pulse = 0.8 + Math.sin(t * 2.5 + n.userData.phase) * 0.4;
+                                n.scale.setScalar(pulse);
+                                n.material.opacity = 0.65 + Math.abs(Math.sin(t * 2 + n.userData.phase)) * 0.35;
+                            });
+                        }
+                    }
+
                     if (child.userData.line) {
                         const pts = [new THREE.Vector3(0, 0, 0), child.position.clone()];
                         child.userData.line.geometry.setFromPoints(pts);

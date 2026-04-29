@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0E1A30">
+    <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+    <title>MFL FBÇ '26 — Yönetim Paneli</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/panel/style.css">
+</head>
+<body class="view-gate">
+
+    <!-- ============= GATE ============= -->
+    <section class="gate" id="gate">
+        <section class="y-card">
+            <h2>Yönetici Girişi</h2>
+            <form id="gateForm" autocomplete="off">
+                <input
+                    id="pinInput"
+                    name="pin"
+                    type="password"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    autocorrect="off"
+                    spellcheck="false"
+                    maxlength="8"
+                    required>
+                <button type="submit" class="y-btn-primary">Giriş</button>
+                <p id="gateHata" class="y-hata" hidden></p>
+            </form>
+        </section>
+    </section>
+
+    <!-- ============= CONTENT ============= -->
+    <main class="content" id="content" hidden>
+        <header class="topbar">
+            <div>
+                <h1>MFL FBÇ '26 — Yönetim Paneli</h1>
+                <p id="summary">Yükleniyor…</p>
+            </div>
+            <div class="topbar__actions">
+                <button id="mailBtn"    type="button" class="btn-primary">✉ Kabul Maili</button>
+                <button id="refreshBtn" type="button" class="btn-sec">↻ Yenile</button>
+                <button id="exportBtn"  type="button" class="btn-sec">CSV indir</button>
+                <button id="logoutBtn"  type="button" class="btn-sec">Çıkış</button>
+            </div>
+        </header>
+
+        <section class="filters">
+            <input type="search" id="searchInput" placeholder="Ad, e-posta, kart no veya komite ara…" autocomplete="off">
+            <select id="committeeFilter">
+                <option value="">Tüm komiteler</option>
+            </select>
+            <select id="statusFilter">
+                <option value="all">Tüm durumlar</option>
+                <option value="used">Geçiş yapmış</option>
+                <option value="unused">Henüz geçmemiş</option>
+                <option value="revoked">İptal edilmiş</option>
+            </select>
+        </section>
+
+        <div class="table-wrap">
+            <table class="cards-table">
+                <thead>
+                    <tr>
+                        <th class="col-num">Kart</th>
+                        <th class="col-qr">QR</th>
+                        <th>Ad Soyad</th>
+                        <th>E-posta</th>
+                        <th>Komite</th>
+                        <th>Geçiş</th>
+                        <th>Son geçiş</th>
+                        <th>Durum</th>
+                    </tr>
+                </thead>
+                <tbody id="cardsTbody"></tbody>
+            </table>
+            <p class="empty" id="emptyMsg" hidden>Filtreyle eşleşen kayıt yok.</p>
+        </div>
+    </main>
+
+    <!-- QR fullscreen modal -->
+    <div class="qr-modal" id="qrModal" aria-hidden="true">
+        <img id="qrModalImg" alt="" src="">
+        <div class="qr-modal__caption" id="qrModalCaption"></div>
+    </div>
+
+    <!-- Kabul maili modal -->
+    <div class="mail-modal" id="mailModal" hidden>
+        <div class="mail-modal__backdrop" data-close></div>
+        <div class="mail-modal__panel">
+            <button class="mail-modal__close" type="button" data-close aria-label="Kapat">×</button>
+            <h2>Kabul Maili Gönder</h2>
+            <p class="mail-modal__lead">Seçilen komitedeki tüm e-posta adreslerine başvuru onayı gönderir. Brevo üzerinden gider, IBAN bilgisi mailde otomatik yazılır.</p>
+
+            <form id="mailForm">
+                <label>
+                    <span>Komite</span>
+                    <select id="mailCommittee" required>
+                        <option value="">— Komite seç —</option>
+                    </select>
+                </label>
+
+                <label>
+                    <span>Son ödeme tarihi</span>
+                    <input id="mailDate" type="text" placeholder="07.05.2026" required pattern="\d{2}\.\d{2}\.\d{4}">
+                </label>
+
+                <label class="mail-modal__check">
+                    <input id="mailDuzeltme" type="checkbox">
+                    <span>Bu bir <strong>düzeltme</strong> maili — başına "az önceki maili dikkate almayın" uyarısı eklenir, konu başına "DÜZELTME" gelir.</span>
+                </label>
+
+                <div id="mailRecipients" class="mail-modal__recipients">
+                    <p class="em">Komite seçilince alıcı listesi burada görünür.</p>
+                </div>
+
+                <button id="mailSendBtn" type="submit" class="btn-primary mail-modal__send" disabled>
+                    Gönder
+                </button>
+                <div id="mailResult" class="mail-modal__result" hidden></div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" defer></script>
+    <script src="/tara/config.js" defer></script>
+    <script src="/panel/app.js" defer></script>
+</body>
+</html>

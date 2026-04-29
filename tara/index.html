@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0E1A30">
+    <meta name="robots" content="noindex,nofollow">
+    <title>MFL FBÇ '26 — Yemek Tarayıcısı</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/tara/style.css">
+</head>
+<body class="view-gate">
+
+    <!-- ============= GATE ============= -->
+    <section class="gate" id="gate">
+        <section class="y-card p-pin-card">
+            <h2>Görevli Girişi</h2>
+            <form id="gateForm" autocomplete="off">
+                <input
+                    id="staffCodeInput"
+                    name="pin"
+                    type="password"
+                    inputmode="numeric"
+                    autocomplete="off"
+                    autocorrect="off"
+                    spellcheck="false"
+                    maxlength="8"
+                    required>
+                <button type="submit" class="y-btn y-btn-primary">Giriş</button>
+                <p id="gateHata" class="y-hata" hidden></p>
+            </form>
+        </section>
+    </section>
+
+    <!-- ============= SCANNER ============= -->
+    <section class="scanner" id="scanner" hidden>
+        <header class="scanner__top">
+            <div class="scanner__top-left">
+                <span class="scanner__day" id="scannerDay">—</span>
+                <span class="scanner__staff">Görevli</span>
+            </div>
+            <button class="scanner__exit" id="logoutBtn" type="button" aria-label="Çıkış">Çıkış</button>
+        </header>
+
+        <div class="scanner__camera" id="cameraBox">
+            <div id="qrReader"></div>
+            <div class="scanner__aim" aria-hidden="true">
+                <span></span><span></span><span></span><span></span>
+            </div>
+            <p class="scanner__hint" id="cameraHint">Kamera başlatılıyor…</p>
+        </div>
+
+        <ol class="scanner__log" id="scanLog" aria-live="polite" aria-label="Son taramalar"></ol>
+    </section>
+
+    <!-- ============= RESULT (overlay) ============= -->
+    <div class="result" id="result" hidden>
+        <div class="result__inner">
+            <div class="result__icon" id="resultIcon" aria-hidden="true"></div>
+            <h2 class="result__title" id="resultTitle"></h2>
+            <p class="result__sub" id="resultSub"></p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/html5-qrcode@2.3.8/html5-qrcode.min.js" defer></script>
+    <script src="/tara/config.js" defer></script>
+    <script src="/tara/app.js" defer></script>
+</body>
+</html>

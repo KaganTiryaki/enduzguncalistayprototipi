@@ -1,0 +1,20 @@
+{
+  "name": "mfl-fbc26-qr-generator",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "MFL FBÇ '26 yaka kartı QR PNG üretici (yerel script, deploy edilmez)",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "generate": "node generate.mjs",
+    "generate:reset": "node generate.mjs --reset",
+    "generate:single": "node generate.mjs --single"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.0",
+    "qrcode": "^1.5.4",
+    "uuid": "^10.0.0"
+  }
+}

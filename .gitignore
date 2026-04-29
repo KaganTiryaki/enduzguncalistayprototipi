@@ -1,0 +1,23 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node (sadece scripts/generate-qrs için kullanılıyor)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# QR generator script — yerel sırlar ve büyük çıktılar
+scripts/generate-qrs/.env
+scripts/generate-qrs/output/
+
+# Supabase CLI artifacts (varsa)
+.supabase/
+
+# Vercel deployment metadata
+.vercel/
+
+.vercel

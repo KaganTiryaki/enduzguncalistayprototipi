@@ -1,0 +1,430 @@
+/* MFL FBÇ '26 staff scanner — utility layout
+   Public site'tan ../css/style.css ile design token'lar inherit ediliyor:
+   --navy-dark, --navy-medium, --accent, --off-white, --gray-light, --gray, vs. */
+
+:root {
+    --danger: #C0392B;
+    --warn:   #C49032;
+    --success-bg: #2E7D5C;   /* navy palette ile uyumlu yeşil — Tailwind default değil */
+    --tap-min: 56px;
+    --shadow-card: 0 10px 30px -10px rgba(44, 86, 165, 0.25);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--off-white);
+    color: var(--text-dark);
+    font-family: var(--font-body);
+    overflow-x: hidden;
+    overscroll-behavior: none;
+}
+
+/* ---- view switching: body class kontrol eder ---- */
+body.view-gate    #scanner { display: none; }
+body.view-scanner #gate    { display: none; }
+
+/* ============================================================
+   GATE — eski yemek/tara.html "y-tara" gate'i.
+   Kaynak: Desktop/mfl calistay/mfl-calistay-2026/yemek/{tara.html, yemek.css}
+   Koyu navy (#0E1A30) zemin üzerinde ortada beyaz card. Bare layout:
+   üstte başlık yok, altta hint yok — kart başlığı + form + hata.
+   ============================================================ */
+.gate {
+    background: #0E1A30;
+    min-height: 100dvh;
+    color: var(--white);
+    padding: 0;
+}
+
+/* Card (yemek.css .y-card) */
+.y-card {
+    background: var(--white);
+    border-radius: 14px;
+    padding: 1.75rem 1.5rem;
+    box-shadow: 0 8px 32px rgba(44, 86, 165, 0.15);
+    border: 1px solid var(--gray-light);
+}
+.y-card h2 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.4rem;
+    margin-bottom: 0.5rem;
+    color: var(--navy-dark);
+}
+
+/* Admin panel PIN card layout (yemek.css .p-pin-card) */
+.p-pin-card {
+    max-width: 400px;
+    margin: 4rem auto;
+}
+
+/* Form */
+.y-card form { display: flex; flex-direction: column; }
+.y-card input[type="text"],
+.y-card input[type="password"] {
+    width: 100%;
+    padding: 0.9rem 1rem;
+    font-size: 1.1rem;
+    border: 2px solid var(--gray-light);
+    border-radius: 10px;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+    font-family: var(--font-body);
+    color: var(--navy-dark);
+    background: var(--white);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.y-card input:focus-visible {
+    outline: none;
+    border-color: var(--navy-medium);
+}
+.y-card input::placeholder {
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+/* Buttons (eski .y-btn / .y-btn-primary) */
+.y-btn {
+    width: 100%;
+    padding: 0.95rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: var(--font-body);
+    transition: transform 0.08s, box-shadow 0.15s, background 0.15s;
+}
+.y-btn:active { transform: scale(0.98); }
+.y-btn-primary {
+    background: var(--navy-primary);
+    color: var(--white);
+}
+.y-btn-primary:hover {
+    background: var(--navy-dark);
+    box-shadow: 0 4px 14px rgba(44, 86, 165, 0.35);
+}
+
+/* Hata mesajı */
+.y-hata {
+    color: #C73E3A;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background: rgba(199, 62, 58, 0.08);
+    border-radius: 8px;
+}
+
+/* ============================================================
+   SCANNER
+   ============================================================ */
+.scanner {
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    background: var(--off-white);
+}
+.scanner__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    background: var(--navy-dark);
+    color: var(--white);
+}
+.scanner__top-left { display: flex; flex-direction: column; gap: 2px; }
+.scanner__day {
+    font-weight: 700;
+    font-size: 15px;
+}
+.scanner__staff {
+    font-size: 11px;
+    color: var(--accent-light);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+.scanner__exit {
+    height: 40px;
+    padding: 0 14px;
+    background: transparent;
+    color: var(--white);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 10px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.scanner__exit:hover { background: rgba(255,255,255,0.1); }
+
+.scanner__tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    padding: 12px;
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-light);
+}
+.scanner__tab {
+    height: var(--tap-min);
+    border: 2px solid var(--gray-light);
+    border-radius: 12px;
+    background: var(--white);
+    color: var(--gray);
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.scanner__tab.is-active {
+    background: var(--navy-medium);
+    color: var(--white);
+    border-color: var(--navy-medium);
+}
+
+.scanner__camera {
+    position: relative;
+    flex: 1;
+    min-height: 280px;
+    margin: 12px;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #000;
+    box-shadow: var(--shadow-card);
+}
+#qrReader { width: 100%; height: 100%; }
+#qrReader video { width: 100% !important; height: 100% !important; object-fit: cover; }
+
+/* html5-qrcode'un kendi UI'ı; sadece dashboard ve header'ı gizle, video kalsın */
+#qrReader__dashboard,
+#qrReader__header_message { display: none !important; }
+#qrReader__scan_region { background: transparent !important; }
+#qrReader__scan_region img { display: none !important; }
+
+.scanner__aim {
+    position: absolute;
+    inset: 16px;
+    pointer-events: none;
+}
+.scanner__aim span {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border: 3px solid var(--accent-light);
+}
+.scanner__aim span:nth-child(1) { top: 0;    left: 0;    border-right: none; border-bottom: none; border-top-left-radius: 8px; }
+.scanner__aim span:nth-child(2) { top: 0;    right: 0;   border-left: none;  border-bottom: none; border-top-right-radius: 8px; }
+.scanner__aim span:nth-child(3) { bottom: 0; left: 0;    border-right: none; border-top: none;    border-bottom-left-radius: 8px; }
+.scanner__aim span:nth-child(4) { bottom: 0; right: 0;   border-left: none;  border-top: none;    border-bottom-right-radius: 8px; }
+
+.scanner__hint {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    padding: 6px 12px;
+    background: rgba(44, 86, 165, 0.85);
+    color: var(--white);
+    font-size: 12px;
+    border-radius: 8px;
+}
+
+.scanner__actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+}
+.scanner__manual {
+    height: 44px;
+    padding: 0 18px;
+    border: 1px solid var(--gray-light);
+    border-radius: 10px;
+    background: var(--white);
+    color: var(--navy-medium);
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.scanner__outbox {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--warn);
+    background: #FFF7E6;
+    padding: 6px 10px;
+    border-radius: 8px;
+}
+
+.scanner__log {
+    list-style: none;
+    margin: 0;
+    padding: 8px 16px 24px;
+    max-height: 30vh;
+    overflow-y: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12px;
+    color: var(--gray);
+}
+.scanner__log li {
+    padding: 6px 0;
+    border-bottom: 1px solid var(--gray-light);
+    display: grid;
+    grid-template-columns: 60px 60px 60px 1fr;
+    gap: 8px;
+    align-items: center;
+}
+.scanner__log li.log--ok    { color: var(--success-bg); }
+.scanner__log li.log--used  { color: var(--warn); }
+.scanner__log li.log--error { color: var(--danger); }
+
+/* ============================================================
+   RESULT OVERLAY
+   ============================================================ */
+.result {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    z-index: 1000;
+    padding: 32px;
+    color: var(--white);
+    text-align: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.result[hidden] { display: none; }
+.result[data-state="visible"] { opacity: 1; pointer-events: auto; }
+.result[data-status="ok"]            { background: var(--success-bg); }
+.result[data-status="already_used"]  { background: var(--warn); }
+.result[data-status="error"]         { background: var(--danger); }
+
+.result__inner { max-width: 520px; }
+.result__icon {
+    font-size: 88px;
+    line-height: 1;
+    margin-bottom: 16px;
+    font-weight: 700;
+}
+.result__title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: 36px;
+    letter-spacing: -0.02em;
+}
+.result__sub {
+    margin: 12px 0 0;
+    font-size: 16px;
+    opacity: 0.9;
+    line-height: 1.5;
+}
+
+/* ============================================================
+   MANUAL ENTRY MODAL
+   ============================================================ */
+.modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1100;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+}
+.modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(44, 86, 165, 0.55);
+    backdrop-filter: blur(4px);
+}
+.modal__panel {
+    position: relative;
+    background: var(--white);
+    border-radius: 20px;
+    padding: 28px 24px;
+    width: 100%;
+    max-width: 360px;
+    box-shadow: var(--shadow-card);
+}
+.modal__close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: none;
+    font-size: 26px;
+    color: var(--gray);
+    cursor: pointer;
+}
+.modal__title {
+    margin: 0 0 16px;
+    font-family: var(--font-display);
+    color: var(--navy-dark);
+    font-size: 22px;
+}
+.modal__label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 6px;
+}
+.modal__panel input {
+    width: 100%;
+    height: var(--tap-min);
+    padding: 0 16px;
+    font-size: 18px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    color: var(--navy-dark);
+    background: var(--off-white);
+    border: 2px solid var(--gray-light);
+    border-radius: 12px;
+    margin-bottom: 12px;
+}
+.modal__panel input:focus-visible {
+    outline: none;
+    border-color: var(--navy-medium);
+}
+.modal__hint {
+    margin: 0 0 16px;
+    font-size: 12px;
+    color: var(--gray);
+}
+.modal__btn {
+    width: 100%;
+    height: var(--tap-min);
+    border: none;
+    border-radius: 12px;
+    background: var(--navy-medium);
+    color: var(--white);
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+/* ============================================================
+   Yatay viewport (telefon yatay tutulduğunda) — kamera daha geniş
+   ============================================================ */
+@media (orientation: landscape) and (max-height: 500px) {
+    .scanner__camera { min-height: 200px; }
+    .scanner__log    { display: none; }
+}
