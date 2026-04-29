@@ -95,6 +95,7 @@
     const mailDate       = document.getElementById('mailDate');
     const mailDuzeltme   = document.getElementById('mailDuzeltme');
     const mailRecipients = document.getElementById('mailRecipients');
+    const mailParseInfo  = document.getElementById('mailParseInfo');
     const mailSendBtn    = document.getElementById('mailSendBtn');
     const mailResult     = document.getElementById('mailResult');
 
@@ -103,11 +104,11 @@
             .sort((a, b) => a.localeCompare(b, 'tr'));
         mailCommittee.innerHTML = '<option value="">— Komite seç —</option>' +
             committees.map(c => `<option value="${escapeAttr(c)}">${escapeHtml(c)}</option>`).join('');
-        const today = new Date();
-        const def = new Date(today.getTime() + 7 * 24 * 3600 * 1000);
-        mailDate.value = `${String(def.getDate()).padStart(2,'0')}.${String(def.getMonth()+1).padStart(2,'0')}.${def.getFullYear()}`;
+        mailDate.value = '04.05.2026';
         mailDuzeltme.checked = false;
-        mailRecipients.innerHTML = '<p class="em">Komite seçilince alıcı listesi burada görünür.</p>';
+        mailRecipients.value = '';
+        mailParseInfo.hidden = true;
+        mailParseInfo.innerHTML = '';
         mailResult.hidden = true;
         mailSendBtn.disabled = true;
         mailModal.hidden = false;
@@ -122,27 +123,40 @@
         if (e.key === 'Escape' && !mailModal.hidden) mailModal.hidden = true;
     });
 
-    mailCommittee.addEventListener('change', updateRecipients);
+    mailCommittee.addEventListener('change', refreshSendButton);
+    mailRecipients.addEventListener('input', parseRecipients);
 
-    function updateRecipients() {
-        const com = mailCommittee.value;
-        if (!com) {
-            mailRecipients.innerHTML = '<p class="em">Komite seçilince alıcı listesi burada görünür.</p>';
-            mailSendBtn.disabled = true;
-            return;
+    function parseRecipients() {
+        const lines = mailRecipients.value.split('\n').map(l => l.trim()).filter(Boolean);
+        const ok = [];
+        const bad = [];
+        for (const line of lines) {
+            const sep = line.includes(',') ? ',' : (line.includes('\t') ? '\t' : ',');
+            const parts = line.split(sep).map(s => s.trim());
+            if (parts.length < 2) { bad.push(line); continue; }
+            const name = parts[0];
+            const email = parts[parts.length - 1].toLowerCase();
+            if (!name || !email.includes('@') || !email.includes('.')) { bad.push(line); continue; }
+            ok.push({ ad_soyad: name, email });
         }
-        const inCom = allCards.filter(c => c.committee === com && !c.revoked_at);
-        const withMail = inCom.filter(c => c.email);
-        const noMail = inCom.filter(c => !c.email);
-        const html = [
-            `<div class="count">${withMail.length} alıcı (${inCom.length} kayıttan ${noMail.length}'i e-postasız)</div>`,
-            '<ul>',
-            ...withMail.map(c => `<li>${escapeHtml(c.name)} · ${escapeHtml(c.email)}</li>`),
-            ...noMail.map(c => `<li class="no-mail">${escapeHtml(c.name)} — e-postası yok, atlanır</li>`),
-            '</ul>'
-        ].join('');
-        mailRecipients.innerHTML = html;
-        mailSendBtn.disabled = withMail.length === 0;
+        if (lines.length === 0) {
+            mailParseInfo.hidden = true;
+            mailParseInfo.innerHTML = '';
+        } else {
+            const badHtml = bad.length
+                ? '<ul class="bad">' + bad.map(b => `<li>Hatalı: ${escapeHtml(b)}</li>`).join('') + '</ul>'
+                : '';
+            mailParseInfo.innerHTML = `<div class="count">${ok.length} geçerli alıcı${bad.length ? `, ${bad.length} hatalı satır` : ''}</div>` + badHtml;
+            mailParseInfo.hidden = false;
+        }
+        mailRecipients.dataset.parsed = JSON.stringify(ok);
+        refreshSendButton();
+    }
+
+    function refreshSendButton() {
+        const com = mailCommittee.value;
+        const parsed = JSON.parse(mailRecipients.dataset.parsed || '[]');
+        mailSendBtn.disabled = !com || parsed.length === 0;
     }
 
     mailForm.addEventListener('submit', async e => {
@@ -152,11 +166,11 @@
         const duzeltme = mailDuzeltme.checked;
         if (!com || !tarih) return;
 
-        const inCom = allCards.filter(c => c.committee === com && !c.revoked_at && c.email);
-        if (inCom.length === 0) return;
+        const kisiler = JSON.parse(mailRecipients.dataset.parsed || '[]');
+        if (kisiler.length === 0) return;
 
         const onay = confirm(
-            `${duzeltme ? 'DÜZELTME maili' : 'Kabul maili'} ${inCom.length} kişiye gönderilecek\n` +
+            `${duzeltme ? 'DÜZELTME maili' : 'Kabul maili'} ${kisiler.length} kişiye gönderilecek\n` +
             `Komite: ${com}\nSon tarih: ${tarih}\n\nDevam edilsin mi?`
         );
         if (!onay) return;
@@ -179,7 +193,7 @@
                     komite: com,
                     sonTarih: tarih,
                     duzeltme,
-                    kisiler: inCom.map(c => ({ ad_soyad: c.name, email: c.email }))
+                    kisiler
                 })
             });
             const data = await r.json();

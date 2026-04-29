@@ -116,9 +116,11 @@
                     <span>Bu bir <strong>düzeltme</strong> maili — başına "az önceki maili dikkate almayın" uyarısı eklenir, konu başına "DÜZELTME" gelir.</span>
                 </label>
 
-                <div id="mailRecipients" class="mail-modal__recipients">
-                    <p class="em">Komite seçilince alıcı listesi burada görünür.</p>
-                </div>
+                <label>
+                    <span>Alıcılar — her satıra bir kişi: <code>Ad Soyad, email</code></span>
+                    <textarea id="mailRecipients" rows="8" placeholder="Kağan Tiryaki, kagan@example.com&#10;Ada Vardar, ada@example.com" required></textarea>
+                </label>
+                <div id="mailParseInfo" class="mail-modal__recipients" hidden></div>
 
                 <button id="mailSendBtn" type="submit" class="btn-primary mail-modal__send" disabled>
                     Gönder
