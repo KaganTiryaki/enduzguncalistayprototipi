@@ -33,6 +33,24 @@
     /* Transitions */
     --transition: 0.3s ease;
     --transition-slow: 0.6s ease;
+
+    /* Mobile breakpoints — documentation only; @media uses literal numbers
+       because CSS custom properties can't be used inside media queries. */
+    --bp-sm: 480px;
+    --bp-md: 768px;
+    --bp-lg: 1024px;
+
+    /* Touch target minimum (Apple HIG) */
+    --touch-min: 44px;
+
+    /* Fluid type scale — mobile-first, desktop scales up via clamp */
+    --text-h1: clamp(1.9rem, 5vw, 3.4rem);
+    --text-body: clamp(0.95rem, 1.4vw, 1.05rem);
+
+    /* Text colors for light-bg sections (vm/about/faq/sponsors) — higher
+       contrast than --text-muted (#7B93B8) which gets washed out on #E4ECF6 */
+    --text-on-light: #2d3e5c;
+    --text-on-light-muted: #5a6e8a;
 }
 
 /* ==================== RESET ==================== */
@@ -50,6 +68,7 @@ html {
 
 body {
     font-family: var(--font-body);
+    font-size: var(--text-body);
     color: var(--text-dark);
     line-height: 1.6;
     overflow-x: hidden;
@@ -69,6 +88,7 @@ body.menu-open {
     z-index: -1;
     pointer-events: none;
     display: block;
+    transition: opacity 0.4s ease;
 }
 
 /* All sections: allow canvas to subtly peek through by using rgba backgrounds */
@@ -229,11 +249,15 @@ img {
 .hamburger {
     display: none;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     gap: 5px;
     background: none;
     border: none;
     cursor: pointer;
-    padding: 4px;
+    width: var(--touch-min);
+    height: var(--touch-min);
+    padding: 0;
     z-index: 1001;
 }
 
@@ -285,6 +309,11 @@ img {
 }
 
 .mobile-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: var(--touch-min);
+    padding: 8px 16px;
     font-size: 1.5rem;
     font-weight: 600;
     color: var(--white);
@@ -323,8 +352,8 @@ img {
 }
 
 .hero-logo {
-    width: 150px;
-    height: 150px;
+    width: clamp(110px, 22vw, 180px);
+    height: clamp(110px, 22vw, 180px);
     border-radius: 50%;
     object-fit: contain;
     margin-bottom: 24px;
@@ -340,7 +369,7 @@ img {
 
 .hero-title {
     font-family: var(--font-display);
-    font-size: 3.5rem;
+    font-size: var(--text-h1);
     font-weight: 700;
     color: var(--white);
     line-height: 1.2;
@@ -462,6 +491,11 @@ img {
     bottom: 32px;
     left: 50%;
     transform: translateX(-50%);
+    min-width: var(--touch-min);
+    min-height: var(--touch-min);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     color: rgba(255, 255, 255, 0.4);
     animation: bounce 2s infinite;
 }
@@ -541,7 +575,7 @@ img {
 
 /* ==================== VISION & MISSION ==================== */
 .section-vm {
-    background: var(--off-white);
+    background: #E4ECF6;
 }
 
 .vm-grid {
@@ -587,13 +621,13 @@ img {
 }
 
 .vm-text {
-    color: var(--text-muted);
+    color: var(--text-on-light-muted);
     line-height: 1.7;
 }
 
 /* ==================== ABOUT / STATS ==================== */
 .section-about {
-    background: var(--white);
+    background: #EDF2F8;
 }
 
 .stats-grid {
@@ -983,7 +1017,7 @@ img {
 
 /* ==================== FAQ ==================== */
 .section-faq {
-    background: var(--white);
+    background: #EDF2F8;
 }
 
 .faq-list {
@@ -1040,13 +1074,13 @@ img {
 }
 
 .faq-answer p {
-    color: var(--text-muted);
+    color: var(--text-on-light-muted);
     line-height: 1.7;
 }
 
 /* ==================== SPONSORS ==================== */
 .section-sponsors {
-    background: var(--off-white);
+    background: #E4ECF6;
 }
 
 .sponsors-grid {
@@ -1066,7 +1100,8 @@ img {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--gray-light);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(10, 22, 40, 0.06);
     transition: all var(--transition);
 }
 
@@ -1473,10 +1508,6 @@ img {
         display: flex;
     }
 
-    .hero-title {
-        font-size: 2.8rem;
-    }
-
     .theme-title {
         font-size: 2.2rem;
     }
@@ -1524,10 +1555,6 @@ img {
     :root {
         --section-padding: 70px 0;
         --nav-height: 60px;
-    }
-
-    .hero-title {
-        font-size: 2.2rem;
     }
 
     .hero-subtitle {
@@ -1626,9 +1653,24 @@ img {
 }
 
 /* Small Mobile */
-@media (max-width: 400px) {
-    .hero-title {
-        font-size: 1.8rem;
+@media (max-width: 480px) {
+    .hero-buttons .btn {
+        max-width: none;
+        width: 100%;
+    }
+
+    .countdown {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        max-width: 320px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .countdown-item {
+        min-height: 80px;
+        justify-content: center;
     }
 
     .countdown-number {
@@ -1760,6 +1802,66 @@ img {
 .committee__icon {
     color: var(--navy-primary);
     opacity: 0.85;
+}
+
+/* C/02 Nöropsikoloji — image swap (base <-> overlay) */
+.committee__icon--swap {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    opacity: 1;
+}
+.committee__icon-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transition: opacity 0.6s ease;
+    will-change: opacity;
+}
+.committee__icon-img--overlay {
+    opacity: 0;
+}
+.committee.is-active .committee__icon-img--base,
+.committee:hover .committee__icon-img--base,
+.committee:focus-visible .committee__icon-img--base {
+    opacity: 0;
+}
+.committee.is-active .committee__icon-img--overlay,
+.committee:hover .committee__icon-img--overlay,
+.committee:focus-visible .committee__icon-img--overlay {
+    opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+    .committee__icon-img {
+        transition: none;
+    }
+}
+
+/* Modal symbol fallback when source card uses <img> icons instead of SVG */
+.committee-modal__symbol-img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.9s ease 0.25s;
+    will-change: opacity;
+    filter: drop-shadow(0 0 20px rgba(159, 182, 213, 0.5));
+}
+.committee-modal__symbol-img--base { opacity: 1; }
+.committee-modal__symbol-img--overlay { opacity: 0; }
+.committee-modal.is-open .committee-modal__symbol-img--base { opacity: 0; }
+.committee-modal.is-open .committee-modal__symbol-img--overlay { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+    .committee-modal__symbol-img { transition: none; }
+}
+@media (max-width: 768px) {
+    .committee-modal__symbol-img { width: 100px; height: 100px; }
 }
 
 .committee__title {
@@ -1928,11 +2030,17 @@ img {
     opacity: 0.72;
 }
 .timeline__time {
+    display: inline-block;
     font-family: var(--font-display);
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     font-weight: 700;
-    color: var(--accent-light);
-    letter-spacing: 0.05em;
+    color: var(--white);
+    background: rgba(129, 159, 205, 0.22);
+    border: 1px solid rgba(159, 182, 213, 0.45);
+    padding: 0.25rem 0.65rem;
+    border-radius: 6px;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
 }
 .timeline__title {
     font-family: var(--font-display);
@@ -1964,21 +2072,21 @@ img {
    Each section gets a translucent overlay instead of an opaque bg. */
 
 .section-theme { background: rgba(58, 100, 167, 0.70); }
-.section-vm { background: rgba(245, 247, 250, 0.72); }
-.section-about { background: rgba(255, 255, 255, 0.72); }
+.section-vm { background: rgba(228, 236, 246, 0.62); }
+.section-about { background: rgba(237, 242, 248, 0.62); }
 .section-activities { background: rgba(44, 86, 165, 0.72); }
 .section-workshop {
     background: linear-gradient(135deg, rgba(58, 100, 167, 0.72), rgba(68, 114, 182, 0.72));
 }
 .section-committees { background: rgba(58, 100, 167, 0.70); }
 .section-team { background: rgba(44, 86, 165, 0.72); }
-.section-faq { background: rgba(255, 255, 255, 0.72); }
-.section-sponsors { background: rgba(245, 247, 250, 0.72); }
+.section-faq { background: rgba(237, 242, 248, 0.62); }
+.section-sponsors { background: rgba(228, 236, 246, 0.62); }
 .section-eventinfo { background: rgba(44, 86, 165, 0.72); }
 .section-past { background: rgba(58, 100, 167, 0.70); }
 .section-contact { background: rgba(44, 86, 165, 0.78); }
 
-.section--paper { background: rgba(245, 247, 250, 0.72); }
+.section--paper { background: rgba(237, 242, 248, 0.62); }
 .section--ink { background: rgba(44, 86, 165, 0.72); }
 
 /* Hero keeps its gradient but semi-transparent to let canvas glow through */
@@ -2129,11 +2237,9 @@ img {
     position: absolute;
     inset: 0;
     background: radial-gradient(ellipse at center,
-        rgba(58, 100, 167, 0.7) 0%,
-        rgba(44, 86, 165, 0.92) 60%,
-        rgba(44, 86, 165, 0.98) 100%);
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
+        rgba(7, 16, 31, 0.2) 0%,
+        rgba(7, 16, 31, 0.45) 70%,
+        rgba(7, 16, 31, 0.7) 100%);
     opacity: 0;
     transition: opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -2141,19 +2247,21 @@ img {
 
 .committee-modal__panel {
     position: relative;
-    width: min(960px, 96vw);
-    max-height: 90vh;
-    background: linear-gradient(160deg, #2C56A5 0%, #3A64A7 60%, #4472B6 100%);
-    border: 1px solid rgba(129, 159, 205, 0.25);
+    width: min(780px, 94vw);
+    max-height: 92vh;
+    background: rgba(12, 22, 42, 0.42);
+    border: 1px solid rgba(159, 182, 213, 0.32);
     border-radius: 16px;
     box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6),
-                0 0 60px rgba(129, 159, 205, 0.15) inset;
+                0 0 60px rgba(129, 159, 205, 0.18) inset;
     color: var(--white);
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transform: scale(0.85);
+    transform: scale(0.88);
     opacity: 0;
+    -webkit-backdrop-filter: blur(8px) saturate(140%);
+    backdrop-filter: blur(8px) saturate(140%);
     transition: transform 0.6s cubic-bezier(0.2, 0.9, 0.2, 1),
                 opacity 0.4s ease;
 }
@@ -2205,7 +2313,7 @@ img {
 /* Symbol reveal area — the committee icon draws itself */
 .committee-modal__symbol {
     position: relative;
-    height: 180px;
+    height: 120px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2217,10 +2325,10 @@ img {
     flex-shrink: 0;
 }
 .committee-modal__symbol svg {
-    width: 140px;
-    height: 140px;
+    width: 92px;
+    height: 92px;
     color: var(--accent-light);
-    filter: drop-shadow(0 0 20px rgba(159, 182, 213, 0.5));
+    filter: drop-shadow(0 0 16px rgba(159, 182, 213, 0.5));
 }
 .committee-modal__symbol svg * {
     fill: none !important;
@@ -2241,6 +2349,8 @@ img {
 .committee-modal.is-open .committee-modal__symbol svg > *:nth-child(6) { animation-delay: 0.85s; }
 .committee-modal.is-open .committee-modal__symbol svg > *:nth-child(7) { animation-delay: 1.0s; }
 .committee-modal.is-open .committee-modal__symbol svg > *:nth-child(8) { animation-delay: 1.15s; }
+.committee-modal.is-open .committee-modal__symbol svg > *:nth-child(9) { animation-delay: 1.3s; }
+.committee-modal.is-open .committee-modal__symbol svg > *:nth-child(10) { animation-delay: 1.45s; }
 
 @keyframes symbolDraw {
     to { stroke-dashoffset: 0; opacity: 1; }
@@ -2259,8 +2369,8 @@ img {
 .committee-modal__symbol::after {
     content: '';
     position: absolute;
-    width: 180px;
-    height: 180px;
+    width: 130px;
+    height: 130px;
     border: 1px solid rgba(159, 182, 213, 0.3);
     border-radius: 50%;
     opacity: 0;
@@ -2276,15 +2386,14 @@ img {
 .committee-modal__inner {
     position: relative;
     z-index: 2;
-    padding: 36px 40px 40px;
-    overflow-y: auto;
-    max-height: calc(90vh - 180px);
+    padding: 22px 32px 26px;
+    overflow: visible;
 }
 
 .committee-modal__head {
     border-bottom: 1px solid rgba(129, 159, 205, 0.2);
-    padding-bottom: 22px;
-    margin-bottom: 28px;
+    padding-bottom: 14px;
+    margin-bottom: 18px;
 }
 
 .committee-modal__num,
@@ -2304,44 +2413,44 @@ img {
 
 .committee-modal__num {
     font-family: var(--font-display);
-    font-size: 0.85rem;
+    font-size: 0.78rem;
     letter-spacing: 0.2em;
     color: var(--accent);
     font-weight: 600;
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
 }
 .committee-modal__title {
     font-family: var(--font-display);
-    font-size: clamp(1.7rem, 3vw, 2.4rem);
+    font-size: clamp(1.35rem, 2.2vw, 1.85rem);
     color: var(--white);
-    margin: 0 0 14px;
+    margin: 0 0 8px;
     font-weight: 700;
     line-height: 1.15;
 }
 .committee-modal__tagline {
-    font-size: 1.02rem;
+    font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.8);
     margin: 0;
-    line-height: 1.65;
-    max-width: 720px;
+    line-height: 1.5;
+    max-width: 680px;
 }
 
 .committee-modal__grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 32px;
+    gap: 18px 24px;
 }
 .committee-modal__block--full { grid-column: 1 / -1; }
 
 .committee-modal__lbl {
-    font-size: 0.72rem;
+    font-size: 0.66rem;
     letter-spacing: 0.15em;
     text-transform: uppercase;
     color: var(--accent);
     font-weight: 600;
     display: block;
-    margin-bottom: 14px;
+    margin-bottom: 8px;
 }
 
 .committee-modal__topics,
@@ -2351,23 +2460,23 @@ img {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 6px;
 }
 .committee-modal__topics li,
 .committee-modal__learn li {
-    font-size: 0.92rem;
+    font-size: 0.83rem;
     color: rgba(255, 255, 255, 0.88);
-    line-height: 1.55;
-    padding-left: 22px;
+    line-height: 1.45;
+    padding-left: 18px;
     position: relative;
 }
 .committee-modal__topics li::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 7px;
-    width: 8px;
-    height: 8px;
+    top: 5px;
+    width: 6px;
+    height: 6px;
     border: 1.5px solid var(--accent);
     border-radius: 50%;
     background: rgba(129, 159, 205, 0.2);
@@ -2379,21 +2488,22 @@ img {
     top: 0;
     color: var(--accent-light);
     font-weight: 700;
+    font-size: 0.9rem;
 }
 
 .committee-modal__speakers {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 14px;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
 }
 .speaker-highlight {
     background: rgba(255, 255, 255, 0.04);
     border: 1px solid rgba(129, 159, 205, 0.18);
-    border-radius: 8px;
-    padding: 16px 18px;
+    border-radius: 7px;
+    padding: 10px 12px;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
     transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
 }
 .speaker-highlight:hover {
@@ -2403,28 +2513,573 @@ img {
 }
 .speaker-highlight__name {
     font-family: var(--font-display);
-    font-size: 1.05rem;
+    font-size: 0.9rem;
     font-weight: 700;
     color: var(--white);
+    line-height: 1.25;
 }
 .speaker-highlight__inst {
-    font-size: 0.82rem;
+    font-size: 0.72rem;
     color: var(--accent);
     font-weight: 600;
+    line-height: 1.3;
 }
 .speaker-highlight__focus {
-    font-size: 0.82rem;
+    font-size: 0.72rem;
     color: rgba(255, 255, 255, 0.7);
-    margin-top: 4px;
-    line-height: 1.5;
+    margin-top: 2px;
+    line-height: 1.4;
 }
 
 body.modal-open { overflow: hidden; }
 
 @media (max-width: 768px) {
-    .committee-modal__inner { padding: 24px 22px 28px; }
-    .committee-modal__grid { grid-template-columns: 1fr; gap: 24px; }
-    .committee-modal__symbol { height: 140px; }
-    .committee-modal__symbol svg { width: 100px; height: 100px; }
+    .committee-modal {
+        padding: 0;
+    }
+    .committee-modal__panel {
+        width: 100vw;
+        max-width: 100vw;
+        height: 100vh;
+        height: 100dvh;
+        max-height: 100vh;
+        max-height: 100dvh;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .committee-modal__symbol {
+        height: 100px;
+    }
+    .committee-modal__symbol svg {
+        width: 78px;
+        height: 78px;
+    }
+    .committee-modal__symbol::after {
+        width: 110px;
+        height: 110px;
+    }
+    .committee-modal__inner {
+        padding: 18px 20px 22px;
+    }
+    .committee-modal__grid {
+        grid-template-columns: 1fr;
+        gap: 16px 0;
+    }
+    .committee-modal__title {
+        font-size: clamp(1.2rem, 5vw, 1.6rem);
+    }
+    .committee-modal__close {
+        width: 44px;
+        height: 44px;
+        top: 12px;
+        right: 12px;
+    }
+    .committee-modal__speakers {
+        grid-template-columns: 1fr;
+    }
 }
 
+/* ==================== EXPERIMENTAL — COMMITTEES CAROUSEL ==================== */
+/* bg-canvas fades out while committees are visible — the dedicated committee
+   scene (js/scene/stage.js) takes over inside #komiteler */
+body.committees-visible #bg-canvas { opacity: 0; }
+
+.section--committees {
+    padding: 140px 0 180px;
+    background: #0A1128;
+}
+#committees-stage {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 1;
+    pointer-events: none;
+    display: block;
+    opacity: 0;
+    background: #0A1128;
+    transition: opacity 0.4s ease;
+}
+body.committees-visible #committees-stage {
+    opacity: 1;
+}
+.section--committees > .container {
+    position: relative;
+    z-index: 2;
+}
+.section--committees .section__title,
+.section--committees .section__title em {
+    color: #fff;
+}
+.section--committees .section__note {
+    color: rgba(255, 255, 255, 0.82);
+}
+
+/* Vertical stack */
+.committees-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+    align-items: center;
+    padding: 64px 0 80px;
+    position: relative;
+    z-index: 3;
+}
+.committee-slide {
+    width: min(640px, 100%);
+    padding: 32px 36px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 14px;
+    -webkit-backdrop-filter: blur(16px) saturate(130%);
+    backdrop-filter: blur(16px) saturate(130%);
+    color: #fff;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 12px 32px rgba(5, 10, 25, 0.24);
+    transition:
+        transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+        border-color 0.3s ease,
+        box-shadow 0.3s ease,
+        background 0.3s ease;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.committee-slide:hover {
+    transform: translateY(-4px);
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.32);
+    box-shadow: 0 22px 50px rgba(5, 10, 25, 0.32);
+}
+.committee-slide:focus-visible {
+    border-color: #C88A3E;
+    box-shadow: 0 0 0 3px rgba(200, 138, 62, 0.35), 0 18px 40px rgba(5, 10, 25, 0.3);
+}
+.committee-slide.is-active {
+    border-color: rgba(255, 255, 255, 0.42);
+    box-shadow: 0 24px 60px rgba(5, 10, 25, 0.4);
+}
+.committee-slide.is-zooming {
+    transform: translateY(-6px) scale(1.015);
+    border-color: #C88A3E;
+    box-shadow: 0 0 0 2px rgba(200, 138, 62, 0.5), 0 40px 80px rgba(5, 10, 25, 0.45);
+}
+.committee-slide__head {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin-bottom: 4px;
+}
+.committee-slide .committee__num {
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    color: rgba(255, 255, 255, 0.78);
+    font-weight: 600;
+}
+.committee-slide__page {
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    color: rgba(255, 255, 255, 0.42);
+    font-weight: 500;
+    text-transform: lowercase;
+}
+.committee-slide .committee__icon {
+    color: rgba(255, 255, 255, 0.88);
+    opacity: 1;
+    margin-left: auto;
+}
+.committee-slide__title {
+    font-family: var(--font-display);
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1.15;
+    margin: 0;
+    color: #fff;
+}
+.committee-slide__lede {
+    font-size: 0.98rem;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.82);
+    margin: 0;
+    max-width: 58ch;
+}
+.committee-slide__topics {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 6px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+}
+.committee-slide__topics li {
+    font-family: var(--font-display);
+    font-size: 0.98rem;
+    line-height: 1.35;
+    color: rgba(255, 255, 255, 0.94);
+    padding-left: 22px;
+    position: relative;
+}
+.committee-slide__topics li::before {
+    content: "—";
+    position: absolute;
+    left: 0;
+    color: rgba(217, 161, 95, 0.85);
+    font-weight: 600;
+}
+.committee-slide__speakers {
+    padding-top: 10px;
+    border-top: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.committee-slide__speakers-lbl {
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-size: 0.66rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.58);
+    font-weight: 500;
+    margin-bottom: 2px;
+}
+.committee-slide__speakers ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.committee-slide__speakers li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
+    font-size: 0.92rem;
+    line-height: 1.3;
+}
+.committee-slide__speakers .speaker-name {
+    font-weight: 600;
+    color: #fff;
+}
+.committee-slide__speakers .speaker-inst {
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 0.86rem;
+}
+
+/* CTA below stack */
+.committees-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 24px 32px;
+    margin: 48px auto 0;
+    max-width: 640px;
+    border: 1px solid rgba(255, 255, 255, 0.32);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: #fff;
+    text-decoration: none;
+    transition: background 0.3s ease, transform 0.3s ease, border-color 0.3s ease;
+    position: relative;
+    z-index: 3;
+}
+.committees-cta:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+.committees-cta__kicker {
+    font-family: var(--font-mono, 'JetBrains Mono', monospace);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: #D9A15F;
+    display: block;
+    margin-bottom: 4px;
+}
+.committees-cta__title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.3;
+}
+.committees-cta__arrow { color: #fff; transition: transform 0.3s ease; }
+.committees-cta:hover .committees-cta__arrow { transform: translateX(6px); }
+
+@media (max-width: 768px) {
+    .section--committees { padding: 80px 0 120px; }
+    .committees-stack { gap: 48px; padding: 40px 0 60px; }
+    .committee-slide { padding: 24px 24px; width: min(100%, calc(100vw - 32px)); }
+    .committee-slide__title { font-size: 1.25rem; }
+    .committees-cta { flex-direction: column; align-items: flex-start; text-align: left; padding: 20px 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .committee-slide,
+    .committees-cta,
+    .committees-cta__arrow {
+        transition: none;
+    }
+}
+
+/* ==================== MOBILE BG-CANVAS PERF — Aşama 2 (B variant) ==================== */
+/* Lighter background presence on phones — Three.js scene still runs but stays
+   in the visual background. JS-side: DPR cap 1.5, antialias off, comets disabled. */
+@media (max-width: 768px) {
+    #bg-canvas {
+        opacity: 0.55;
+    }
+}
+
+/* ==================== MOBILE COMMITTEES — Aşama 2 (B variant) ==================== */
+/* Below 768px the Three.js committees-stage is not initialized (carousel.js
+   early-returns on mobile). The canvas stays in DOM but is hidden, and the
+   .committees-stack becomes a plain vertical card list. */
+@media (max-width: 768px) {
+    #committees-stage {
+        display: none;
+    }
+    .committees-stack {
+        gap: 20px;
+        padding: 32px 0 40px;
+    }
+    .committee-slide {
+        padding: 22px 24px;
+        gap: 12px;
+        backdrop-filter: blur(8px) saturate(120%);
+        -webkit-backdrop-filter: blur(8px) saturate(120%);
+    }
+    .committee-slide__title {
+        font-size: 1.25rem;
+    }
+    .committee-slide__lede {
+        font-size: 0.92rem;
+    }
+}
+
+/* ==================== MOBILE GLOBAL — Aşama 1 ==================== */
+/* Section padding shrink + multi-column grids fall back to single column.
+   Goes after all per-component @media blocks so it overrides them in cascade order. */
+@media (max-width: 768px) {
+    .section {
+        padding: 60px 0;
+    }
+    .vm-grid,
+    .stats-grid,
+    .activities-grid,
+    .team-grid,
+    .subteam-grid,
+    .sponsors-grid,
+    .contact-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+@media (max-width: 480px) {
+    .section {
+        padding: 44px 0;
+    }
+}
+
+/* Disable hover-only lift/glow effects on touch-only devices.
+   pointer/hover queries respect the actual input device, not just viewport size,
+   so a tablet with a stylus still gets desktop hover behavior. */
+@media (hover: none) {
+    .vm-card:hover,
+    .stat-item:hover,
+    .activity-card:hover,
+    .team-card:hover,
+    .subteam-card:hover,
+    .speaker-highlight:hover,
+    .committee:hover,
+    .btn-primary:hover,
+    .btn-secondary:hover,
+    .nav-cta:hover {
+        transform: none;
+        box-shadow: none;
+    }
+}
+
+/* ==================== PRELOADER ==================== */
+body.is-loading {
+    overflow: hidden;
+}
+#preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #0a1628;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+#preloader.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+#preloader {
+    flex-direction: column;
+    gap: 32px;
+}
+.preloader__scene {
+    position: relative;
+    width: 180px;
+    height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.preloader__logo-img {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: contain;
+    animation: preloaderPulse 2.4s ease-in-out infinite;
+}
+.preloader__orbit {
+    position: absolute;
+    border-radius: 50%;
+}
+.preloader__orbit--outer {
+    inset: 0;
+    background: conic-gradient(from 0deg, transparent 0%, rgba(159, 182, 213, 0.65) 45%, transparent 60%);
+    -webkit-mask: radial-gradient(closest-side, transparent 82px, #000 84px, #000 89px, transparent 91px);
+            mask: radial-gradient(closest-side, transparent 82px, #000 84px, #000 89px, transparent 91px);
+    animation: preloaderSpin 3.2s linear infinite;
+}
+.preloader__orbit--inner {
+    inset: 16px;
+    background: conic-gradient(from 180deg, transparent 0%, rgba(129, 159, 205, 0.5) 40%, transparent 58%);
+    -webkit-mask: radial-gradient(closest-side, transparent 66px, #000 68px, #000 72px, transparent 74px);
+            mask: radial-gradient(closest-side, transparent 66px, #000 68px, #000 72px, transparent 74px);
+    animation: preloaderSpin 5s linear infinite reverse;
+}
+@keyframes preloaderSpin {
+    to { transform: rotate(360deg); }
+}
+@keyframes preloaderPulse {
+    0%, 100% { transform: scale(1);    filter: drop-shadow(0 0 18px rgba(159, 182, 213, 0.4)); }
+    50%      { transform: scale(1.04); filter: drop-shadow(0 0 34px rgba(159, 182, 213, 0.75)); }
+}
+.preloader__bar {
+    width: min(220px, 55vw);
+    height: 2px;
+    background: rgba(255, 255, 255, 0.12);
+    border-radius: 2px;
+    overflow: hidden;
+}
+.preloader__bar-fill {
+    width: 0%;
+    height: 100%;
+    background: var(--white);
+    transition: width 0.2s ease;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+}
+
+/* ==================== IMAGE LIGHTBOX ==================== */
+.lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: rgba(5, 12, 22, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    padding: 2rem;
+}
+.lightbox.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+.lightbox__img {
+    max-width: 95vw;
+    max-height: 85vh;
+    object-fit: contain;
+    border-radius: 6px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+.lightbox__close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: var(--touch-min);
+    height: var(--touch-min);
+    background: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: var(--white);
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.lightbox__close:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+.lightbox__caption {
+    position: absolute;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--accent-light);
+    font-size: 0.9rem;
+    text-align: center;
+    padding: 0 1rem;
+}
+.zoomable {
+    cursor: zoom-in;
+    transition: transform 0.2s ease;
+}
+@media (hover: hover) {
+    .zoomable:hover {
+        transform: scale(1.02);
+    }
+}
+body.lightbox-open {
+    overflow: hidden;
+}
+
+/* ==================== SCROLL PROGRESS ==================== */
+#scrollProgress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 9998;
+    background: rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+}
+#scrollProgressFill {
+    height: 100%;
+    width: 0%;
+    background: var(--white);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+}
+@media (max-width: 768px) {
+    #scrollProgress {
+        height: 2px;
+    }
+}

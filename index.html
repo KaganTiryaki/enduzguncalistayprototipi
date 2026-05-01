@@ -14,6 +14,9 @@
 
     <title>MFL FBÇ '26 | Maltepe Fen Lisesi Fen Bilimleri Çalıştayı</title>
 
+    <link rel="icon" type="image/png" href="assets/images/çalıştay.png">
+    <link rel="apple-touch-icon" href="assets/images/çalıştay.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
@@ -36,7 +39,20 @@
     }
     </script>
 </head>
-<body>
+<body class="is-loading">
+    <!-- Preloader (asset gating) -->
+    <div id="preloader" role="status" aria-live="polite" aria-label="Site yükleniyor">
+        <div class="preloader__scene" aria-hidden="true">
+            <div class="preloader__orbit preloader__orbit--outer"></div>
+            <div class="preloader__orbit preloader__orbit--inner"></div>
+            <img class="preloader__logo-img" src="assets/images/çalıştay.png" alt="">
+        </div>
+        <div class="preloader__bar"><div class="preloader__bar-fill" id="preloaderFill"></div></div>
+    </div>
+
+    <!-- Scroll progress bar -->
+    <div id="scrollProgress" aria-hidden="true"><div id="scrollProgressFill"></div></div>
+
     <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
     <!-- ==================== NAVBAR ==================== -->
@@ -59,11 +75,12 @@
                 <li><a href="#komiteler" class="nav-link">Komiteler</a></li>
                 <li><a href="#program" class="nav-link">Program</a></li>
                 <li><a href="#contact" class="nav-link">İletişim</a></li>
+                <li><a href="https://yemek.maltepefencalistay.org" class="nav-link" target="_blank" rel="noopener noreferrer">QR Kodum</a></li>
             </ul>
 
             <a href="#" class="nav-cta" id="applyBtnNav" target="_blank" rel="noopener noreferrer">Başvur</a>
 
-            <button class="hamburger" id="hamburger" aria-label="Menüyü aç">
+            <button class="hamburger" id="hamburger" aria-label="Menüyü aç" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -72,7 +89,7 @@
     </nav>
 
     <!-- Mobile Menu Overlay -->
-    <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu" id="mobileMenu" data-lenis-prevent>
         <ul class="mobile-links">
             <li><a href="#hero" class="mobile-link">Anasayfa</a></li>
             <li><a href="#about" class="mobile-link">Hakkımızda</a></li>
@@ -81,6 +98,7 @@
             <li><a href="#komiteler" class="mobile-link">Komiteler</a></li>
             <li><a href="#program" class="mobile-link">Program</a></li>
             <li><a href="#contact" class="mobile-link">İletişim</a></li>
+            <li><a href="https://yemek.maltepefencalistay.org" class="mobile-link" target="_blank" rel="noopener noreferrer">QR Kodum</a></li>
             <li><a href="#" class="mobile-link mobile-cta" id="applyBtnMobile" target="_blank" rel="noopener noreferrer">Başvur</a></li>
         </ul>
     </div>
@@ -89,7 +107,7 @@
     <section class="hero" id="hero">
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <img src="assets/images/çalıştay.png" alt="MFL FBÇ" class="hero-logo">
+            <img src="assets/images/çalıştay.png" alt="MFL FBÇ" class="hero-logo zoomable">
             <h1 class="hero-title">Maltepe Fen Lisesi<br><span class="hero-highlight">Fen Bilimleri Çalıştayı '26</span></h1>
             <p class="hero-subtitle">Bilim, bilinmeyene atılan en cesur sorudur; ilerleme ise o sorudan vazgeçmemektir.</p>
 
@@ -221,7 +239,8 @@
     </section>
 
     <!-- ============= KOMİTELER ============= -->
-    <section class="section section--paper section--no-top" id="komiteler" aria-labelledby="committees-title">
+    <canvas id="committees-stage" aria-hidden="true"></canvas>
+    <section class="section section--committees" id="komiteler" aria-labelledby="committees-title">
       <div class="container">
         <header class="section__head section__head--split reveal">
           <div>
@@ -234,249 +253,245 @@
           </p>
         </header>
 
-        <div class="committees">
-          <article class="committee reveal">
-            <header class="committee__head">
-              <span class="committee__num">C/01</span>
-              <div class="committee__icon" aria-hidden="true">
-                <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.3">
-                  <circle cx="24" cy="24" r="3"/>
-                  <ellipse cx="24" cy="24" rx="18" ry="7"/>
-                  <ellipse cx="24" cy="24" rx="18" ry="7" transform="rotate(60 24 24)"/>
-                  <ellipse cx="24" cy="24" rx="18" ry="7" transform="rotate(120 24 24)"/>
-                </svg>
-              </div>
-            </header>
-            <h3 class="committee__title">Kuantum Fiziği</h3>
-            <p class="committee__topic">
-              Kuantum mekaniğinin temelleri, kuantum hesaplama ve kuantum iletişim — klasik sezginin sınırları.
-            </p>
-            <div class="committee__speakers">
-              <span class="committee__speakers-lbl">Davetli Konuşmacılar</span>
-              <div class="speaker-row">
-                <span class="speaker-name">Onur Pusuluk</span>
-                <span class="speaker-inst">Kadir Has Üniversitesi</span>
-              </div>
-              <div class="speaker-row">
-                <span class="speaker-name">İnanç Kanık</span>
-                <span class="speaker-inst">Radarsan</span>
-              </div>
-              <div class="speaker-row">
-                <span class="speaker-name">Elif Yunt</span>
-                <span class="speaker-inst">Türk Alman Üniversitesi</span>
-              </div>
-            </div>
-          </article>
+        <div class="committees-stack">
 
-          <article class="committee reveal">
-            <header class="committee__head">
-              <span class="committee__num">C/02</span>
-              <div class="committee__icon" aria-hidden="true">
-                <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M7 26 C5 16 13 9 20 11 C22 7 27 7 28 11 C35 8 41 12 40 18 C44 20 44 26 40 28 C42 32 36 33 34 32 C33 35 28 36 25 34 C19 37 8 35 7 26 Z"/>
-                  <path d="M11 20 C14 18 17 20 19 19 C21 18 23 20 21 22"/>
-                  <path d="M22 14 C25 12 28 14 27 17"/>
-                  <path d="M30 16 C33 14 36 16 35 19"/>
-                  <path d="M13 25 C16 23 19 25 22 24 C25 23 28 25 26 27"/>
-                  <path d="M28 23 C31 21 35 23 34 26"/>
-                  <path d="M14 29 C17 28 20 30 23 29"/>
-                  <path d="M26 30 C28 29 30 31 30 32"/>
-                  <path d="M34 32 C38 32 41 34 40 38 C38 41 33 40 32 37 L31 34 Z"/>
-                  <path d="M35 34 L39 39 M37 33 L38 39 M39 35 L37 40"/>
-                  <path d="M25 33 L24 42 L29 42 L30 33"/>
-                </svg>
+            <article class="committee-slide" data-signature="quantum">
+              <div class="committee-slide__head">
+                <span class="committee__num">C/01</span>
+                <span class="committee-slide__page">p. 04</span>
+                <div class="committee__icon" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.3">
+                    <circle cx="24" cy="24" r="3"/>
+                    <ellipse cx="24" cy="24" rx="18" ry="7"/>
+                    <ellipse cx="24" cy="24" rx="18" ry="7" transform="rotate(60 24 24)"/>
+                    <ellipse cx="24" cy="24" rx="18" ry="7" transform="rotate(120 24 24)"/>
+                  </svg>
+                </div>
               </div>
-            </header>
-            <h3 class="committee__title">Nöropsikoloji</h3>
-            <p class="committee__topic">
-              Beyin, davranış ve bilişsel süreçler — biyoloji ile zihin arasındaki köprü.
-            </p>
-            <div class="committee__speakers">
-              <span class="committee__speakers-lbl">Davetli Konuşmacı</span>
-              <div class="speaker-row">
-                <span class="speaker-name">Havva Demir</span>
-                <span class="speaker-inst">İstanbul Üniversitesi</span>
-              </div>
-            </div>
-          </article>
+              <h3 class="committee-slide__title">Kuantum Fiziği</h3>
+              <p class="committee-slide__lede">Atom altı dünyanın kuralları klasik sezgiyi bozar. Süperpozisyon, dolanıklık ve kuantum hesaplama üzerinden teknolojinin bir sonraki katmanını masaya yatırıyoruz.</p>
+              <ul class="committee-slide__topics">
+                <li>Kuantum mekaniği temelleri</li>
+                <li>Süperpozisyon ve dolanıklık</li>
+                <li>Kuantum hesaplama — qubit, kapı mantığı</li>
+                <li>Kuantum iletişim ve güvenlik</li>
+              </ul>
+              <footer class="committee-slide__speakers">
+                <span class="committee-slide__speakers-lbl">Davetli Konuşmacılar</span>
+                <ul>
+                  <li><span class="speaker-name">Onur Pusuluk</span><span class="speaker-inst">Kadir Has Üniversitesi</span></li>
+                  <li><span class="speaker-name">İnanç Kanık</span><span class="speaker-inst">Radarsan</span></li>
+                  <li><span class="speaker-name">Elif Yunt</span><span class="speaker-inst">Türk Alman Üniversitesi</span></li>
+                </ul>
+              </footer>
+            </article>
 
-          <article class="committee reveal">
-            <header class="committee__head">
-              <span class="committee__num">C/03</span>
-              <div class="committee__icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.4069-.6813zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/>
-                </svg>
+            <article class="committee-slide" data-signature="neuro">
+              <div class="committee-slide__head">
+                <span class="committee__num">C/02</span>
+                <span class="committee-slide__page">p. 05</span>
+                <div class="committee__icon" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M8 20 C8 10 14 4 22 4 C32 4 42 8 44 16 C45 21 43 26 40 27 C36 27 33 28 31 29 C29 30 28 30 26 30 C20 31 14 30 10 28 C7 26 5 24 8 20 Z"/>
+                    <path d="M30 29 C34 28 40 29 40 32 C40 35 36 37 32 36 C29 35 28 31 30 29 Z"/>
+                    <path d="M24 30 L24 37 L27 37 L27 31"/>
+                    <path d="M12 21 C18 23 26 23 32 21"/>
+                    <path d="M24 5 L24 18"/>
+                    <path d="M36 8 L36 17"/>
+                    <path d="M10 13 C13 15 16 15 19 13"/>
+                    <path d="M11 17 C14 19 17 19 20 17"/>
+                    <path d="M14 25 C18 27 25 27 30 25"/>
+                    <path d="M32 32 L37 32 M33 34 L37 34"/>
+                  </svg>
+                </div>
               </div>
-            </header>
-            <h3 class="committee__title">Yapay Zekâ, Veri & Doğal Dil İşleme</h3>
-            <p class="committee__topic">
-              Makine öğrenmesi, veri analizi ve dil modelleri — makinenin anlaması, hata yapması ve etiği.
-            </p>
-            <div class="committee__speakers">
-              <span class="committee__speakers-lbl">Davetli Konuşmacılar</span>
-              <div class="speaker-row">
-                <span class="speaker-name">Mehmet Ali Bayram</span>
-                <span class="speaker-inst">Yeditepe Üniversitesi</span>
-              </div>
-              <div class="speaker-row">
-                <span class="speaker-name">Emre Gül</span>
-                <span class="speaker-inst">Fi-Product</span>
-              </div>
-              <div class="speaker-row">
-                <span class="speaker-name">Melis Dünya Sezer Gül</span>
-                <span class="speaker-inst">Fi-Product</span>
-              </div>
-            </div>
-          </article>
+              <h3 class="committee-slide__title">Nöropsikoloji</h3>
+              <p class="committee-slide__lede">Zihin biyolojiden doğar, ama onu aşar. Beyin bölgelerinin işlevinden karar verme anatomisine, davranışın ve bilincin nörobilimsel temellerini inceliyoruz.</p>
+              <ul class="committee-slide__topics">
+                <li>Beyin bölgeleri ve fonksiyonları</li>
+                <li>Bilişsel süreçler: algı, dikkat, bellek</li>
+                <li>Nörolojik bozukluklar</li>
+                <li>Bilinç ve karar verme</li>
+              </ul>
+              <footer class="committee-slide__speakers">
+                <span class="committee-slide__speakers-lbl">Davetli Konuşmacı</span>
+                <ul>
+                  <li><span class="speaker-name">Havva Demir</span><span class="speaker-inst">İstanbul Üniversitesi</span></li>
+                </ul>
+              </footer>
+            </article>
 
-          <article class="committee reveal">
-            <header class="committee__head">
-              <span class="committee__num">C/04</span>
-              <div class="committee__icon" aria-hidden="true">
-                <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M24 6 L22 18 L6 26 L6 30 L22 26 L22 34 L18 38 L18 40 L24 38 L30 40 L30 38 L26 34 L26 26 L42 30 L42 26 L26 18 L24 6 Z"/>
-                  <path d="M22 12 L26 12"/>
-                  <path d="M14 44 C18 42 22 42 24 43 C26 44 30 44 34 42" opacity="0.6"/>
-                  <circle cx="14" cy="44" r="0.6" fill="currentColor"/>
-                  <circle cx="34" cy="42" r="0.6" fill="currentColor"/>
-                </svg>
+            <article class="committee-slide" data-signature="ai-nlp">
+              <div class="committee-slide__head">
+                <span class="committee__num">C/03</span>
+                <span class="committee-slide__page">p. 06</span>
+                <div class="committee__icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="0.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22.2819 9.8211a5.9847 5.9847 0 0 0-.5157-4.9108 6.0462 6.0462 0 0 0-6.5098-2.9A6.0651 6.0651 0 0 0 4.9807 4.1818a5.9847 5.9847 0 0 0-3.9977 2.9 6.0462 6.0462 0 0 0 .7427 7.0966 5.98 5.98 0 0 0 .511 4.9107 6.051 6.051 0 0 0 6.5146 2.9001A5.9847 5.9847 0 0 0 13.2599 24a6.0557 6.0557 0 0 0 5.7718-4.2058 5.9894 5.9894 0 0 0 3.9977-2.9001 6.0557 6.0557 0 0 0-.7475-7.0729zm-9.022 12.6081a4.4755 4.4755 0 0 1-2.8764-1.0408l.1419-.0804 4.7783-2.7582a.7948.7948 0 0 0 .3927-.6813v-6.7369l2.02 1.1686a.071.071 0 0 1 .038.052v5.5826a4.504 4.504 0 0 1-4.4945 4.4944zm-9.6607-4.1254a4.4708 4.4708 0 0 1-.5346-3.0137l.142.0852 4.783 2.7582a.7712.7712 0 0 0 .7806 0l5.8428-3.3685v2.3324a.0804.0804 0 0 1-.0332.0615L9.74 19.9502a4.4992 4.4992 0 0 1-6.1408-1.6464zM2.3408 7.8956a4.485 4.485 0 0 1 2.3655-1.9728V11.6a.7664.7664 0 0 0 .3879.6765l5.8144 3.3543-2.0201 1.1685a.0757.0757 0 0 1-.071 0l-4.8303-2.7865A4.504 4.504 0 0 1 2.3408 7.872zm16.5963 3.8558L13.1038 8.364 15.1192 7.2a.0757.0757 0 0 1 .071 0l4.8303 2.7913a4.4944 4.4944 0 0 1-.6765 8.1042v-5.6772a.79.79 0 0 0-.4069-.6813zm2.0107-3.0231l-.142-.0852-4.7735-2.7818a.7759.7759 0 0 0-.7854 0L9.409 9.2297V6.8974a.0662.0662 0 0 1 .0284-.0615l4.8303-2.7866a4.4992 4.4992 0 0 1 6.6802 4.66zM8.3065 12.863l-2.02-1.1638a.0804.0804 0 0 1-.038-.0567V6.0742a4.4992 4.4992 0 0 1 7.3757-3.4537l-.142.0805L8.704 5.459a.7948.7948 0 0 0-.3927.6813zm1.0976-2.3654l2.602-1.4998 2.6069 1.4998v2.9994l-2.5974 1.4997-2.6067-1.4997Z"/>
+                  </svg>
+                </div>
               </div>
-            </header>
-            <h3 class="committee__title">Uçak ve Havacılık</h3>
-            <p class="committee__topic">
-              Aerodinamik, uçuş sistemleri ve havacılığın güncel gündemi — kanattan yörüngeye.
-            </p>
-            <div class="committee__speakers">
-              <span class="committee__speakers-lbl">Davetli Konuşmacılar</span>
-              <div class="speaker-row">
-                <span class="speaker-name">Serhan Kök</span>
-                <span class="speaker-inst">Maltepe Kadir Has BİLSEM</span>
-              </div>
-              <div class="speaker-row">
-                <span class="speaker-name">Dr. Caner Şentürk</span>
-                <span class="speaker-inst">İstanbul Beykoz Üniversitesi</span>
-              </div>
-            </div>
-          </article>
+              <h3 class="committee-slide__title">Yapay Zekâ, Veri &amp; Doğal Dil İşleme</h3>
+              <p class="committee-slide__lede">Bir makinenin "anladığı" an hâlâ tartışmalıdır. Makine öğrenmesinden büyük dil modellerine, doğal dil işlemeden veri etiğine; teknolojinin en dinamik cephesine bakıyoruz.</p>
+              <ul class="committee-slide__topics">
+                <li>Makine öğrenmesi temelleri</li>
+                <li>Büyük dil modelleri (LLM)</li>
+                <li>Doğal dil işleme (NLP)</li>
+                <li>Veri etiği ve önyargı</li>
+              </ul>
+              <footer class="committee-slide__speakers">
+                <span class="committee-slide__speakers-lbl">Davetli Konuşmacılar</span>
+                <ul>
+                  <li><span class="speaker-name">Mehmet Ali Bayram</span><span class="speaker-inst">Yeditepe Üniversitesi</span></li>
+                  <li><span class="speaker-name">Emre Gül</span><span class="speaker-inst">Fi-Product</span></li>
+                  <li><span class="speaker-name">Melis Dünya Sezer Gül</span><span class="speaker-inst">Fi-Product</span></li>
+                </ul>
+              </footer>
+            </article>
 
-          <article class="committee reveal">
-            <header class="committee__head">
-              <span class="committee__num">C/05</span>
-              <div class="committee__icon" aria-hidden="true">
-                <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 8 C14 18 34 18 34 24 C34 30 14 30 14 40"/>
-                  <path d="M34 8 C34 18 14 18 14 24 C14 30 34 30 34 40"/>
-                  <path d="M16 12 L32 12 M17 18 L31 18 M14 24 L34 24 M17 30 L31 30 M16 36 L32 36"/>
-                </svg>
+            <article class="committee-slide" data-signature="aero">
+              <div class="committee-slide__head">
+                <span class="committee__num">C/04</span>
+                <span class="committee-slide__page">p. 07</span>
+                <div class="committee__icon" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M24 6 L22 18 L6 26 L6 30 L22 26 L22 34 L18 38 L18 40 L24 38 L30 40 L30 38 L26 34 L26 26 L42 30 L42 26 L26 18 L24 6 Z"/>
+                    <path d="M22 12 L26 12"/>
+                    <path d="M14 44 C18 42 22 42 24 43 C26 44 30 44 34 42" opacity="0.6"/>
+                    <circle cx="14" cy="44" r="0.6" fill="currentColor"/>
+                    <circle cx="34" cy="42" r="0.6" fill="currentColor"/>
+                  </svg>
+                </div>
               </div>
-            </header>
-            <h3 class="committee__title">Moleküler Biyoloji & Genetik</h3>
-            <p class="committee__topic">
-              DNA, RNA ve genetik düzenleme — CRISPR'dan gen ifadesine uzanan moleküler yaşam bilimi.
-            </p>
-            <div class="committee__speakers">
-              <span class="committee__speakers-lbl">Davetli Konuşmacılar</span>
-              <div class="speaker-row">
-                <span class="speaker-name">Necla Birgül-Iyison</span>
-                <span class="speaker-inst">Boğaziçi Üniversitesi</span>
-              </div>
-              <div class="speaker-row">
-                <span class="speaker-name">Yelda Özden Çiftçi</span>
-                <span class="speaker-inst">Gebze Teknik Üniversitesi</span>
-              </div>
-              <div class="speaker-row">
-                <span class="speaker-name">Ercan Arıcan</span>
-                <span class="speaker-inst">İstanbul Üniversitesi</span>
-              </div>
-              <div class="speaker-row">
-                <span class="speaker-name">Gül Çiçek Kılıç</span>
-                <span class="speaker-inst">Gebze Teknik Üniversitesi</span>
-              </div>
-              <div class="speaker-row">
-                <span class="speaker-name">Işık Ertekin</span>
-                <span class="speaker-inst">Şişli Terakki</span>
-              </div>
-            </div>
-          </article>
+              <h3 class="committee-slide__title">Uçak ve Havacılık</h3>
+              <p class="committee-slide__lede">Bir uçağın havalanması, sıradan görünen bir mucizedir. Aerodinamikten uçuş sistemlerine, sürdürülebilir havacılığa uzanan mühendislik zincirini izliyoruz.</p>
+              <ul class="committee-slide__topics">
+                <li>Aerodinamik prensipler</li>
+                <li>Uçak tasarımı ve yapısal analiz</li>
+                <li>Uçuş sistemleri ve aviyonik</li>
+                <li>Sürdürülebilir havacılık ve uzay teknolojileri</li>
+              </ul>
+              <footer class="committee-slide__speakers">
+                <span class="committee-slide__speakers-lbl">Davetli Konuşmacılar</span>
+                <ul>
+                  <li><span class="speaker-name">Serhan Kök</span><span class="speaker-inst">Maltepe Kadir Has BİLSEM</span></li>
+                  <li><span class="speaker-name">Dr. Caner Şentürk</span><span class="speaker-inst">İstanbul Beykoz Üniversitesi</span></li>
+                </ul>
+              </footer>
+            </article>
 
-          <article class="committee reveal">
-            <header class="committee__head">
-              <span class="committee__num">C/06</span>
-              <div class="committee__icon" aria-hidden="true">
-                <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="20" cy="20" r="12"/>
-                  <path d="M15 26 C15 18 17 14 20 14 C23 14 25 18 25 26"/>
-                  <path d="M17 26 C17 20 18 17 20 17 C22 17 23 20 23 26"/>
-                  <path d="M19 26 L19 22"/>
-                  <path d="M29 29 L38 38"/>
-                  <path d="M36 36 L42 42"/>
-                </svg>
+            <article class="committee-slide" data-signature="molbio">
+              <div class="committee-slide__head">
+                <span class="committee__num">C/05</span>
+                <span class="committee-slide__page">p. 08</span>
+                <div class="committee__icon" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14 8 C14 18 34 18 34 24 C34 30 14 30 14 40"/>
+                    <path d="M34 8 C34 18 14 18 14 24 C14 30 34 30 34 40"/>
+                    <path d="M16 12 L32 12 M17 18 L31 18 M14 24 L34 24 M17 30 L31 30 M16 36 L32 36"/>
+                  </svg>
+                </div>
               </div>
-            </header>
-            <h3 class="committee__title">Adli Bilimler, Kriminalistik & Toksikoloji</h3>
-            <p class="committee__topic">
-              DNA analizi, olay yeri incelemesi ve toksikolojik değerlendirme — bilimin mahkemedeki yeri.
-            </p>
-            <div class="committee__speakers">
-              <span class="committee__speakers-lbl">Davetli Konuşmacılar</span>
-              <div class="speaker-row">
-                <span class="speaker-name">Miraç Özdemir</span>
-                <span class="speaker-inst">İstanbul Gelişim Üniversitesi</span>
-              </div>
-              <div class="speaker-row">
-                <span class="speaker-name">Av. Ece Ertuğ Özkara</span>
-                <span class="speaker-inst">Serbest Avukat</span>
-              </div>
-            </div>
-          </article>
+              <h3 class="committee-slide__title">Moleküler Biyoloji &amp; Genetik</h3>
+              <p class="committee-slide__lede">Yaşam moleküler bir dildir; DNA onun alfabesi. Genetik kodun okunmasından CRISPR ile yeniden yazılmasına, biyoteknolojinin güncel uygulamalarına uzanıyoruz.</p>
+              <ul class="committee-slide__topics">
+                <li>DNA, RNA ve protein sentezi</li>
+                <li>Gen düzenleme (CRISPR-Cas9)</li>
+                <li>Genetik hastalıklar ve tanı</li>
+                <li>Biyoteknoloji uygulamaları</li>
+              </ul>
+              <footer class="committee-slide__speakers">
+                <span class="committee-slide__speakers-lbl">Davetli Konuşmacılar</span>
+                <ul>
+                  <li><span class="speaker-name">Necla Birgül-Iyison</span><span class="speaker-inst">Boğaziçi Üniversitesi</span></li>
+                  <li><span class="speaker-name">Yelda Özden Çiftçi</span><span class="speaker-inst">Gebze Teknik Üniversitesi</span></li>
+                  <li><span class="speaker-name">Ercan Arıcan</span><span class="speaker-inst">İstanbul Üniversitesi</span></li>
+                  <li><span class="speaker-name">Gül Çiçek Kılıç</span><span class="speaker-inst">Gebze Teknik Üniversitesi</span></li>
+                  <li><span class="speaker-name">Işık Ertekin</span><span class="speaker-inst">Şişli Terakki</span></li>
+                </ul>
+              </footer>
+            </article>
 
-          <article class="committee reveal">
-            <header class="committee__head">
-              <span class="committee__num">C/07</span>
-              <div class="committee__icon" aria-hidden="true">
-                <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="12" y="12" width="24" height="24" rx="2.5"/>
-                  <rect x="18" y="18" width="12" height="12" rx="1"/>
-                  <path d="M24 18 L24 30 M18 24 L30 24"/>
-                  <path d="M21 21 L21 21.01 M27 21 L27 21.01 M21 27 L21 27.01 M27 27 L27 27.01" stroke-width="2"/>
-                  <path d="M18 15 L30 15 M18 33 L30 33 M15 18 L15 30 M33 18 L33 30"/>
-                  <path d="M8 16 L12 16 M8 20 L12 20 M8 24 L12 24 M8 28 L12 28 M8 32 L12 32 M36 16 L40 16 M36 20 L40 20 M36 24 L40 24 M36 28 L40 28 M36 32 L40 32"/>
-                  <path d="M16 8 L16 12 M20 8 L20 12 M24 8 L24 12 M28 8 L28 12 M32 8 L32 12 M16 36 L16 40 M20 36 L20 40 M24 36 L24 40 M28 36 L28 40 M32 36 L32 40"/>
-                </svg>
+            <article class="committee-slide" data-signature="forensic">
+              <div class="committee-slide__head">
+                <span class="committee__num">C/06</span>
+                <span class="committee-slide__page">p. 09</span>
+                <div class="committee__icon" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="20" cy="20" r="12"/>
+                    <path d="M15 26 C15 18 17 14 20 14 C23 14 25 18 25 26"/>
+                    <path d="M17 26 C17 20 18 17 20 17 C22 17 23 20 23 26"/>
+                    <path d="M19 26 L19 22"/>
+                    <path d="M29 29 L38 38"/>
+                    <path d="M36 36 L42 42"/>
+                  </svg>
+                </div>
               </div>
-            </header>
-            <h3 class="committee__title">Akıllı Sistemler & Mühendislik</h3>
-            <p class="committee__topic">
-              Robotik, otomasyon ve Endüstri 4.0 — sensörden karara uzanan mühendislik zinciri.
-            </p>
-            <div class="committee__speakers">
-              <span class="committee__speakers-lbl">Davetli Konuşmacılar</span>
-              <div class="speaker-row">
-                <span class="speaker-name">Ali Buldu</span>
-                <span class="speaker-inst">Marmara Üniversitesi</span>
-              </div>
-              <div class="speaker-row">
-                <span class="speaker-name">Mehmet Kaan İldiz</span>
-                <span class="speaker-inst">Üsküdar Üniversitesi</span>
-              </div>
-            </div>
-          </article>
+              <h3 class="committee-slide__title">Adli Bilimler, Kriminalistik &amp; Toksikoloji</h3>
+              <p class="committee-slide__lede">Bir suç aydınlatıldığında bilim ile hukuk aynı masaya oturur. DNA analizinden olay yeri incelemesine, toksikolojiden delilin hukuki geçerliliğine kadar izliyoruz.</p>
+              <ul class="committee-slide__topics">
+                <li>DNA ve biyolojik delil analizi</li>
+                <li>Olay yeri inceleme yöntemleri</li>
+                <li>Toksikoloji ve zehir bilimi</li>
+                <li>Adli delilin hukuki geçerliliği</li>
+              </ul>
+              <footer class="committee-slide__speakers">
+                <span class="committee-slide__speakers-lbl">Davetli Konuşmacılar</span>
+                <ul>
+                  <li><span class="speaker-name">Miraç Özdemir</span><span class="speaker-inst">İstanbul Gelişim Üniversitesi</span></li>
+                  <li><span class="speaker-name">Av. Ece Ertuğ Özkara</span><span class="speaker-inst">Serbest Avukat</span></li>
+                </ul>
+              </footer>
+            </article>
 
-          <a class="committee committee--cta reveal" href="https://forms.google.com/REPLACE_ME" target="_blank" rel="noopener noreferrer" data-register>
-            <span class="committee__cta-kicker">Kayıt</span>
-            <span class="committee__cta-title">Komitenizi seçin, yerinizi alın.</span>
-            <span class="committee__cta-arrow" aria-hidden="true">
-              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-            </span>
-          </a>
+            <article class="committee-slide" data-signature="smart">
+              <div class="committee-slide__head">
+                <span class="committee__num">C/07</span>
+                <span class="committee-slide__page">p. 10</span>
+                <div class="committee__icon" aria-hidden="true">
+                  <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="12" y="12" width="24" height="24" rx="2.5"/>
+                    <rect x="18" y="18" width="12" height="12" rx="1"/>
+                    <path d="M24 18 L24 30 M18 24 L30 24"/>
+                    <path d="M21 21 L21 21.01 M27 21 L27 21.01 M21 27 L21 27.01 M27 27 L27 27.01" stroke-width="2"/>
+                    <path d="M18 15 L30 15 M18 33 L30 33 M15 18 L15 30 M33 18 L33 30"/>
+                    <path d="M8 16 L12 16 M8 20 L12 20 M8 24 L12 24 M8 28 L12 28 M8 32 L12 32 M36 16 L40 16 M36 20 L40 20 M36 24 L40 24 M36 28 L40 28 M36 32 L40 32"/>
+                    <path d="M16 8 L16 12 M20 8 L20 12 M24 8 L24 12 M28 8 L28 12 M32 8 L32 12 M16 36 L16 40 M20 36 L20 40 M24 36 L24 40 M28 36 L28 40 M32 36 L32 40"/>
+                  </svg>
+                </div>
+              </div>
+              <h3 class="committee-slide__title">Akıllı Sistemler &amp; Mühendislik</h3>
+              <p class="committee-slide__lede">Bir robotun karar verişi, sensör-aktüatör döngüsünün zarif bir koreografisidir. Robotikten IoT'ye, Endüstri 4.0'dan insan-makine etkileşimine bakıyoruz.</p>
+              <ul class="committee-slide__topics">
+                <li>Robotik ve otonom sistemler</li>
+                <li>Gömülü sistemler ve IoT</li>
+                <li>Endüstri 4.0 ve otomasyon</li>
+                <li>İnsan-makine etkileşimi</li>
+              </ul>
+              <footer class="committee-slide__speakers">
+                <span class="committee-slide__speakers-lbl">Davetli Konuşmacılar</span>
+                <ul>
+                  <li><span class="speaker-name">Ali Buldu</span><span class="speaker-inst">Marmara Üniversitesi</span></li>
+                  <li><span class="speaker-name">Mehmet Kaan İldiz</span><span class="speaker-inst">Üsküdar Üniversitesi</span></li>
+                </ul>
+              </footer>
+            </article>
+
         </div>
+
+        <a class="committees-cta reveal" href="https://forms.google.com/REPLACE_ME" target="_blank" rel="noopener noreferrer" data-register>
+          <span class="committees-cta__kicker">Kayıt</span>
+          <span class="committees-cta__title">Komitenizi seçin, yerinizi alın.</span>
+          <span class="committees-cta__arrow" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </span>
+        </a>
 
       </div>
     </section>
 
     <!-- Committee modal (contrast overlay with symbol animation) -->
-    <div class="committee-modal" id="committeeModal" role="dialog" aria-modal="true" aria-labelledby="committeeModalTitle" hidden>
+    <div class="committee-modal" id="committeeModal" role="dialog" aria-modal="true" aria-labelledby="committeeModalTitle" hidden data-lenis-prevent>
       <div class="committee-modal__backdrop" data-close></div>
       <div class="committee-modal__panel">
         <button class="committee-modal__close" type="button" aria-label="Kapat" data-close>
@@ -554,35 +569,42 @@
                 <li class="timeline__item">
                   <span class="timeline__time">11:00</span>
                   <div class="timeline__body">
-                    <h3 class="timeline__title">Komite Oturumları · 1. Blok</h3>
-                    <p class="timeline__meta">Dağınık salonlar · 7 komite paralel</p>
-                  </div>
-                </li>
-                <li class="timeline__item">
-                  <span class="timeline__time">13:00</span>
-                  <div class="timeline__body">
-                    <h3 class="timeline__title">Öğle Arası & Kampüs Turu</h3>
-                    <p class="timeline__meta">Merkez Yemekhane</p>
-                  </div>
-                </li>
-                <li class="timeline__item">
-                  <span class="timeline__time">14:30</span>
-                  <div class="timeline__body">
-                    <h3 class="timeline__title">Komite Oturumları · 2. Blok</h3>
-                    <p class="timeline__meta">Dağınık salonlar</p>
-                  </div>
-                </li>
-                <li class="timeline__item">
-                  <span class="timeline__time">16:30</span>
-                  <div class="timeline__body">
-                    <h3 class="timeline__title">Disiplinler Arası Panel</h3>
-                    <p class="timeline__meta">Ana Konferans Salonu</p>
+                    <h3 class="timeline__title">Komite Oturumları · 1. Oturum</h3>
+                    <p class="timeline__meta">11:00 – 12:15 · Tanışma & sunum · 7 komite paralel</p>
                   </div>
                 </li>
                 <li class="timeline__item timeline__item--soft">
-                  <span class="timeline__time">18:30</span>
+                  <span class="timeline__time">12:15</span>
                   <div class="timeline__body">
-                    <h3 class="timeline__title">Networking Etkinliği</h3>
+                    <h3 class="timeline__title">Öğle Arası</h3>
+                    <p class="timeline__meta">12:15 – 13:30 · Merkez Yemekhane · 75 dakika</p>
+                  </div>
+                </li>
+                <li class="timeline__item">
+                  <span class="timeline__time">13:30</span>
+                  <div class="timeline__body">
+                    <h3 class="timeline__title">Komite Oturumları · 2. Oturum</h3>
+                    <p class="timeline__meta">13:30 – 14:45 · Davetli akademisyen oturumu</p>
+                  </div>
+                </li>
+                <li class="timeline__item timeline__item--soft">
+                  <span class="timeline__time">14:45</span>
+                  <div class="timeline__body">
+                    <h3 class="timeline__title">Çay & Kahve Arası</h3>
+                    <p class="timeline__meta">14:45 – 15:30 · Fuaye · 45 dakika</p>
+                  </div>
+                </li>
+                <li class="timeline__item">
+                  <span class="timeline__time">15:30</span>
+                  <div class="timeline__body">
+                    <h3 class="timeline__title">Komite Oturumları · 3. Oturum</h3>
+                    <p class="timeline__meta">15:30 – 16:45 · Davetli akademisyen oturumu</p>
+                  </div>
+                </li>
+                <li class="timeline__item timeline__item--soft">
+                  <span class="timeline__time">16:45</span>
+                  <div class="timeline__body">
+                    <h3 class="timeline__title">Gün Sonu & Networking</h3>
                     <p class="timeline__meta">Kampüs Bahçesi</p>
                   </div>
                 </li>
@@ -592,49 +614,56 @@
             <div class="program__panel" id="day2" role="tabpanel" aria-labelledby="day2-tab" hidden>
               <ol class="timeline" role="list">
                 <li class="timeline__item">
-                  <span class="timeline__time">09:00</span>
+                  <span class="timeline__time">09:30</span>
                   <div class="timeline__body">
-                    <h3 class="timeline__title">Sabah Kahvesi & Beklenmedik Sohbetler</h3>
+                    <h3 class="timeline__title">Sabah Kahvesi & Karşılama</h3>
                     <p class="timeline__meta">Fuaye</p>
                   </div>
                 </li>
                 <li class="timeline__item">
-                  <span class="timeline__time">10:00</span>
+                  <span class="timeline__time">11:00</span>
                   <div class="timeline__body">
-                    <h3 class="timeline__title">Komite Oturumları · 3. Blok</h3>
-                    <p class="timeline__meta">Dağınık salonlar</p>
+                    <h3 class="timeline__title">Komite Oturumları · 1. Oturum</h3>
+                    <p class="timeline__meta">11:00 – 12:15 · Davetli akademisyen oturumu</p>
                   </div>
                 </li>
-                <li class="timeline__item timeline__item--highlight">
-                  <span class="timeline__time">12:00</span>
-                  <div class="timeline__body">
-                    <h3 class="timeline__title">Uzman Paneli: Disiplinler Arası Sorular</h3>
-                    <p class="timeline__meta">Ana Konferans Salonu</p>
-                  </div>
-                </li>
-                <li class="timeline__item">
-                  <span class="timeline__time">13:00</span>
+                <li class="timeline__item timeline__item--soft">
+                  <span class="timeline__time">12:15</span>
                   <div class="timeline__body">
                     <h3 class="timeline__title">Öğle Arası</h3>
-                    <p class="timeline__meta">Merkez Yemekhane</p>
+                    <p class="timeline__meta">12:15 – 13:30 · Merkez Yemekhane · 75 dakika</p>
                   </div>
                 </li>
                 <li class="timeline__item">
-                  <span class="timeline__time">14:30</span>
+                  <span class="timeline__time">13:30</span>
                   <div class="timeline__body">
-                    <h3 class="timeline__title">Komite Sunumları</h3>
-                    <p class="timeline__meta">İki günlük tartışmaların çıktıları</p>
+                    <h3 class="timeline__title">Komite Oturumları · 2. Oturum</h3>
+                    <p class="timeline__meta">13:30 – 14:45 · Davetli akademisyen oturumu</p>
+                  </div>
+                </li>
+                <li class="timeline__item timeline__item--soft">
+                  <span class="timeline__time">14:45</span>
+                  <div class="timeline__body">
+                    <h3 class="timeline__title">Çay & Kahve Arası</h3>
+                    <p class="timeline__meta">14:45 – 15:30 · Fuaye · 45 dakika</p>
+                  </div>
+                </li>
+                <li class="timeline__item">
+                  <span class="timeline__time">15:30</span>
+                  <div class="timeline__body">
+                    <h3 class="timeline__title">Komite Oturumları · 3. Oturum</h3>
+                    <p class="timeline__meta">15:30 – 16:10 · Rapor oturumu</p>
                   </div>
                 </li>
                 <li class="timeline__item timeline__item--highlight">
-                  <span class="timeline__time">16:00</span>
+                  <span class="timeline__time">16:30</span>
                   <div class="timeline__body">
                     <h3 class="timeline__title">Kapanış Konferansı</h3>
                     <p class="timeline__meta">Ana Konferans Salonu</p>
                   </div>
                 </li>
                 <li class="timeline__item timeline__item--soft">
-                  <span class="timeline__time">17:00</span>
+                  <span class="timeline__time">17:30</span>
                   <div class="timeline__body">
                     <h3 class="timeline__title">Sertifika & Kapanış Resepsiyonu</h3>
                     <p class="timeline__meta">Kampüs Bahçesi</p>
@@ -844,7 +873,7 @@
 
             <div class="eventinfo-content">
                 <div class="eventinfo-program reveal">
-                    <img src="assets/images/programblabla.png" alt="Genel Program" class="eventinfo-img">
+                    <img src="assets/images/programblabla.png" alt="Genel Program" class="eventinfo-img zoomable">
                 </div>
                 <div class="eventinfo-map reveal">
                     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3010.5!2d29.0212792!3d41.0044719!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x14cab83e40f4ea3d%3A0xcf11899ee923db00!2sSa%C4%9Fl%C4%B1k+Bilimleri+%C3%9Cniversitesi!5e0!3m2!1str!2str" width="100%" height="100%" style="border:0; border-radius:16px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
@@ -866,16 +895,16 @@
             <h3 class="past-year">'25</h3>
             <div class="past-gallery past-gallery--4">
                 <div class="past-photo reveal">
-                    <img src="assets/images/25-1ncu-foto.png" alt="FBÇ '25">
+                    <img src="assets/images/25-1ncu-foto.png" alt="FBÇ '25" class="zoomable">
                 </div>
                 <div class="past-photo reveal">
-                    <img src="assets/images/25-2nci-foto.png" alt="FBÇ '25">
+                    <img src="assets/images/25-2nci-foto.png" alt="FBÇ '25" class="zoomable">
                 </div>
                 <div class="past-photo reveal">
-                    <img src="assets/images/25-3ncu-foto.png" alt="FBÇ '25">
+                    <img src="assets/images/25-3ncu-foto.png" alt="FBÇ '25" class="zoomable">
                 </div>
                 <div class="past-photo reveal">
-                    <img src="assets/images/25-4nci-foto.png" alt="FBÇ '25">
+                    <img src="assets/images/25-4nci-foto.png" alt="FBÇ '25" class="zoomable">
                 </div>
             </div>
         </div>
@@ -889,11 +918,13 @@
 
             <div class="contact-grid">
                 <div class="contact-item reveal">
-                    <div class="contact-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                    </div>
-                    <h4>E-posta</h4>
-                    <a href="mailto:maltepefenfbç@gmail.com">maltepefenfbç@gmail.com</a>
+                    <a href="mailto:maltepefenfbc@gmail.com" class="contact-link-wrap">
+                        <div class="contact-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                        </div>
+                        <h4>E-posta</h4>
+                        <span>maltepefenfbc@gmail.com</span>
+                    </a>
                 </div>
                 <div class="contact-item reveal">
                     <a href="https://instagram.com/mflfenbilimlericalistayi" target="_blank" rel="noopener noreferrer" class="contact-link-wrap">
@@ -905,11 +936,13 @@
                     </a>
                 </div>
                 <div class="contact-item reveal">
-                    <div class="contact-icon">
-                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                    </div>
-                    <h4>Konum</h4>
-                    <a href="https://maps.app.goo.gl/Kmb4B191Xa3VnykC6" target="_blank" rel="noopener noreferrer">Maltepe Fen Lisesi, İstanbul</a>
+                    <a href="https://maps.app.goo.gl/Kmb4B191Xa3VnykC6" target="_blank" rel="noopener noreferrer" class="contact-link-wrap">
+                        <div class="contact-icon">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        </div>
+                        <h4>Konum</h4>
+                        <span>Maltepe Fen Lisesi, İstanbul</span>
+                    </a>
                 </div>
             </div>
 
@@ -942,6 +975,7 @@
                         <li><a href="#komiteler">Komiteler</a></li>
                         <li><a href="#program">Program</a></li>
                         <li><a href="#faq">SSS</a></li>
+                        <li><a href="https://yemek.maltepefencalistay.org" target="_blank" rel="noopener noreferrer">QR Kodum</a></li>
                     </ul>
                 </div>
 
@@ -954,7 +988,7 @@
                         </li>
                         <li>
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-                            maltepefenfbç@gmail.com
+                            maltepefenfbc@gmail.com
                         </li>
                     </ul>
                 </div>
@@ -983,7 +1017,26 @@
         }
     }
     </script>
+
+    <!-- GSAP core + plugins -->
+    <script defer src="https://unpkg.com/gsap@3.13.0/dist/gsap.min.js"></script>
+    <script defer src="https://unpkg.com/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+    <script defer src="https://unpkg.com/gsap@3.13.0/dist/ScrollToPlugin.min.js"></script>
+
+    <!-- Lenis smooth scroll -->
+    <script defer src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+
+    <!-- Image lightbox -->
+    <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Görsel önizleme">
+        <button class="lightbox__close" id="lightboxClose" type="button" aria-label="Kapat">&times;</button>
+        <img class="lightbox__img" id="lightboxImg" alt="">
+        <div class="lightbox__caption" id="lightboxCaption"></div>
+    </div>
+
     <script src="js/main.js"></script>
+    <!-- Full-page background scene: covers all sections except #komiteler (which
+         has its own dedicated committee scene in js/carousel.js + js/scene/stage.js) -->
     <script type="module" src="js/three-scene.js"></script>
+    <script type="module" src="js/carousel.js"></script>
 </body>
 </html>
