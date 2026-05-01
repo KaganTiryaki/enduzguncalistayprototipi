@@ -44,7 +44,7 @@
 })();
 
 /* ==================== GOOGLE FORMS LINK ==================== */
-const GOOGLE_FORMS_URL = 'https://docs.google.com/forms/d/1ZZhDnKlnY8I3jcgfbBd72_pR7xphhxl4y2pHaWWI3jI/viewform?edit_requested=true';
+const GOOGLE_FORMS_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSf_KHNDmFBX3j_FMZu05fp3onw6rFmOLi4kMqrOohEjjk8l7g/viewform';
 
 document.querySelectorAll('#applyBtnNav, #applyBtnHero, #applyBtnMobile').forEach(btn => {
     btn.href = GOOGLE_FORMS_URL;
