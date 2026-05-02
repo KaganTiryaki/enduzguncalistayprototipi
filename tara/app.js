@@ -51,14 +51,36 @@
         body.className = 'view-gate';
     }
 
-    gateForm.addEventListener('submit', e => {
+    gateForm.addEventListener('submit', async e => {
         e.preventDefault();
         const code = staffInput.value.trim();
         if (!code) return;
-        staffPin = code;
-        sessionStorage.setItem(PIN_KEY, code);
+        const submitBtn = gateForm.querySelector('button[type="submit"]');
+        const oldText = submitBtn ? submitBtn.textContent : '';
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Doğrulanıyor...'; }
         gateHata.hidden = true;
-        enterScanner();
+        try {
+            const { data, error } = await supabase.rpc('lookup_short_code', {
+                p_short_code: 'PINCHECK',
+                p_staff_code: code
+            });
+            if (error) throw error;
+            if (data?.status === 'invalid_staff') {
+                gateHata.textContent = 'PIN hatalı.';
+                gateHata.hidden = false;
+                staffInput.select();
+                return;
+            }
+            staffPin = code;
+            sessionStorage.setItem(PIN_KEY, code);
+            enterScanner();
+        } catch (err) {
+            console.error('PIN doğrulama hatası', err);
+            gateHata.textContent = 'Bağlantı hatası: ' + (err.message || err);
+            gateHata.hidden = false;
+        } finally {
+            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = oldText; }
+        }
     });
 
     logoutBtn.addEventListener('click', () => {

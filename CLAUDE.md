@@ -22,14 +22,34 @@ Aşağıdaki işlerde brainstorming'e gerek yok, doğrudan yap:
 
 ## Proje Yapısı
 ```
-index.html          → tek sayfa, tüm section'lar içinde
-css/style.css       → tek stylesheet, CSS variable tabanlı
+index.html          → landing tek sayfa, tüm section'lar içinde
+css/style.css       → landing stylesheet, CSS variable tabanlı
 js/main.js          → navbar, modal, scroll, etkileşim
 js/three-scene.js   → arka plan beyin sahnesi (Three.js)
+js/scene/           → komite carousel Three.js sistemi
+js/carousel.js      → komite slide picker
 assets/images/      → logolar, ekip fotoğrafları, sponsor logoları
+
+# Yemek QR Sistemi (etkinlik 9-10 Mayıs 2026)
+adminpanel/         → /adminpanel/ — yetkili paneli (PIN gate, kart listesi, kabul mail)
+tara/               → /tara/ — görevli QR scanner (kapıda fiziksel kart okutma)
+yemekqrkodlari/     → 800 adet QR kart PNG'i (script ile üretilir)
+supabase/migrations → DB schema + RPC'ler (0001-0004)
+supabase/functions  → Edge function (send-kabul-mail klasörü — DİKKAT alttaki nota bak)
+scripts/generate-qrs → Node script'leri: kart üretici, seed-participants, seed-pin
 ```
 
-Bölümler: `#hero`, `#about`, `#team`, `#sponsors`, `#komiteler`, `#program`, `#contact`.
+Landing bölümleri: `#hero`, `#about`, `#team`, `#sponsors`, `#komiteler`, `#program`, `#contact`.
+
+## Yemek QR Sistemi — Önemli Notlar
+- **Mimari:** Her katılımcıya fiziksel QR kart (`yemekqrkodlari/png/card-NNN-{kahvalti,ogle}.png`). Kullanıcı portali YOK — sadece kapıda görevli scanner okutuyor.
+- **DB (Supabase):** `cards`, `redemptions`, `staff_codes`, `people` tabloları + RLS (anon GRANT yok, sadece SECURITY DEFINER RPC'ler).
+- **RPC'ler:** `redeem_meal(short_code, staff_code, ts)`, `lookup_short_code(short_code, staff_code)`, `list_cards(staff_code)`, `today_event_day()`.
+- **PIN:** Tek `staff_codes.code` (default `0910`), tüm görevli/admin için ortak. Admin panel + scanner aynı PIN'i kullanır.
+- **Edge function uyumsuzluğu:** Klasör adı `supabase/functions/send-kabul-mail/` ama frontend `${SUPABASE_URL}/functions/v1/yemek-mail`'e istek atıyor. Eski projeden kalma `yemek-mail` deploy'u sayesinde çalışıyor. Yeni session'da deploy etmeden önce isim hizalaması gerekli.
+- **Cooldown:** 0003 migration aynı kart için 2 saat cooldown koyar; etkinlik tarihi `2026-05-09 / 2026-05-10` hardcoded — değişirse migration update lazım.
+- **vercel.json:** Sadece `{"trailingSlash": false}`. Klasör isimleri direkt URL oluyor (`/adminpanel/`, `/tara/`).
+- **Hassas:** `scripts/generate-qrs/.env` (service role key) gitignored. Anon key `tara/config.js`'de public — RLS sayesinde güvenli.
 
 ## Dil ve İçerik
 - **Tüm kullanıcıya görünen metin Türkçe.** İngilizce placeholder yazma.
