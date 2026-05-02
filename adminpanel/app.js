@@ -244,11 +244,10 @@
     }
 
     function updateSummary() {
-        const total   = allCards.length;
-        const used    = allCards.filter(c => c.last_redeemed_at).length;
-        const paid    = allCards.filter(c => c.paid_at).length;
+        const total = allCards.length;
+        const used  = allCards.filter(c => c.last_redeemed_at).length;
         const revoked = allCards.filter(c => c.revoked_at).length;
-        summaryEl.textContent = `${total} kart · ${paid} ödedi · ${used} geçti · ${revoked} iptal`;
+        summaryEl.textContent = `${total} kart kişiye atanmış · ${used} en az bir kez geçiş yaptı · ${revoked} iptal`;
     }
 
     // ========== render ==========
@@ -262,8 +261,6 @@
             if (stat === 'used'    && !c.last_redeemed_at) return false;
             if (stat === 'unused'  && c.last_redeemed_at)  return false;
             if (stat === 'revoked' && !c.revoked_at)        return false;
-            if (stat === 'paid'    && !c.paid_at)           return false;
-            if (stat === 'unpaid'  && c.paid_at)            return false;
             if (q) {
                 const hay = `${c.short_code} ${c.name || ''} ${c.email || ''} ${c.committee || ''}`.toLowerCase();
                 if (!hay.includes(q)) return false;
@@ -283,9 +280,6 @@
                     : status === 'ok'      ? '<span class="badge badge--ok">Geçti</span>'
                     :                        '<span class="badge badge--idle">Bekliyor</span>';
         const last = c.last_redeemed_at ? humanDateTime(c.last_redeemed_at) : '<span class="em">—</span>';
-        const paid = c.paid_at
-            ? `<button class="badge badge--ok pay-toggle" data-code="${escapeAttr(c.short_code)}" data-action="unpay" title="${escapeAttr(humanDateTime(c.paid_at))} — kaldırmak için tıkla">Ödendi</button>`
-            : `<button class="badge badge--idle pay-toggle" data-code="${escapeAttr(c.short_code)}" data-action="pay" title="Ödendi olarak işaretle">Bekliyor</button>`;
         const qrSrc = `/yemekqrkodlari/png/card-${c.short_code}-kahvalti.png`;
         const qrAlt = `${c.name || c.short_code} QR`;
         return `<tr>
@@ -294,7 +288,6 @@
             <td>${escapeHtml(c.name || '—')}</td>
             <td>${c.email ? escapeHtml(c.email) : '<span class="em">—</span>'}</td>
             <td class="committee-cell">${escapeHtml(c.committee || '—')}</td>
-            <td class="pay-cell">${paid}</td>
             <td class="cnt">${c.redemption_count || 0}</td>
             <td>${last}</td>
             <td>${badge}</td>
@@ -305,41 +298,7 @@
     const qrModal      = document.getElementById('qrModal');
     const qrModalImg   = document.getElementById('qrModalImg');
     const qrModalCap   = document.getElementById('qrModalCaption');
-    tbody.addEventListener('click', async e => {
-        // Ödeme toggle
-        const payBtn = e.target.closest('.pay-toggle');
-        if (payBtn) {
-            e.preventDefault();
-            const code = payBtn.dataset.code;
-            const action = payBtn.dataset.action; // 'pay' veya 'unpay'
-            if (action === 'unpay') {
-                if (!confirm(`${code} kartının "Ödendi" işaretini kaldır?`)) return;
-            }
-            payBtn.disabled = true;
-            const oldText = payBtn.textContent;
-            payBtn.textContent = '…';
-            try {
-                const rpcName = action === 'pay' ? 'mark_paid' : 'mark_unpaid';
-                const params = { p_short_code: code, p_staff_code: staffPin };
-                if (action === 'pay') params.p_note = null;
-                const { data, error } = await supabase.rpc(rpcName, params);
-                if (error) throw error;
-                if (data?.status !== 'ok') throw new Error(data?.status || 'failed');
-                // Local state'i güncelle (yenilemeden)
-                const card = allCards.find(c => c.short_code === code);
-                if (card) {
-                    card.paid_at = action === 'pay' ? (data.paid_at || new Date().toISOString()) : null;
-                    if (action === 'unpay') card.payment_note = null;
-                }
-                renderTable();
-            } catch (err) {
-                alert('Ödeme güncellenemedi: ' + (err.message || err));
-                payBtn.disabled = false;
-                payBtn.textContent = oldText;
-            }
-            return;
-        }
-        // QR zoom
+    tbody.addEventListener('click', e => {
         const img = e.target.closest('.qr-thumb');
         if (!img) return;
         qrModalImg.src = img.src;
