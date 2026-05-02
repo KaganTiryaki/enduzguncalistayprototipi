@@ -1,3 +1,11 @@
 {
-  "trailingSlash": false
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/panel", "destination": "/adminpanel", "permanent": true },
+    { "source": "/panel/:path*", "destination": "/adminpanel/:path*", "permanent": true },
+    { "source": "/admin", "destination": "/adminpanel", "permanent": true },
+    { "source": "/admin/:path*", "destination": "/adminpanel/:path*", "permanent": true },
+    { "source": "/gorevli", "destination": "/tara", "permanent": true },
+    { "source": "/gorevli/:path*", "destination": "/tara/:path*", "permanent": true }
+  ]
 }

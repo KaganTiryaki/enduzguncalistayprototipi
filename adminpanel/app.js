@@ -107,6 +107,7 @@
         mailDate.value = '04.05.2026';
         mailDuzeltme.checked = false;
         mailRecipients.value = '';
+        delete mailRecipients.dataset.parsed;
         mailParseInfo.hidden = true;
         mailParseInfo.innerHTML = '';
         mailResult.hidden = true;

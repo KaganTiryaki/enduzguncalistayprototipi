@@ -22,7 +22,8 @@
     const SCAN_LOCKOUT_MS    = 4000;
     const REDEEM_TIMEOUT_MS  = 6000;
     const OUTBOX_KEY         = 'mfl-tara-outbox';
-    const OUTBOX_MAX         = 50;
+    const OUTBOX_MAX         = 500;
+    const OUTBOX_WARN_AT     = 400;
     const PIN_KEY            = 'mfl-tara-pin';
 
     const body          = document.body;
@@ -308,13 +309,10 @@
                 break;
 
             case 'cooldown': {
-                const remain = Number(res.remaining_secs) || 0;
-                const mins = Math.floor(remain / 60);
-                const secs = remain % 60;
                 const ago  = humanTime(res.last_at);
-                flashResult('already_used', '⏳',
-                    `BEKLE — ${who}`,
-                    `${mins} dk ${secs} sn sonra geçebilir · Son geçiş: ${ago}`);
+                flashResult('already_used', '✓',
+                    `İÇERİDE — ${who}`,
+                    `Az önce (${ago}) geçti, geçirebilirsin.`);
                 vibrate([100, 80, 100]);
                 break;
             }
@@ -383,12 +381,20 @@
         catch { return []; }
     }
     function writeOutbox(arr) {
-        localStorage.setItem(OUTBOX_KEY, JSON.stringify(arr.slice(0, OUTBOX_MAX)));
+        // En yeni taramaları tut, eskilerden taşarsa baştakini at (gerçi 500 çok yüksek)
+        localStorage.setItem(OUTBOX_KEY, JSON.stringify(arr.slice(-OUTBOX_MAX)));
     }
     function queueOutbox(entry) {
         const ob = readOutbox();
         ob.push(entry);
         writeOutbox(ob);
+        if (ob.length >= OUTBOX_MAX) {
+            flashResult('error', '⚠️', 'KUYRUK DOLDU',
+                `${OUTBOX_MAX}+ offline tarama bekliyor — internet sağlanana kadar yeni taramalar kaydedilemeyebilir.`);
+        } else if (ob.length === OUTBOX_WARN_AT) {
+            flashResult('error', '⚠️', 'OFFLINE — kuyruk doluyor',
+                `${ob.length} tarama bekliyor, internet kontrol et.`);
+        }
     }
     async function drainOutbox() {
         if (!navigator.onLine || !supabase) return;
