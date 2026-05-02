@@ -577,3 +577,19 @@ statNumbers.forEach(el => statObserver.observe(el));
     window.addEventListener('resize', tick);
     tick();
 })();
+
+/* ==================== COOKIE / ANALYTICS BANNER ==================== */
+(function () {
+    const KEY = 'mfl-cookie-consent';
+    const banner = document.getElementById('cookieBanner');
+    const accept = document.getElementById('cookieAccept');
+    if (!banner || !accept) return;
+    if (!localStorage.getItem(KEY)) {
+        // Sayfa yüklendikten 1.5 sn sonra göster (yumuşak giriş)
+        setTimeout(() => { banner.hidden = false; }, 1500);
+    }
+    accept.addEventListener('click', () => {
+        localStorage.setItem(KEY, '1');
+        banner.hidden = true;
+    });
+})();
