@@ -43,13 +43,6 @@
     setTimeout(finish, 6000);
 })();
 
-/* ==================== GOOGLE FORMS LINK ==================== */
-const GOOGLE_FORMS_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSf_KHNDmFBX3j_FMZu05fp3onw6rFmOLi4kMqrOohEjjk8l7g/viewform';
-
-document.querySelectorAll('#applyBtnNav, #applyBtnHero, #applyBtnMobile').forEach(btn => {
-    btn.href = GOOGLE_FORMS_URL;
-});
-
 /* ==================== NAVBAR SCROLL EFFECT ==================== */
 const navbar = document.getElementById('navbar');
 let lastScroll = 0;

@@ -81,7 +81,7 @@
                 <li><a href="#contact" class="nav-link">İletişim</a></li>
             </ul>
 
-            <a href="https://docs.google.com/forms/d/e/1FAIpQLSf_KHNDmFBX3j_FMZu05fp3onw6rFmOLi4kMqrOohEjjk8l7g/viewform" class="nav-cta" id="applyBtnNav" target="_blank" rel="noopener noreferrer">Başvur</a>
+            <span class="nav-cta is-closed" id="applyBtnNav" aria-disabled="true">Başvurular bitti</span>
 
             <button class="hamburger" id="hamburger" aria-label="Menüyü aç" aria-expanded="false">
                 <span></span>
@@ -101,7 +101,7 @@
             <li><a href="#komiteler" class="mobile-link">Komiteler</a></li>
             <li><a href="#program" class="mobile-link">Program</a></li>
             <li><a href="#contact" class="mobile-link">İletişim</a></li>
-            <li><a href="https://docs.google.com/forms/d/e/1FAIpQLSf_KHNDmFBX3j_FMZu05fp3onw6rFmOLi4kMqrOohEjjk8l7g/viewform" class="mobile-link mobile-cta" id="applyBtnMobile" target="_blank" rel="noopener noreferrer">Başvur</a></li>
+            <li><span class="mobile-link mobile-cta is-closed" id="applyBtnMobile" aria-disabled="true">Başvurular bitti</span></li>
         </ul>
     </div>
 
@@ -133,7 +133,7 @@
             </div>
 
             <div class="hero-buttons">
-                <a href="https://docs.google.com/forms/d/e/1FAIpQLSf_KHNDmFBX3j_FMZu05fp3onw6rFmOLi4kMqrOohEjjk8l7g/viewform" class="btn btn-primary" id="applyBtnHero" target="_blank" rel="noopener noreferrer">Başvur</a>
+                <span class="btn btn-primary is-closed" id="applyBtnHero" aria-disabled="true">Başvurular bitti</span>
                 <a href="#theme" class="btn btn-secondary">Keşfet</a>
             </div>
 
@@ -481,13 +481,10 @@
 
         </div>
 
-        <a class="committees-cta reveal" href="https://docs.google.com/forms/d/e/1FAIpQLSf_KHNDmFBX3j_FMZu05fp3onw6rFmOLi4kMqrOohEjjk8l7g/viewform" target="_blank" rel="noopener noreferrer" data-register>
-          <span class="committees-cta__kicker">Kayıt</span>
-          <span class="committees-cta__title">Komitenizi seçin, yerinizi alın.</span>
-          <span class="committees-cta__arrow" aria-hidden="true">
-            <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
-          </span>
-        </a>
+        <div class="committees-cta is-closed reveal" aria-disabled="true">
+          <span class="committees-cta__kicker">Bilgi</span>
+          <span class="committees-cta__title">Başvurular bitti</span>
+        </div>
 
       </div>
     </section>

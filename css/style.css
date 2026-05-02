@@ -3084,3 +3084,30 @@ body.lightbox-open {
     }
 }
 
+
+/* ==================== BAŞVURU KAPANDI (pasif CTA) ==================== */
+.is-closed {
+    background: var(--accent-light) !important;
+    color: var(--white) !important;
+    border-color: var(--accent-light) !important;
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.85;
+    transform: none !important;
+    text-decoration: none;
+}
+.is-closed:hover,
+.is-closed:focus {
+    background: var(--accent-light) !important;
+    color: var(--white) !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+.committees-cta.is-closed {
+    background: var(--accent-light);
+    color: var(--white);
+    border-color: var(--accent-light);
+}
+.committees-cta.is-closed .committees-cta__kicker {
+    opacity: 0.8;
+}
