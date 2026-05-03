@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0E1A30">
+<meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+<title>MFL FBÇ '26 — Hızlı Kart Ekle</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:-apple-system,"Segoe UI",Roboto,Inter,sans-serif;
+    background:#0E1A30;color:#e9eef8;min-height:100vh;
+    padding:20px 16px;line-height:1.5;
+  }
+  .wrap{max-width:480px;margin:0 auto}
+  h1{font-size:20px;font-weight:700;margin-bottom:4px;letter-spacing:0.3px}
+  .sub{font-size:13px;color:#7d8aa3;margin-bottom:24px}
+  .card{
+    background:#172439;border:1px solid #243553;border-radius:12px;
+    padding:18px;margin-bottom:16px;
+  }
+  label{display:block;font-size:12px;color:#a4b1c8;margin-bottom:6px;font-weight:500;letter-spacing:0.3px;text-transform:uppercase}
+  input,select,button,textarea{
+    width:100%;padding:14px 14px;border-radius:10px;border:1px solid #2c3f5e;
+    background:#0e1a30;color:#e9eef8;font-size:16px;font-family:inherit;
+    -webkit-appearance:none;appearance:none;
+  }
+  input:focus,select:focus{outline:none;border-color:#5a8dd8}
+  .row{margin-bottom:14px}
+  button.primary{
+    background:linear-gradient(180deg,#3766b9 0%,#2c56a5 100%);color:#fff;
+    border:none;font-weight:700;cursor:pointer;letter-spacing:0.3px;
+    margin-top:6px;
+  }
+  button.primary:active{transform:translateY(1px)}
+  button.primary:disabled{opacity:0.5;cursor:not-allowed}
+  button.secondary{
+    background:#2c3f5e;color:#e9eef8;border:none;font-weight:600;cursor:pointer;
+    margin-top:8px;
+  }
+  .err{color:#ff6b7c;font-size:13px;margin-top:8px}
+  .ok{color:#6dd690;font-size:13px;margin-top:8px}
+  .qr-box{text-align:center;padding:20px;background:#fff;border-radius:10px;margin:14px 0}
+  .qr-box canvas,.qr-box img{max-width:100%;height:auto;display:block;margin:0 auto}
+  .meta{font-size:13px;color:#a4b1c8;text-align:center;margin-top:8px}
+  .meta strong{color:#e9eef8}
+  .hidden{display:none}
+  select{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 14 14'><path d='M3 5l4 4 4-4' fill='none' stroke='%23a4b1c8' stroke-width='2'/></svg>");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
+  .pill{display:inline-block;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;letter-spacing:0.3px;text-transform:uppercase}
+  .pill-ok{background:#1c4a32;color:#6dd690}
+  .pill-warn{background:#4a3a1c;color:#e6c46d}
+  .small{font-size:12px;color:#7d8aa3;margin-top:6px}
+  hr{border:none;border-top:1px solid #243553;margin:18px 0}
+  .reset{background:none;border:none;color:#7d8aa3;font-size:12px;text-decoration:underline;cursor:pointer;padding:4px 0;margin-top:4px}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <h1>⚡ Hızlı Kart Ekle</h1>
+  <div class="sub">MFL FBÇ '26 — Yönetim aracı</div>
+
+  <!-- Gate -->
+  <section id="gate" class="card">
+    <div class="row">
+      <label for="key">Service Role Key</label>
+      <input id="key" type="password" autocomplete="off" placeholder="eyJhbG...">
+      <p class="small">Bir kez gir, tarayıcıda saklanır. Supabase Dashboard → Settings → API → service_role.</p>
+    </div>
+    <button class="primary" id="gate-btn">Devam</button>
+    <div class="err hidden" id="gate-err"></div>
+  </section>
+
+  <!-- Form -->
+  <section id="form" class="card hidden">
+    <div class="row">
+      <label for="ad">Ad Soyad</label>
+      <input id="ad" type="text" placeholder="Örn: Ada Özçelikel" autocomplete="off" autocapitalize="words">
+    </div>
+    <div class="row">
+      <label for="email">E-posta</label>
+      <input id="email" type="email" placeholder="ornek@gmail.com" autocomplete="off" autocapitalize="none" inputmode="email">
+    </div>
+    <div class="row">
+      <label for="komite">Komite</label>
+      <select id="komite">
+        <option value="">— Seç —</option>
+        <option>Kuantum Fiziği</option>
+        <option>Nöropsikoloji</option>
+        <option>Moleküler Biyoloji ve Genetik</option>
+        <option>AI/Data/NLP</option>
+        <option>Uçak ve Havacılık</option>
+        <option>Adli Bilimler, Kriminalistik ve Toksikoloji</option>
+        <option>Akıllı Sistemler ve Mühendislik Gelişim Projesi</option>
+      </select>
+    </div>
+    <button class="primary" id="add-btn">Panele Ekle + QR Üret</button>
+    <button class="reset" id="logout-btn">Key'i unut</button>
+    <div class="err hidden" id="form-err"></div>
+  </section>
+
+  <!-- Result -->
+  <section id="result" class="card hidden">
+    <div class="meta">
+      <span class="pill pill-ok">Eklendi</span>
+      <h2 style="font-size:18px;font-weight:700;margin:10px 0 4px"><span id="r-name">—</span></h2>
+      <div>Kart: <strong id="r-code">—</strong> · <span id="r-com">—</span></div>
+      <div id="r-email" style="margin-top:4px;font-family:monospace;font-size:12px;color:#7d8aa3"></div>
+    </div>
+    <div class="qr-box">
+      <canvas id="qr-canvas"></canvas>
+    </div>
+    <button class="primary" id="dl-btn">📥 PNG İndir</button>
+    <button class="secondary" id="another-btn">+ Yeni kart ekle</button>
+  </section>
+
+  <p class="small" style="text-align:center;margin-top:20px;color:#5a6a85">v1 · cards tablosuna doğrudan INSERT</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script>
+(() => {
+  'use strict';
+  const SUPA = 'https://sfoimuxbvxbwywujoeoa.supabase.co';
+  const KEY_STORE = 'mfl-hizli-ekle-key';
+
+  const el = id => document.getElementById(id);
+  const show = id => el(id).classList.remove('hidden');
+  const hide = id => el(id).classList.add('hidden');
+  const err = (id, msg) => { const e = el(id); e.textContent = msg; show(id); };
+  const clearErr = id => { hide(id); el(id).textContent = ''; };
+
+  function getKey() { return localStorage.getItem(KEY_STORE) || ''; }
+  function setKey(k) { localStorage.setItem(KEY_STORE, k); }
+  function clearKey() { localStorage.removeItem(KEY_STORE); }
+
+  function headers() {
+    const k = getKey();
+    return {
+      apikey: k, Authorization: 'Bearer ' + k,
+      'Content-Type': 'application/json; charset=utf-8',
+      Prefer: 'return=representation'
+    };
+  }
+
+  // GATE
+  function showGate() { show('gate'); hide('form'); hide('result'); }
+  function showForm() { hide('gate'); show('form'); hide('result'); el('ad').focus(); }
+  function showResult() { hide('gate'); hide('form'); show('result'); }
+
+  // Init
+  if (getKey()) showForm(); else showGate();
+
+  el('gate-btn').addEventListener('click', async () => {
+    clearErr('gate-err');
+    const k = el('key').value.trim();
+    if (!k.startsWith('eyJ')) { err('gate-err', 'Geçersiz key formatı.'); return; }
+    el('gate-btn').disabled = true;
+    el('gate-btn').textContent = 'Doğrulanıyor...';
+    setKey(k);
+    try {
+      const r = await fetch(`${SUPA}/rest/v1/cards?select=short_code&limit=1`, { headers: headers() });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      showForm();
+    } catch (e) {
+      clearKey();
+      err('gate-err', 'Key çalışmadı: ' + e.message);
+    } finally {
+      el('gate-btn').disabled = false;
+      el('gate-btn').textContent = 'Devam';
+    }
+  });
+
+  el('logout-btn').addEventListener('click', () => {
+    clearKey();
+    el('key').value = '';
+    showGate();
+  });
+
+  el('add-btn').addEventListener('click', async () => {
+    clearErr('form-err');
+    const ad = el('ad').value.trim();
+    const email = el('email').value.trim().toLowerCase();
+    const komite = el('komite').value;
+    if (!ad) { err('form-err', 'Ad Soyad zorunlu.'); return; }
+    if (!komite) { err('form-err', 'Komite seç.'); return; }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err('form-err', 'E-posta formatı geçersiz.'); return; }
+
+    el('add-btn').disabled = true;
+    el('add-btn').textContent = '⏳ Ekleniyor...';
+
+    try {
+      // 1) Max short_code öğren
+      const maxRes = await fetch(`${SUPA}/rest/v1/cards?select=short_code&order=short_code.desc&limit=1`, { headers: headers() });
+      const maxData = await maxRes.json();
+      const maxCode = maxData.length ? parseInt(maxData[0].short_code, 10) : 0;
+      const newCode = String(maxCode + 1).padStart(3, '0');
+
+      // 2) Yeni UUID
+      const id = crypto.randomUUID();
+
+      // 3) INSERT
+      const body = {
+        id, short_code: newCode, name: ad, email: email || null,
+        committee: komite, issued_at: new Date().toISOString()
+      };
+      const insRes = await fetch(`${SUPA}/rest/v1/cards`, {
+        method: 'POST', headers: headers(), body: JSON.stringify(body)
+      });
+      if (!insRes.ok) throw new Error('INSERT: ' + insRes.status + ' ' + (await insRes.text()).substring(0, 200));
+
+      // 4) QR oluştur
+      const url = `https://maltepefencalistay.org/tara?c=${id}&m=br`;
+      await QRCode.toCanvas(el('qr-canvas'), url, {
+        width: 360, margin: 2, errorCorrectionLevel: 'M',
+        color: { dark: '#000000', light: '#ffffff' }
+      });
+
+      // 5) Sonuç göster
+      el('r-name').textContent = ad;
+      el('r-code').textContent = newCode;
+      el('r-com').textContent = komite;
+      el('r-email').textContent = email || '(e-posta yok)';
+      window.LAST_CODE = newCode;
+      showResult();
+    } catch (e) {
+      err('form-err', 'Hata: ' + e.message);
+    } finally {
+      el('add-btn').disabled = false;
+      el('add-btn').textContent = 'Panele Ekle + QR Üret';
+    }
+  });
+
+  el('dl-btn').addEventListener('click', () => {
+    const c = el('qr-canvas');
+    const url = c.toDataURL('image/png');
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `card-${window.LAST_CODE}-kahvalti.png`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  });
+
+  el('another-btn').addEventListener('click', () => {
+    el('ad').value = '';
+    el('email').value = '';
+    el('komite').value = '';
+    showForm();
+  });
+
+  el('key').addEventListener('keydown', e => { if (e.key === 'Enter') el('gate-btn').click(); });
+})();
+</script>
+
+</body>
+</html>
