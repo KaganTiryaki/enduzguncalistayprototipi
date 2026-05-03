@@ -119,7 +119,7 @@
   <p class="small" style="text-align:center;margin-top:20px;color:#5a6a85">v1 · cards tablosuna doğrudan INSERT</p>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
 <script>
 (() => {
   'use strict';
@@ -211,11 +211,16 @@
       });
       if (!insRes.ok) throw new Error('INSERT: ' + insRes.status + ' ' + (await insRes.text()).substring(0, 200));
 
-      // 4) QR oluştur
+      // 4) QR oluştur (qrious - canvas native)
       const url = `https://maltepefencalistay.org/tara?c=${id}&m=br`;
-      await QRCode.toCanvas(el('qr-canvas'), url, {
-        width: 360, margin: 2, errorCorrectionLevel: 'M',
-        color: { dark: '#000000', light: '#ffffff' }
+      new QRious({
+        element: el('qr-canvas'),
+        value: url,
+        size: 600,
+        level: 'M',
+        background: '#ffffff',
+        foreground: '#000000',
+        padding: 16
       });
 
       // 5) Sonuç göster
