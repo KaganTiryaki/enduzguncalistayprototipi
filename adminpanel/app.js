@@ -234,7 +234,7 @@
             new QRious({
                 element: tmp,
                 value: `https://maltepefencalistay.org/tara?c=${data.card_id}&m=br`,
-                size: 240, level: 'M', background: '#ffffff', foreground: '#000000', padding: 8
+                size: 240, level: 'M', background: '#ffffff', foreground: '#2C56A5', padding: 8
             });
             const dataURL = tmp.toDataURL('image/png');
             _qrCache.set(sc, dataURL);
