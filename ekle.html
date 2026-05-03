@@ -192,8 +192,8 @@
     el('add-btn').textContent = '⏳ Ekleniyor...';
 
     try {
-      // 1) Max short_code öğren
-      const maxRes = await fetch(`${SUPA}/rest/v1/cards?select=short_code&order=short_code.desc&limit=1`, { headers: headers() });
+      // 1) Max short_code öğren (sadece dolu kartlar — boş kartları görmezden gel)
+      const maxRes = await fetch(`${SUPA}/rest/v1/cards?select=short_code&name=not.is.null&order=short_code.desc&limit=1`, { headers: headers() });
       const maxData = await maxRes.json();
       const maxCode = maxData.length ? parseInt(maxData[0].short_code, 10) : 0;
       const newCode = String(maxCode + 1).padStart(3, '0');
