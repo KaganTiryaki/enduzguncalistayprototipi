@@ -217,6 +217,31 @@
         }
     });
 
+    // ========== QR fallback (static PNG bulunamazsa runtime'da üret) ==========
+    const _qrCache = new Map(); // short_code -> dataURL
+    window.__qrFallback = async function (img) {
+        if (!img || !img.dataset || img.dataset.qrTried === '1') return;
+        img.dataset.qrTried = '1';
+        const sc = img.dataset.code;
+        if (!sc) return;
+        try {
+            if (_qrCache.has(sc)) { img.src = _qrCache.get(sc); return; }
+            const { data, error } = await supabase.rpc('lookup_short_code', {
+                p_short_code: sc, p_staff_code: staffPin
+            });
+            if (error || !data || !data.card_id || !window.QRious) return;
+            const tmp = document.createElement('canvas');
+            new QRious({
+                element: tmp,
+                value: `https://maltepefencalistay.org/tara?c=${data.card_id}&m=br`,
+                size: 240, level: 'M', background: '#ffffff', foreground: '#000000', padding: 8
+            });
+            const dataURL = tmp.toDataURL('image/png');
+            _qrCache.set(sc, dataURL);
+            img.src = dataURL;
+        } catch (_) { /* sessizce yut */ }
+    };
+
     // ========== veri ==========
     async function enterPanel() {
         await loadCards();
@@ -284,7 +309,7 @@
         const qrAlt = `${c.name || c.short_code} QR`;
         return `<tr>
             <td>${escapeHtml(c.short_code)}</td>
-            <td class="qr-cell"><img class="qr-thumb" src="${qrSrc}" alt="${escapeAttr(qrAlt)}" loading="lazy" data-code="${escapeAttr(c.short_code)}" data-name="${escapeAttr(c.name || '')}"></td>
+            <td class="qr-cell"><img class="qr-thumb" src="${qrSrc}" alt="${escapeAttr(qrAlt)}" loading="lazy" data-code="${escapeAttr(c.short_code)}" data-name="${escapeAttr(c.name || '')}" onerror="window.__qrFallback&&window.__qrFallback(this)"></td>
             <td>${escapeHtml(c.name || '—')}</td>
             <td>${c.email ? escapeHtml(c.email) : '<span class="em">—</span>'}</td>
             <td class="committee-cell">${escapeHtml(c.committee || '—')}</td>
