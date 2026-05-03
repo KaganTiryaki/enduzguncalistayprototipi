@@ -1,5 +1,8 @@
 {
   "trailingSlash": false,
+  "rewrites": [
+    { "source": "/ekle", "destination": "/ekle.html" }
+  ],
   "redirects": [
     { "source": "/panel", "destination": "/adminpanel", "permanent": true },
     { "source": "/panel/:path*", "destination": "/adminpanel/:path*", "permanent": true },
