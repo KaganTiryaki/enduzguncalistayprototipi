@@ -1,8 +1,10 @@
 // MFL FBÇ '26 — staff scanner
 // Akış:
-//   1) Gate: ortak PIN (örn. 0910) sessionStorage'a kaydet
-//   2) Scanner: kamera + html5-qrcode (BarcodeDetector tercihli) → URL parse → redeem RPC
-//      Öğün QR'ın m=br|lu parametresinden çıkarılır, kullanıcı seçim yapmaz.
+//   1) Gate: ortak PIN sessionStorage'a kaydet
+//   2) Scanner: getUserMedia HD stream + dual-decoder loop
+//      Layer 1: BarcodeDetector (iOS 16+ Safari, Android Chrome — native, en hızlı)
+//      Layer 2: jsQR (saf JS, küçük + dot-stilde QR'larda iyi, inversionAttempts=attemptBoth)
+//      requestAnimationFrame loop, qrbox kısıtı yok, tüm frame taranır.
 //   3) Result overlay 1.5s → yeniden tarama
 //   4) Network hatası → localStorage outbox → otomatik replay
 
@@ -40,9 +42,9 @@
     const resultSub     = document.getElementById('resultSub');
 
     let staffPin    = sessionStorage.getItem(PIN_KEY) || '';
-    let recentScans = new Map();   // "card_id|meal" → expiresAt
-    let scanner     = null;        // html5-qrcode instance
-    let nativeStream = null;       // BarcodeDetector için MediaStream
+    let recentScans = new Map();
+    let mediaStream = null;
+    let videoEl     = null;
     let scanning    = false;
     let resultTimer = 0;
 
@@ -116,118 +118,122 @@
     async function startCamera() {
         scanning = true;
         cameraHint.textContent = 'Kamera başlatılıyor…';
-        // BarcodeDetector bazı tarayıcılarda sessizce decode etmiyor.
-        // Daha sağlam ve evrensel olduğu için doğrudan html5-qrcode kullanıyoruz.
-        await startHtml5Qrcode();
-    }
-
-    async function startNativeScanner() {
-        console.log('[scanner] using BarcodeDetector');
-        const detector = new window.BarcodeDetector({ formats: ['qr_code'] });
-        const video = document.createElement('video');
-        video.setAttribute('playsinline', '');
-        video.muted = true;
 
         const reader = document.getElementById('qrReader');
         reader.innerHTML = '';
+
+        const video = document.createElement('video');
+        video.setAttribute('playsinline', '');
+        video.setAttribute('autoplay', '');
+        video.muted = true;
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'cover';
         reader.appendChild(video);
+        videoEl = video;
 
         try {
-            nativeStream = await navigator.mediaDevices.getUserMedia({
-                video: { facingMode: { ideal: 'environment' } }
+            mediaStream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: { ideal: 'environment' },
+                    width:  { ideal: 1920 },
+                    height: { ideal: 1080 }
+                }
             });
-            video.srcObject = nativeStream;
+            video.srcObject = mediaStream;
             await video.play();
-            cameraHint.textContent = 'QR\'ı çerçeveye getir';
-            console.log('[scanner] camera streaming, video size:', video.videoWidth, 'x', video.videoHeight);
+            const settings = mediaStream.getVideoTracks()[0]?.getSettings?.() || {};
+            console.log('[scanner] camera streaming', settings.width + 'x' + settings.height);
+            cameraHint.textContent = 'QR’ı çerçeveye getir';
         } catch (err) {
-            cameraHint.textContent = 'Kamera açılamadı: ' + err.message;
+            cameraHint.textContent = 'Kamera açılamadı: ' + (err.message || err);
             console.error('[scanner] getUserMedia failed:', err);
             return;
         }
 
+        const detector = ('BarcodeDetector' in window)
+            ? new window.BarcodeDetector({ formats: ['qr_code'] })
+            : null;
+        const hasJsQR = typeof window.jsQR === 'function';
+        console.log('[scanner] decoders — BarcodeDetector:', !!detector, 'jsQR:', hasJsQR);
+
+        if (!detector && !hasJsQR) {
+            cameraHint.textContent = 'QR motoru yüklenemedi (jsQR + BarcodeDetector yok).';
+            console.error('[scanner] hiçbir decoder yok!');
+            return;
+        }
+
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+
         let frameCount = 0;
-        let firstDecodeError = false;
+        let lastDetectorErrLog = 0;
         const startTs = Date.now();
 
         const tick = async () => {
             if (!scanning) return;
-            if (video.readyState < 2) {
+            if (video.readyState < 2 || video.videoWidth === 0) {
                 requestAnimationFrame(tick);
                 return;
             }
             frameCount++;
-            try {
-                const codes = await detector.detect(video);
-                if (codes.length > 0) {
-                    console.log('[scanner] decoded:', codes[0].rawValue);
-                    handleDecoded(codes[0].rawValue);
-                }
-            } catch (err) {
-                if (!firstDecodeError) {
-                    console.error('[scanner] BarcodeDetector.detect threw:', err);
-                    firstDecodeError = true;
-                    // Native başarısız → html5-qrcode'a düş
-                    cameraHint.textContent = 'Yedek QR motoruna geçiliyor…';
-                    if (nativeStream) {
-                        nativeStream.getTracks().forEach(t => t.stop());
-                        nativeStream = null;
+            let decoded = null;
+
+            if (detector) {
+                try {
+                    const codes = await detector.detect(video);
+                    if (codes && codes.length > 0) decoded = codes[0].rawValue;
+                } catch (err) {
+                    const now = Date.now();
+                    if (now - lastDetectorErrLog > 5000) {
+                        console.warn('[scanner] BarcodeDetector.detect threw:', err);
+                        lastDetectorErrLog = now;
                     }
-                    scanning = false;
-                    setTimeout(() => { scanning = true; startHtml5Qrcode(); }, 100);
-                    return;
                 }
             }
-            if (frameCount % 60 === 0) {
-                const fps = (frameCount / ((Date.now() - startTs) / 1000)).toFixed(1);
-                console.log(`[scanner] alive — frame ${frameCount}, ${fps} fps`);
+
+            if (!decoded && hasJsQR) {
+                try {
+                    canvas.width  = video.videoWidth;
+                    canvas.height = video.videoHeight;
+                    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+                    const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = window.jsQR(img.data, img.width, img.height, {
+                        inversionAttempts: 'attemptBoth'
+                    });
+                    if (code && code.data) decoded = code.data;
+                } catch (err) {
+                    if (frameCount === 1) console.warn('[scanner] jsQR error:', err);
+                }
             }
+
+            if (decoded) {
+                console.log('[scanner] decoded:', decoded);
+                handleDecoded(decoded);
+            }
+
+            if (frameCount % 120 === 0) {
+                const fps = (frameCount / ((Date.now() - startTs) / 1000)).toFixed(1);
+                console.log('[scanner] alive — frame ' + frameCount + ', ' + fps + ' fps');
+            }
+
             if (scanning) requestAnimationFrame(tick);
         };
         requestAnimationFrame(tick);
     }
 
-    async function startHtml5Qrcode() {
-        console.log('[scanner] starting html5-qrcode');
-        if (!window.Html5Qrcode) {
-            cameraHint.textContent = 'QR kütüphanesi yüklenemedi (html5-qrcode).';
-            console.error('[scanner] window.Html5Qrcode is undefined');
-            return;
-        }
-        const reader = document.getElementById('qrReader');
-        reader.innerHTML = '';
-        scanner = new window.Html5Qrcode('qrReader', { verbose: false });
-
-        // qrbox: tarama bölgesi, geniş tutalım ki QR'ı bulması kolay olsun
-        const qrboxFn = (vw, vh) => {
-            const min = Math.min(vw, vh);
-            const size = Math.floor(min * 0.7);
-            return { width: size, height: size };
-        };
-
-        try {
-            await scanner.start(
-                { facingMode: 'environment' },
-                { fps: 15, qrbox: qrboxFn, aspectRatio: 1.0 },
-                decoded => { console.log('[scanner] decoded:', decoded); handleDecoded(decoded); },
-                () => { /* per-frame error, yoksay */ }
-            );
-            cameraHint.textContent = 'QR\'ı çerçeveye getir';
-        } catch (err) {
-            cameraHint.textContent = 'Kamera açılamadı: ' + (err.message || err);
-        }
-    }
-
     function stopScanner() {
         scanning = false;
-        if (scanner) {
-            scanner.stop().then(() => scanner.clear()).catch(() => {});
-            scanner = null;
+        if (mediaStream) {
+            mediaStream.getTracks().forEach(t => t.stop());
+            mediaStream = null;
         }
-        if (nativeStream) {
-            nativeStream.getTracks().forEach(t => t.stop());
-            nativeStream = null;
+        if (videoEl) {
+            try { videoEl.srcObject = null; } catch {}
+            videoEl = null;
         }
+        const reader = document.getElementById('qrReader');
+        if (reader) reader.innerHTML = '';
     }
 
     function handleDecoded(raw) {
@@ -254,7 +260,6 @@
             const url = new URL(raw);
             const c = url.searchParams.get('c');
             if (!c || !/^[0-9a-f-]{36}$/i.test(c)) return null;
-            // m=br|lu eski QR'larda var, yeni mantıkta yoksayılır.
             return { cardId: c, meal: 'kahvalti' };
         } catch {
             return null;
@@ -381,7 +386,6 @@
         catch { return []; }
     }
     function writeOutbox(arr) {
-        // En yeni taramaları tut, eskilerden taşarsa baştakini at (gerçi 500 çok yüksek)
         localStorage.setItem(OUTBOX_KEY, JSON.stringify(arr.slice(-OUTBOX_MAX)));
     }
     function queueOutbox(entry) {
@@ -414,9 +418,6 @@
         writeOutbox(remaining);
     }
 
-    function mealLabel(m) {
-        return m === 'kahvalti' ? 'Kahvaltı' : m === 'ogle' ? 'Öğle Yemeği' : '—';
-    }
     function humanDate(d) {
         if (!d) return '—';
         const date = typeof d === 'string' ? new Date(d + 'T00:00:00') : d;
@@ -433,6 +434,6 @@
         return `${hh}:${mm}:${ss}`;
     }
     function vibrate(p) {
-        try { navigator.vibrate && navigator.vibrate(p); } catch { /* no-op */ }
+        try { navigator.vibrate && navigator.vibrate(p); } catch {}
     }
 })();
